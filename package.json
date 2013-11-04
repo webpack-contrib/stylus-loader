@@ -1,0 +1,24 @@
+{
+  "name": "stylus-loader",
+  "version": "0.1.0",
+  "description": "Stylus loader for webpack",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
+  "license": "MIT",
+  "dependencies": {
+    "stylus": "~0.39.4",
+    "nib": "~1.0.1",
+    "loader-utils": "~0.2.1"
+  },
+  "devDependencies": {
+    "tape": "~2.1.0"
+  },
+  "keywords": [
+    "webpack",
+    "loader",
+    "stylus"
+  ]
+}
