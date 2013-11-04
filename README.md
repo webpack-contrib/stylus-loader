@@ -11,9 +11,10 @@ Or within the webpack config:
 
 ```js
 module: {
-  loaders: [
-    { test: /\.styl$/, loader: 'stylus-loader?paths=node_modules/bootstrap-stylus/stylus/,include css=true' }
-  ]
+  loaders: [{
+    test: /\.styl$/,
+    loader: 'stylus-loader?paths=node_modules/bootstrap-stylus/stylus/,include css=true'
+  }]
 }
 ```
 
@@ -23,10 +24,9 @@ Use in tandem with the [style-loader](https://github.com/webpack/style-loader) t
 
 ```js
 module: {
-  loaders: [{
-    test: /\.styl$/,
-    loader: 'style-loader!stylus-loader?paths=node_modules/bootstrap-stylus/stylus/,include css=true'
-  }]
+  loaders: [
+    { test: /\.styl$/, loader: 'style-loader!stylus-loader' }
+  ]
 }
 ```
 
