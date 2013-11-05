@@ -16,7 +16,7 @@ Or within the webpack config:
 module: {
   loaders: [{
     test: /\.styl$/,
-    loader: 'css-loader!stylus-loader'
+    loader: 'css-loader!stylus-loader?paths=node_modules/bootstrap-stylus/stylus/'
   }]
 }
 ```
