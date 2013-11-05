@@ -20,9 +20,7 @@ module.exports = function(source) {
 
   Object.keys(options).forEach(function(key) {
     var value = options[key];
-    if (key === 'urlfunc') {
-      styl.define(value, stylus.url());
-    } else if (key === 'use') {
+    if (key === 'use') {
       needsArray(value).forEach(function(func) {
         if (typeof func === 'function') {
           styl.use(func());
