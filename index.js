@@ -39,6 +39,8 @@ module.exports = function(source) {
     }
   });
 
+  // TODO call this.addDependency for each imported stylus file
+  //      to fix watch mode
   styl.use(nib());
   styl.render(function(err, css) {
     if (err) done(err);
