@@ -4,9 +4,9 @@ var nib = require('nib');
 
 module.exports = function(source) {
   this.cacheable && this.cacheable();
-  var done = this.callback;
+  var done = this.async();
   var options = loaderUtils.parseQuery(this.query);
-  options.filename = options.filename || this.resource;
+  options.filename = options.filename || this.resourcePath;
 
   var styl = stylus(source);
 
@@ -47,4 +47,3 @@ module.exports = function(source) {
     else done(null, 'module.exports = ' + JSON.stringify(css) + ';');
   });
 }
-module.exports.seperable = true;
