@@ -4,9 +4,9 @@ var nib = require('nib');
 
 module.exports = function(source) {
   this.cacheable && this.cacheable();
-  var done = this.callback;
+  var done = this.async();
   var options = loaderUtils.parseQuery(this.query);
-  options.filename = options.filename || this.resource;
+  options.filename = options.filename || this.resourcePath;
 
   var styl = stylus(source);
 
@@ -20,9 +20,7 @@ module.exports = function(source) {
 
   Object.keys(options).forEach(function(key) {
     var value = options[key];
-    if (key === 'urlfunc') {
-      styl.define(value, stylus.url());
-    } else if (key === 'use') {
+    if (key === 'use') {
       needsArray(value).forEach(function(func) {
         if (typeof func === 'function') {
           styl.use(func());
@@ -41,10 +39,11 @@ module.exports = function(source) {
     }
   });
 
+  // TODO call this.addDependency for each imported stylus file
+  //      to fix watch mode
   styl.use(nib());
   styl.render(function(err, css) {
     if (err) done(err);
-    else done(null, 'module.exports = ' + JSON.stringify(css) + ';');
+    else done(null, css);
   });
 }
-module.exports.seperable = true;

@@ -4,8 +4,11 @@ A [stylus](http://learnboost.github.io/stylus/) loader for [webpack](https://git
 ## Usage
 
 ```js
-var css = require('stylus!./file.styl');
+var css = require('!raw!stylus!./file.styl'); // Just the CSS
+var css = require('!css!stylus!./file.styl'); // CSS with processed url(...)s
 ```
+
+See [css-loader](https://github.com/webpack/css-loader) to see the effect of processed `url(...)`s.
 
 Or within the webpack config:
 
@@ -13,7 +16,7 @@ Or within the webpack config:
 module: {
   loaders: [{
     test: /\.styl$/,
-    loader: 'stylus-loader?paths=node_modules/bootstrap-stylus/stylus/,include css=true'
+    loader: 'css-loader!stylus-loader?paths=node_modules/bootstrap-stylus/stylus/'
   }]
 }
 ```
@@ -25,7 +28,7 @@ Use in tandem with the [style-loader](https://github.com/webpack/style-loader) t
 ```js
 module: {
   loaders: [
-    { test: /\.styl$/, loader: 'style-loader!stylus-loader' }
+    { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' }
   ]
 }
 ```

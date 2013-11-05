@@ -4,7 +4,7 @@
   "description": "Stylus loader for webpack",
   "main": "index.js",
   "scripts": {
-    "test": "node test/index.js"
+    "test": "webpack-dev-server --config test/webpack.config.js"
   },
   "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
   "license": "MIT",
@@ -14,7 +14,12 @@
     "loader-utils": "~0.2.1"
   },
   "devDependencies": {
-    "tape": "~2.1.0"
+    "webpack-dev-server": "~0.11.0",
+    "should": "~2.0.2",
+    "mocha": "~1.14.0",
+    "mocha-loader": "~0.6.3",
+    "css-loader": "~0.6.2",
+    "raw-loader": "~0.5.0"
   },
   "keywords": [
     "webpack",
