@@ -44,6 +44,6 @@ module.exports = function(source) {
   styl.use(nib());
   styl.render(function(err, css) {
     if (err) done(err);
-    else done(null, 'module.exports = ' + JSON.stringify(css) + ';');
+    else done(null, css);
   });
 }
