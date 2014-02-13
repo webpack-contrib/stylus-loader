@@ -73,7 +73,7 @@ module.exports = function(source) {
 
 // Not the best way but it works for now
 function extractImports(source) {
-  var imports = ['invalid'];
+  var imports = [];
   var regex = /@import *[\'|\"]([^\'|\"]+)*/gi;
   var matches = regex.exec(source);
   if (matches) {
