@@ -16,8 +16,8 @@
     "url": "https://github.com/shama/stylus-loader/issues"
   },
   "dependencies": {
-    "stylus": "~0.39.4",
-    "nib": "~1.0.1",
+    "stylus": "~0.42.2",
+    "nib": "~1.0.2",
     "loader-utils": "~0.2.1"
   },
   "devDependencies": {
