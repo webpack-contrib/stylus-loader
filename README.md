@@ -43,7 +43,7 @@ and then `require('./file.style');` will compile and add the CSS to your page.
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
-* 0.2.0 - Now tracks dependencies for @import statements making cacheable work
+* 0.2.0 - Now tracks dependencies for @import statements making cacheable work. Update stylus dep.
 * 0.1.0 - Initial release
 
 ## License
