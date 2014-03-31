@@ -33,7 +33,7 @@ module: {
 }
 ```
 
-and then `require('./file.style');` will compile and add the CSS to your page.
+and then `require('./file.styl');` will compile and add the CSS to your page.
 
 ## Install
 
