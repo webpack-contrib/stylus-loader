@@ -27,4 +27,11 @@ describe("basic", function() {
 		(typeof css).should.be.eql("string");
 		css.should.match(/\url\(\"?img.png\"?\)/);
 	});
+	it("with option, should resolve urls relatively", function() {
+		var css = require(
+			"!raw-loader!../?{\"resolve url\":true}!./fixtures/shallow.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/\url\(\"?img.png\"?\)/);
+	});
 });
