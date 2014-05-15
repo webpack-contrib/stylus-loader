@@ -4,14 +4,18 @@ var nib = require('nib');
 var path = require('path');
 var fs = require('fs');
 
+var CachedPathEvaluator = require('./lib/evaluator');
+var PathCache = require('./lib/pathcache');
+
 module.exports = function(source) {
   var self = this;
   this.cacheable && this.cacheable();
   var done = this.async();
   var options = loaderUtils.parseQuery(this.query);
   options.filename = options.filename || this.resourcePath;
+  options.Evaluator = CachedPathEvaluator;
 
-  var styl = stylus(source);
+  var styl = stylus(source, options);
   var paths = [path.dirname(options.filename)];
 
   function needsArray(value) {
@@ -50,42 +54,18 @@ module.exports = function(source) {
     }
   });
 
-  extractImports(source).concat(manualImports).map(function(dep) {
-    var filepath = null;
-    for (var i = 0; i < paths.length; i++) {
-      filepath = path.resolve(paths[i], dep);
-      if (!fs.existsSync(filepath)) {
-        filepath = path.resolve(paths[i], dep + '.styl');
-        if (fs.existsSync(filepath)) break;
-      } else {
-        break;
-      }
-    }
-    return fs.existsSync(filepath) ? filepath : null;
-  }).filter(function(dep) {
-    return !!dep;
-  }).forEach(function(dep) {
-    self.addDependency(dep);
-  });
+  var boundResolvers = PathCache.resolvers(options, this.resolve);
+  PathCache.createFromFile(boundResolvers, {}, options.filename)
+    .then(function(importPathCache) {
+      // CachedPathEvaluator will use this PathCache to find its dependencies.
+      options.cache = importPathCache;
+      importPathCache.allDeps().forEach(self.addDependency);
 
-  styl.use(nib());
-  styl.render(function(err, css) {
-    if (err) done(err);
-    else done(null, css);
-  });
-}
-
-// Not the best way but it works for now
-function extractImports(source) {
-  var imports = [];
-  var regex = /@import *[\'|\"]([^\'|\"]+)*/gi;
-  var matches = regex.exec(source);
-  if (matches) {
-    imports.push(matches[1]);
-    while (matches != null) {
-      matches = regex.exec(source);
-      if (matches) imports.push(matches[1]);
-    }
-  }
-  return imports || [];
+      styl.use(nib());
+      styl.render(function(err, css) {
+        if (err) done(err);
+        else done(null, css);
+      });
+    })
+    .catch(done);
 }
