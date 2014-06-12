@@ -35,6 +35,20 @@ module: {
 
 and then `require('./file.styl');` will compile and add the CSS to your page.
 
+`stylus-loader` can also take advantage of webpack's resolve options. With the default options it'll find files in `web_modules` as well as `node_modules`, make sure to prefix any lookup in node_modules with `~`. For example if you have a styles package lookup files in it like `@import '~styles/my-styles`. It can also find stylus files without having the extension specified in the `@import` and index files in folders if webpack is configured for stylus's file extension.
+
+```js
+module: {
+  resolve: {
+    extensions: ['', '.js', '.styl']
+  }
+}
+```
+
+will let you have an `index.styl` file in your styles package and `require('styles')` or `@import '~styles'` it. It also lets you load a stylus file from a package installed in node_modules or if you add a modulesDirectories, like `modulesDirectories: ['node_modules', 'web_modules', 'bower_components']` option you could load from a folder like bower_components. To load files from a relative path leave off the `~` and `@import 'relative-styles/my-styles';` it.
+
+Be careful though not to use the extensions configuration for two types of in one folder. If a folder has a `index.js` and a `index.styl` and you `@import './that-folder'`, it'll end up importing a javascript file into your stylus.
+
 ## Install
 
 `npm install stylus-loader --save-dev`

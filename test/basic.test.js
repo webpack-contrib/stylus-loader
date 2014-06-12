@@ -34,4 +34,52 @@ describe("basic", function() {
 		(typeof css).should.be.eql("string");
 		css.should.match(/\url\(\"?img.png\"?\)/);
 	});
+	it("with paths, find deps and load like normal stylus", function() {
+		var css = require(
+			"!raw-loader!../?paths=test/fixtures/paths!./fixtures/import-paths.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/.other/);
+		css.should.match(/font-family/);
+	});
+	it("stylus can find modules in node_modules", function() {
+		var css = require("!raw-loader!../!./fixtures/import-fakenib.styl");
+		(typeof css).should.be.eql("string");
+		css.should.match(/.not-real-nib/);
+	});
+	it("resolve with webpack if stylus can't find it", function() {
+		var css = require("!raw-loader!../!./fixtures/import-webpack.styl");
+		(typeof css).should.be.eql("string");
+		css.should.match(/.other/);
+		css.should.match(/font-size/);
+	});
+	it("in a nested import load module from paths", function() {
+		var css = require(
+			"!raw-loader!../?paths=test/fixtures/paths!./fixtures/shallow-paths.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/.other/);
+		css.should.match(/font-family/);
+	});
+	it("in a nested import load module from node_modules", function() {
+		var css = require("!raw-loader!../!./fixtures/shallow-fakenib.styl");
+		(typeof css).should.be.eql("string");
+		css.should.match(/.not-real-nib/);
+	});
+	it("in a nested import load module from webpack", function() {
+		var css = require("!raw-loader!../!./fixtures/shallow-webpack.styl");
+		(typeof css).should.be.eql("string");
+		css.should.match(/.other/);
+		css.should.match(/font-size/);
+	});
+	it("resolves css with webpack but does not import it", function() {
+		var css = require("!raw-loader!../!./fixtures/import-webpack-css.styl");
+		(typeof css).should.be.eql("string");
+		css.should.not.match(/\.imported-css/);
+	});
+	it("in a nested import resolve css with webpack but not import", function() {
+		var css = require("!raw-loader!../!./fixtures/import-webpack-css.styl");
+		(typeof css).should.be.eql("string");
+		css.should.not.match(/\.imported-css/);
+	});
 });
