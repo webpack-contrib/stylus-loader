@@ -15,6 +15,9 @@ module.exports = function(source) {
   options.filename = options.filename || this.resourcePath;
   options.Evaluator = CachedPathEvaluator;
 
+  var stylusOptions = this.options.stylus || {};
+  options.use = options.use || stylusOptions.use || [];
+
   var styl = stylus(source, options);
   var paths = [path.dirname(options.filename)];
 
@@ -31,9 +34,11 @@ module.exports = function(source) {
   Object.keys(options).forEach(function(key) {
     var value = options[key];
     if (key === 'use') {
-      needsArray(value).forEach(function(func) {
-        if (typeof func === 'function') {
-          styl.use(func());
+      needsArray(value).forEach(function(plugin) {
+        if (typeof plugin === 'function') {
+          styl.use(plugin);
+        } else {
+          throw new Error("Plugin should be a function");
         }
       });
     } else if (key === 'define') {
