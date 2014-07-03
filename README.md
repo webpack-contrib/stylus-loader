@@ -57,6 +57,7 @@ Be careful though not to use the extensions configuration for two types of in on
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+* 0.3.1 - Fix when dependency (@tkellen)
 * 0.3.0 - Define url resolver() when "resolve url" option is true (@mzgoddard).
 * 0.2.0 - Now tracks dependencies for @import statements making cacheable work. Update stylus dep.
 * 0.1.0 - Initial release
