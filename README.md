@@ -73,6 +73,7 @@ stylus: {
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+* 0.4.0 - Allow configuration of plugins through webpack config (@bobzoller). Update to stylus 0.47.2 (@shanewilson).
 * 0.3.1 - Fix when dependency (@tkellen)
 * 0.3.0 - Define url resolver() when "resolve url" option is true (@mzgoddard).
 * 0.2.0 - Now tracks dependencies for @import statements making cacheable work. Update stylus dep.
