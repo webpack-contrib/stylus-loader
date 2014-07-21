@@ -38,7 +38,7 @@ module.exports = function(source) {
         if (typeof plugin === 'function') {
           styl.use(plugin);
         } else {
-          throw new Error("Plugin should be a function");
+          throw new Error('Plugin should be a function');
         }
       });
     } else if (key === 'define') {
