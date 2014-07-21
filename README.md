@@ -49,6 +49,22 @@ will let you have an `index.styl` file in your styles package and `require('styl
 
 Be careful though not to use the extensions configuration for two types of in one folder. If a folder has a `index.js` and a `index.styl` and you `@import './that-folder'`, it'll end up importing a javascript file into your stylus.
 
+### Stylus Plugins
+
+You can also use stylus plugins by adding an extra `stylus` section to your `webpack.config.js`.
+
+```js
+var stylus_plugin = require('stylus_plugin');
+module: {
+  loaders: [
+    { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' }
+  ]
+},
+stylus: {
+  use: [stylus_plugin()]
+}
+```
+
 ## Install
 
 `npm install stylus-loader --save-dev`

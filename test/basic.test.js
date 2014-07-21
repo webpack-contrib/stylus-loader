@@ -82,4 +82,9 @@ describe("basic", function() {
 		(typeof css).should.be.eql("string");
 		css.should.not.match(/\.imported-css/);
 	});
+	it("should allow stylus plugins to be configured in webpack.config.js", function() {
+		var css = require("!raw-loader!../!./fixtures/webpack.config-plugin.styl");
+		(typeof css).should.be.eql("string");
+		css.should.match(/width:\s?75%;/);
+	});
 });
