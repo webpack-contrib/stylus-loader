@@ -79,5 +79,5 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 * 0.1.0 - Initial release
 
 ## License
-Copyright (c) 2013 Kyle Robinson Young  
+Copyright (c) 2014 Kyle Robinson Young  
 Licensed under the MIT license.
