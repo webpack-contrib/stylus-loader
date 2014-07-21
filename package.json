@@ -18,7 +18,7 @@
   "dependencies": {
     "loader-utils": "~0.2.1",
     "nib": "~1.0.2",
-    "stylus": "~0.42.2",
+    "stylus": "~0.47.2",
     "when": "~3.2.x"
   },
   "devDependencies": {
