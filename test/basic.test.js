@@ -87,4 +87,10 @@ describe("basic", function() {
 		(typeof css).should.be.eql("string");
 		css.should.match(/width:\s?75%;/);
 	});
+	it("correctly compiles mixin calls inside imported files", function () {
+		var css = require("!raw-loader!../!./fixtures/import-mixins/index.styl");
+		(typeof css).should.be.eql("string");
+		var regexp = new RegExp('body{color:#639;}.rule{color:#639;}main{color:#639;}');
+		css.replace(/\s/g, '').should.match(regexp);
+	});
 });
