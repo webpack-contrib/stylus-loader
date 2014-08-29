@@ -17,9 +17,11 @@
   },
   "dependencies": {
     "loader-utils": "~0.2.3",
-    "nib": "~1.0.2",
-    "stylus": "~0.47.2",
     "when": "~3.2.x"
+  },
+  "peerDependencies": {
+    "nib": "~1.0.3",
+    "stylus": "~0.48.1"
   },
   "devDependencies": {
     "css-loader": "~0.6.2",
