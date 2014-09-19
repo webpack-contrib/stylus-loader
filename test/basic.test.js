@@ -85,7 +85,7 @@ describe("basic", function() {
 	it("should allow stylus plugins to be configured in webpack.config.js", function() {
 		var css = require("!raw-loader!../!./fixtures/webpack.config-plugin.styl");
 		(typeof css).should.be.eql("string");
-		css.should.match(/width:\s?75%;/);
+                css.should.match(/width:\s?100%;/);
 	});
 	it("correctly compiles mixin calls inside imported files", function () {
 		var css = require("!raw-loader!../!./fixtures/import-mixins/index.styl");
