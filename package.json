@@ -1,6 +1,6 @@
 {
   "name": "stylus-loader",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Stylus loader for webpack",
   "main": "index.js",
   "scripts": {

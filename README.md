@@ -73,6 +73,7 @@ stylus: {
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+* 0.5.0 - Disable Stylus parser caching in listImports (@DaQuirm). Update to stylus@0.49.2 and nib@1.0.4 as peerDependencies (@kompot). 
 * 0.4.0 - Allow configuration of plugins through webpack config (@bobzoller). Update to stylus 0.47.2 (@shanewilson).
 * 0.3.1 - Fix when dependency (@tkellen)
 * 0.3.0 - Define url resolver() when "resolve url" option is true (@mzgoddard).
