@@ -69,6 +69,14 @@ stylus: {
 
 `npm install stylus-loader --save-dev`
 
+## Testing
+
+```
+npm test
+open http://localhost:8080/test/
+```
+
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
