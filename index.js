@@ -6,6 +6,7 @@ var fs = require('fs');
 
 var CachedPathEvaluator = require('./lib/evaluator');
 var PathCache = require('./lib/pathcache');
+var resolver = require('./lib/resolver');
 
 module.exports = function(source) {
   var self = this;
@@ -54,7 +55,7 @@ module.exports = function(source) {
       styl.set(key, value);
 
       if (key === 'resolve url' && value) {
-        styl.define('url', stylus.resolver());
+        styl.define('url', resolver());
       }
     }
   });
@@ -73,4 +74,4 @@ module.exports = function(source) {
       });
     })
     .catch(done);
-}
+};
