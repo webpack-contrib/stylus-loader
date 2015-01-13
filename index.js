@@ -17,6 +17,7 @@ module.exports = function(source) {
 
   var stylusOptions = this.options.stylus || {};
   options.use = options.use || stylusOptions.use || [];
+  options.import = options.import || stylusOptions.import || [];
 
   var styl = stylus(source, options);
   var paths = [path.dirname(options.filename)];
