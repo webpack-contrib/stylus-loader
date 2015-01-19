@@ -20,7 +20,7 @@
     "when": "~3.2.x"
   },
   "peerDependencies": {
-    "nib": "~1.0.4",
+    "nib": "^1.0.4",
     "stylus": "~0.49.2"
   },
   "devDependencies": {
