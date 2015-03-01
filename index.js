@@ -1,6 +1,5 @@
 var loaderUtils = require('loader-utils');
 var stylus = require('stylus');
-var nib = require('nib');
 var path = require('path');
 var fs = require('fs');
 
@@ -67,7 +66,6 @@ module.exports = function(source) {
       options.cache = importPathCache;
       importPathCache.allDeps().forEach(self.addDependency);
 
-      styl.use(nib());
       styl.render(function(err, css) {
         if (err) done(err);
         else done(null, css);
