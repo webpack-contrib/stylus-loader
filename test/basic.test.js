@@ -32,7 +32,11 @@ describe("basic", function() {
 			"!raw-loader!../?{\"resolve url\":true}!./fixtures/shallow.styl"
 		);
 		(typeof css).should.be.eql("string");
-		css.should.match(/\url\(\"?img.png\"?\)/);
+		css.should.match(/\url\(\"img.png\"\)/);
+		css.should.match(/\url\(\"deep\/deep-img.png\"\)/);
+		css.should.match(/\url\(\"!!deep\/deep-img.png\"\)/);
+		css.should.match(/\url\(\"file!deep\/deep-img.png\"\)/);
+		css.should.match(/\url\(\"file\?foo!deep\/deep-img.png\"\)/);
 	});
 	it("with paths, find deps and load like normal stylus", function() {
 		var css = require(
