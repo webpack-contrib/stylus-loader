@@ -20,6 +20,11 @@ module.exports = function(source) {
   options.use = options.use || stylusOptions.use || [];
   options.import = options.import || stylusOptions.import || [];
 
+  if (options.sourceMap) {
+    options.sourcemap = { comment: true, inline: true };
+    delete options.sourceMap;
+  }
+
   var styl = stylus(source, options);
   var paths = [path.dirname(options.filename)];
 
@@ -71,7 +76,7 @@ module.exports = function(source) {
       styl.use(nib());
       styl.render(function(err, css) {
         if (err) done(err);
-        else done(null, css);
+        else done(null, css, styl.sourcemap);
       });
     })
     .catch(done);
