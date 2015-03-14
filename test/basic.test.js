@@ -13,12 +13,12 @@ describe("basic", function() {
 		css.should.not.match(/\.imported-css/);
 	});
 	it("should import css with the css-loader", function() {
-		var css = require("!css-loader!../!./fixtures/import-css.styl");
+		var css = require("!css-loader!../!./fixtures/import-css.styl").toString();
 		(typeof css).should.be.eql("string");
 		css.should.match(/\.imported-css/);
 	});
 	it("should import stylus", function() {
-		var css = require("!css-loader!../!./fixtures/import-styl.styl");
+		var css = require("!css-loader!../!./fixtures/import-styl.styl").toString();
 		(typeof css).should.be.eql("string");
 		css.should.match(/\.imported-stylus/);
 	});
@@ -98,7 +98,7 @@ describe("basic", function() {
 		css.replace(/\s/g, '').should.match(regexp);
 	});
 	it("should compile an @import URL through the CSS loader", function () {
-		var css = require("!css-loader!../!./fixtures/import-google-font.styl");
+		var css = require("!css-loader!../!./fixtures/import-google-font.styl").toString();
 		(typeof css).should.be.eql("string");
 		css.should.be.eql('@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic);\n');
 	});
