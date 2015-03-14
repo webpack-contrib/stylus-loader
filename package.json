@@ -17,10 +17,8 @@
   },
   "dependencies": {
     "loader-utils": "~0.2.6",
+    "stylus": "^0.49.3",
     "when": "~3.6.x"
-  },
-  "peerDependencies": {
-    "stylus": "^0.49.3"
   },
   "devDependencies": {
     "css-loader": "~0.9.1",
@@ -29,7 +27,6 @@
     "nib": "^1.0.4",
     "raw-loader": "~0.5.1",
     "should": "~4.6.1",
-    "stylus": "^0.49.3",
     "webpack-dev-server": "~1.7.0"
   },
   "keywords": [
