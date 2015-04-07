@@ -19,9 +19,12 @@ module.exports = function(source) {
   options.use = options.use || stylusOptions.use || [];
   options.import = options.import || stylusOptions.import || [];
 
-  if (options.sourceMap) {
-    options.sourcemap = { comment: true, inline: true };
+  if (options.sourceMap != null) {
+    options.sourcemap = options.sourceMap;
     delete options.sourceMap;
+  }
+  else if (this.sourceMap) {
+    options.sourcemap = { comment: false };
   }
 
   var styl = stylus(source, options);
