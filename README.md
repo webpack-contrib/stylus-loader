@@ -81,9 +81,10 @@ open http://localhost:8080/test/
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+* 1.1.0 - Pass through sourceMap option to stylus instead of defaulting to inline. Inherit source-map from devtool (@jordansexton).
 * 1.0.0 - Basic source map support (@skozin). Remove nib as dep. stylus is now a direct dep (as peerDependencies are deprecated).
 * 0.6.0 - Support loader prefixes when resolving paths (@kpdecker).
-* 0.5.0 - Disable Stylus parser caching in listImports (@DaQuirm). Update to stylus@0.49.2 and nib@1.0.4 as peerDependencies (@kompot). 
+* 0.5.0 - Disable Stylus parser caching in listImports (@DaQuirm). Update to stylus@0.49.2 and nib@1.0.4 as peerDependencies (@kompot).
 * 0.4.0 - Allow configuration of plugins through webpack config (@bobzoller). Update to stylus 0.47.2 (@shanewilson).
 * 0.3.1 - Fix when dependency (@tkellen)
 * 0.3.0 - Define url resolver() when "resolve url" option is true (@mzgoddard).
