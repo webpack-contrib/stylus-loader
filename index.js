@@ -18,6 +18,7 @@ module.exports = function(source) {
   var stylusOptions = this.options.stylus || {};
   options.use = options.use || stylusOptions.use || [];
   options.import = options.import || stylusOptions.import || [];
+  options.define = options.define || stylusOptions.define || [];
 
   if (options.sourceMap != null) {
     options.sourcemap = options.sourceMap;
