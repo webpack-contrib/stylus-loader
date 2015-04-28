@@ -5,6 +5,7 @@ var fs = require('fs');
 
 var CachedPathEvaluator = require('./lib/evaluator');
 var PathCache = require('./lib/pathcache');
+var utils = require('stylus').utils;
 
 module.exports = function(source) {
   var self = this;
@@ -58,6 +59,11 @@ module.exports = function(source) {
       }
     }
   });
+
+  manualImports.forEach(function(dep) {
+    var fullPath = utils.lookup(dep, options.paths, '', true);
+    self.addDependency(fullPath);
+  });  
 
   var boundResolvers = PathCache.resolvers(options, this.resolve);
   PathCache.createFromFile(boundResolvers, {}, options.filename)
