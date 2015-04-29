@@ -60,18 +60,22 @@ module.exports = function(source) {
     }
   });
 
-  manualImports.forEach(function(dep) {
-    var fullPath = utils.lookup(dep, options.paths, '', true);
-    self.addDependency(fullPath);
-  });  
+  manualImports = manualImports.map(function (it) { return utils.lookup(it, options.paths, '', true); });
 
   var boundResolvers = PathCache.resolvers(options, this.resolve);
-  PathCache.createFromFile(boundResolvers, {}, options.filename)
+
+  var cache = manualImports.concat(options.filename).reduce(function(carry, filename) {
+    return carry
+      .then(function(lastCache) {
+        return PathCache.createFromFile(boundResolvers, lastCache.contexts, filename);
+      });
+  }, PathCache.create());
+
+  cache
     .then(function(importPathCache) {
       // CachedPathEvaluator will use this PathCache to find its dependencies.
       options.cache = importPathCache;
-      importPathCache.allDeps().forEach(self.addDependency);
-
+      manualImports.concat(importPathCache.allDeps()).forEach(self.addDependency);
       styl.render(function(err, css) {
         if (err) done(err);
         else done(null, css);
