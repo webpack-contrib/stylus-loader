@@ -8,3 +8,4 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 script:
   - "node_modules/.bin/testem ci -l firefox"
+ 
