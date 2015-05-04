@@ -102,4 +102,56 @@ describe("basic", function() {
 		(typeof css).should.be.eql("string");
 		css.should.be.eql('@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic);\n');
 	});
+	it("imports files listed in option argument", function() {
+		var css = require(
+			"!raw-loader!..?import[]=urls.styl!./fixtures/stylus.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/body/);
+		css.should.match(/\.imported-stylus/);
+	});
+	it("imports files listed in option argument stylus paths style", function() {
+		var css = require(
+			"!raw-loader" +
+			"!..?import[]=in-paths.styl&paths[]=" + __dirname + "/fixtures/paths" +
+			"!./fixtures/stylus.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/\.other/);
+		css.should.match(/\.imported-stylus/);
+	});
+	it("imports files listed in option argument webpack style", function() {
+		var css = require(
+			"!raw-loader!..?import[]=~fakenib!./fixtures/stylus.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/\.not-real-nib/);
+		css.should.match(/\.imported-stylus/);
+	});
+	it("imports files listed in option argument and deps", function() {
+		var css = require(
+			"!raw-loader!..?import[]=import-styl.styl!./fixtures/basic.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/\.imported-stylus/);
+		css.should.match(/a\.button/);
+	});
+	it("imports files listed in option argument and paths deps", function() {
+		var css = require(
+			"!raw-loader" +
+			"!..?import[]=import-paths.styl&paths[]=" + __dirname + "/fixtures/paths" +
+			"!./fixtures/basic.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/\.other/);
+		css.should.match(/a\.button/);
+	});
+	it("imports files listed in option argument and webpack deps", function() {
+		var css = require(
+			"!raw-loader!..?import[]=import-webpack.styl!./fixtures/basic.styl"
+		);
+		(typeof css).should.be.eql("string");
+		css.should.match(/\.other/);
+		css.should.match(/a\.button/);
+	});
 });

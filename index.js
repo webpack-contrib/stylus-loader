@@ -2,6 +2,8 @@ var loaderUtils = require('loader-utils');
 var stylus = require('stylus');
 var path = require('path');
 var fs = require('fs');
+var when = require('when');
+var whenNodefn = require('when/node/function');
 
 var CachedPathEvaluator = require('./lib/evaluator');
 var PathCache = require('./lib/pathcache');
@@ -59,7 +61,6 @@ module.exports = function(source) {
       }
     } else if (key === 'import') {
       needsArray(value).forEach(function(stylusModule) {
-        styl.import(stylusModule);
         manualImports.push(stylusModule);
       });
     } else {
@@ -94,22 +95,49 @@ module.exports = function(source) {
   }
 
   var boundResolvers = PathCache.resolvers(options, this.resolve);
+  var pathCacheHelpers = {
+    resolvers: boundResolvers,
+    readFile: readFile,
+  };
 
-  PathCache
-    .createFromFile({
-      resolvers: boundResolvers,
-      readFile: readFile,
-    }, {
-      contexts: {},
-      sources: {},
-      imports: importsCache,
-    }, source, options.filename)
+  when
+    // Resolve manual imports like @import files.
+    .reduce(manualImports, function resolveManualImports(carry, filename) {
+      return PathCache.resolvers
+        .reduce(boundResolvers, path.dirname(options.filename), filename)
+        .then(function(paths) { return carry.concat(paths); });
+    }, [])
+    // Resolve dependencies of 
+    .then(function(paths) {
+      paths.forEach(styl.import.bind(styl));
+      paths.forEach(self.addDependency);
+
+      var readFile = whenNodefn.lift(pathCacheHelpers.readFile);
+      return when.reduce(paths, function(cache, filepath) {
+        return readFile(filepath)
+          .then(function(source) {
+            return PathCache.createFromFile(
+              pathCacheHelpers, cache, source.toString(), filepath
+            );
+          });
+      }, {
+        contexts: {},
+        sources: {},
+        imports: importsCache,
+      });
+    })
+    .then(function(cache) {
+      return PathCache
+        .createFromFile(pathCacheHelpers, cache, source, options.filename);
+    })
     .then(function(importPathCache) {
       // CachedPathEvaluator will use this PathCache to find its dependencies.
       options.cache = importPathCache;
       importPathCache.allDeps().forEach(function(f) {
         self.addDependency(path.normalize(f));
       });
+
+      // var paths = importPathCache.origins;
 
       styl.render(function(err, css) {
         if (err) done(err);
