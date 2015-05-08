@@ -74,7 +74,9 @@ module.exports = function(source) {
     .then(function(importPathCache) {
       // CachedPathEvaluator will use this PathCache to find its dependencies.
       options.cache = importPathCache;
-      importPathCache.allDeps().forEach(self.addDependency);
+      importPathCache.allDeps().forEach(function(f) {
+        self.addDependency(path.normalize(f));
+      });
 
       styl.render(function(err, css) {
         if (err) done(err);
