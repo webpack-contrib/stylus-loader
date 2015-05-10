@@ -3,6 +3,10 @@
   "version": "1.1.0",
   "description": "Stylus loader for webpack",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "lib/"
+  ],
   "scripts": {
     "test": "webpack-dev-server --config test/webpack.config.js"
   },
