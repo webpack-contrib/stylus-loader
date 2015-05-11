@@ -1,6 +1,9 @@
 # stylus-loader
 A [stylus](http://learnboost.github.io/stylus/) loader for [webpack](https://github.com/webpack/webpack).
 
+[![build status](https://secure.travis-ci.org/shama/stylus-loader.svg)](https://travis-ci.org/shama/stylus-loader)
+[![NPM version](https://badge.fury.io/js/stylus-loader.svg)](https://badge.fury.io/js/stylus-loader)
+
 ## Usage
 
 ```js
