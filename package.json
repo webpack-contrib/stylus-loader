@@ -8,7 +8,8 @@
     "lib/"
   ],
   "scripts": {
-    "test": "webpack-dev-server --config test/webpack.config.js"
+    "test": "testem ci",
+    "test-dev": "testem -l firefox"
   },
   "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
   "license": "MIT",
@@ -31,6 +32,7 @@
     "nib": "^1.0.4",
     "raw-loader": "~0.5.1",
     "should": "~4.6.1",
+    "testem": "^0.8.3",
     "webpack-dev-server": "~1.7.0"
   },
   "keywords": [
