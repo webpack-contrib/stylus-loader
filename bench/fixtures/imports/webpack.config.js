@@ -12,6 +12,7 @@ module.exports = {
   entry: "./index.js",
   output: {
     path: __dirname + '/tmp',
+    filename: 'bundle.js',
   },
   resolve: {
     extensions: ["", ".js", ".css", ".styl"]
@@ -26,5 +27,5 @@ module.exports = {
   },
   stylus: {
     use: [plugin()]
-  }
+  },
 };
