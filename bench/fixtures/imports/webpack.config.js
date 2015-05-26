@@ -26,6 +26,7 @@ module.exports = {
     ]
   },
   stylus: {
-    use: [plugin()]
+    use: [plugin()],
+    // importsCache: false,
   },
 };
