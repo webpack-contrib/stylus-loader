@@ -88,6 +88,7 @@ module.exports = function(source) {
       readFile: readFile,
     }, {
       contexts: {},
+      sources: {},
     }, source, options.filename)
     .then(function(importPathCache) {
       // CachedPathEvaluator will use this PathCache to find its dependencies.
