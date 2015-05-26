@@ -69,11 +69,23 @@ module.exports = function(source) {
     }
   });
 
+  // Use input file system's readFile if available. The normal webpack input
+  // file system is cached with entries purged when they are detected to be
+  // changed on disk by the watcher.
+  var readFile;
+  try {
+    var inputFileSystem = this._compiler.inputFileSystem;
+    readFile = inputFileSystem.readFile.bind(inputFileSystem);
+  } catch (error) {
+    readFile = fs.readFile;
+  }
+
   var boundResolvers = PathCache.resolvers(options, this.resolve);
 
   PathCache
     .createFromFile({
       resolvers: boundResolvers,
+      readFile: readFile,
     }, {
       contexts: {},
     }, source, options.filename)
