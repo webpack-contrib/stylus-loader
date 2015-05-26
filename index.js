@@ -70,7 +70,13 @@ module.exports = function(source) {
   });
 
   var boundResolvers = PathCache.resolvers(options, this.resolve);
-  PathCache.createFromFile(boundResolvers, {}, source, options.filename)
+
+  PathCache
+    .createFromFile({
+      resolvers: boundResolvers,
+    }, {
+      contexts: {},
+    }, source, options.filename)
     .then(function(importPathCache) {
       // CachedPathEvaluator will use this PathCache to find its dependencies.
       options.cache = importPathCache;
