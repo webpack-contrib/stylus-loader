@@ -7,6 +7,8 @@ var CachedPathEvaluator = require('./lib/evaluator');
 var PathCache = require('./lib/pathcache');
 var resolver = require('./lib/resolver');
 
+var globalImportsCache = {};
+
 module.exports = function(source) {
   var self = this;
   this.cacheable && this.cacheable();
@@ -69,8 +71,39 @@ module.exports = function(source) {
     }
   });
 
+  var shouldCacheImports = stylusOptions.importsCache !== false;
+
+  var importsCache;
+  if (stylusOptions.importsCache !== false) {
+    if (typeof stylusOptions.importsCache === 'object') {
+      importsCache = stylusOptions.importsCache;
+    } else {
+      importsCache = globalImportsCache;
+    }
+  }
+
+  // Use input file system's readFile if available. The normal webpack input
+  // file system is cached with entries purged when they are detected to be
+  // changed on disk by the watcher.
+  var readFile;
+  try {
+    var inputFileSystem = this._compiler.inputFileSystem;
+    readFile = inputFileSystem.readFile.bind(inputFileSystem);
+  } catch (error) {
+    readFile = fs.readFile;
+  }
+
   var boundResolvers = PathCache.resolvers(options, this.resolve);
-  PathCache.createFromFile(boundResolvers, {}, source, options.filename)
+
+  PathCache
+    .createFromFile({
+      resolvers: boundResolvers,
+      readFile: readFile,
+    }, {
+      contexts: {},
+      sources: {},
+      imports: importsCache,
+    }, source, options.filename)
     .then(function(importPathCache) {
       // CachedPathEvaluator will use this PathCache to find its dependencies.
       options.cache = importPathCache;
