@@ -21,7 +21,7 @@
     "url": "https://github.com/shama/stylus-loader/issues"
   },
   "peerDependencies": {
-    "stylus": "0.x",
+    "stylus": "0.x"
   },
   "dependencies": {
     "loader-utils": "^0.2.9",
