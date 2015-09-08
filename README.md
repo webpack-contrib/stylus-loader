@@ -84,6 +84,8 @@ open http://localhost:8080/test/
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+* 1.3.0 - resolve use() calls (@mzgoddard), manual imports through path cache (@mzgoddard)
+* 1.2.0 - files in package.json (@SimenB), test running with testem (@mzgoddard), and some performance changes (@mzgoddard)
 * 1.1.0 - Pass through sourceMap option to stylus instead of defaulting to inline. Inherit source-map from devtool (@jordansexton).
 * 1.0.0 - Basic source map support (@skozin). Remove nib as dep. stylus is now a direct dep (as peerDependencies are deprecated).
 * 0.6.0 - Support loader prefixes when resolving paths (@kpdecker).
