@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "test": "testem ci",
-    "test-dev": "testem -l firefox"
+    "test-dev": "testem -l firefox",
+    "test-one": "testem ci -l firefox",
+    "test-build": "webpack --config test/webpack.config.js --output-path test/tmp --output-file bundle.js"
   },
   "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
   "license": "MIT",

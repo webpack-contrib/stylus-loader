@@ -20,7 +20,9 @@ module.exports = function(source) {
   options.Evaluator = CachedPathEvaluator;
 
   var stylusOptions = this.options.stylus || {};
-  options.use = options.use || stylusOptions.use || [];
+  // Instead of assigning to options, we run them manually later so their side effects apply earlier for
+  // resolving paths.
+  var use = options.use || stylusOptions.use || [];
   options.import = options.import || stylusOptions.import || [];
   options.define = options.define || stylusOptions.define || [];
 
@@ -99,6 +101,9 @@ module.exports = function(source) {
     resolvers: boundResolvers,
     readFile: readFile,
   };
+
+  // Use plugins here so that resolve related side effects can be used while we resolve imports.
+  use.forEach(styl.use, styl);
 
   when
     // Resolve manual imports like @import files.

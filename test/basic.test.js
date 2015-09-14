@@ -110,6 +110,11 @@ describe("basic", function() {
 		css.should.match(/body/);
 		css.should.match(/\.imported-stylus/);
 	});
+	it("imports files in a directory included by a plugin", function() {
+		var css = require("!raw-loader!..!./fixtures/import-include.styl");
+		(typeof css).should.be.eql("string");
+		css.should.match(/.in-include/);
+	});
 	it("imports files listed in option argument stylus paths style", function() {
 		var css = require(
 			"!raw-loader" +
