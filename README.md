@@ -68,6 +68,16 @@ stylus: {
 }
 ```
 
+### Query Parameters
+
+You can pass the built-in stylus paramters via the loader configration.
+
+There is an extra parameter for webpack:
+
+If you set the value for the `requireSyntax` to __true__, paths which doesn't
+start with `.` or `/` will be automatically prepended with a `~` (if they don't have `~` already).
+This makes stylus `@imports` and `@require` behave like a webpack `require()`.
+
 ## Install
 
 `npm install stylus-loader --save-dev`
