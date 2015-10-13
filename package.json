@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "loader-utils": "^0.2.9",
-    "stylus": "^0.49.3",
+    "stylus": "^0.52.4",
     "when": "~3.6.x"
   },
   "devDependencies": {
