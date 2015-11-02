@@ -145,8 +145,12 @@ module.exports = function(source) {
       // var paths = importPathCache.origins;
 
       styl.render(function(err, css) {
-        if (err) done(err);
-        else done(null, css, styl.sourcemap);
+        if (err) {
+          done(err);
+        } else {
+          styl.sourcemap.sourcesContent = [source];
+          done(null, css, styl.sourcemap);
+        }
       });
     })
     .catch(done);
