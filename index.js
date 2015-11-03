@@ -148,7 +148,9 @@ module.exports = function(source) {
         if (err) {
           done(err);
         } else {
-          styl.sourcemap.sourcesContent = [source];
+          if (styl.sourcemap) {
+            styl.sourcemap.sourcesContent = [source];
+          }
           done(null, css, styl.sourcemap);
         }
       });
