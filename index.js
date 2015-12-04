@@ -24,7 +24,9 @@ module.exports = function(source) {
   // resolving paths.
   var use = options.use || stylusOptions.use || [];
   options.import = options.import || stylusOptions.import || [];
-  options.define = options.define || stylusOptions.define || [];
+  options.include = options.include || stylusOptions.include || [];
+  options.set = options.set || stylusOptions.set || {};
+  options.define = options.define || stylusOptions.define || {};
 
   if (options.sourceMap != null) {
     options.sourcemap = options.sourceMap;
@@ -57,10 +59,16 @@ module.exports = function(source) {
           throw new Error('Plugin should be a function');
         }
       });
+    } else if (key === 'set') {
+      for (var name in value) {
+        styl.set(name, value[name]);
+      }
     } else if (key === 'define') {
       for (var defineName in value) {
         styl.define(defineName, value[defineName]);
       }
+    } else if (key === 'include') {
+      needsArray(value).forEach(styl.include);
     } else if (key === 'import') {
       needsArray(value).forEach(function(stylusModule) {
         manualImports.push(stylusModule);
