@@ -149,7 +149,9 @@ module.exports = function(source) {
           done(err);
         } else {
           if (styl.sourcemap) {
-            styl.sourcemap.sourcesContent = [source];
+            styl.sourcemap.sourcesContent = styl.sourcemap.sources.map(function (file) {
+              return importPathCache.sources[path.resolve(file)]
+            });
           }
           done(null, css, styl.sourcemap);
         }
