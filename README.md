@@ -68,6 +68,19 @@ stylus: {
 }
 ```
 
+#### Using nib with stylus
+
+The easiest way of enabling `nib` is to import it in the stylus options:
+
+```js
+stylus: {
+  use: [require('nib')()],
+  import: ['~nib/lib/nib/index.styl']
+}
+```
+
+where `~` resolves to `node_modules/`
+
 ## Install
 
 `npm install stylus-loader --save-dev`
