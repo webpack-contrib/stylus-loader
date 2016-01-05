@@ -65,6 +65,8 @@ module.exports = function(source) {
       needsArray(value).forEach(function(stylusModule) {
         manualImports.push(stylusModule);
       });
+    } else if (key === 'url') {
+      styl.define('url', stylus.resolver(JSON.parse(value)))
     } else {
       styl.set(key, value);
     }
