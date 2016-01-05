@@ -67,10 +67,6 @@ module.exports = function(source) {
       });
     } else {
       styl.set(key, value);
-
-      if (key === 'resolve url' && value) {
-        styl.define('url', resolver());
-      }
     }
   });
 
