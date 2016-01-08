@@ -17,7 +17,7 @@ module.exports = function(source) {
   var done = this.async();
   var options = loaderUtils.parseQuery(this.query);
   options.filename = options.filename || this.resourcePath;
-  options.Evaluator = CachedPathEvaluator;
+  options.Evaluator = options.pathCache !== false && CachedPathEvaluator;
 
   var stylusOptions = this.options.stylus || {};
   // Instead of assigning to options, we run them manually later so their side effects apply earlier for
