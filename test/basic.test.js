@@ -159,4 +159,10 @@ describe("basic", function() {
 		css.should.match(/\.other/);
 		css.should.match(/a\.button/);
 	});
+  it("imports the right file based on context", function() {
+    var css = require("!raw-loader!..!./fixtures/context");
+    (typeof css).should.be.eql("string");
+    css.should.match(/\.a-color/);
+    css.should.match(/\.b-color/);
+  });
 });
