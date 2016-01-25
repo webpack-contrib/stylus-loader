@@ -9,7 +9,7 @@ var CachedPathEvaluator = require('./lib/evaluator');
 var PathCache = require('./lib/pathcache');
 var resolver = require('./lib/resolver');
 
-var globalImportsCache = {};
+var globalImportsCaches = {};
 
 module.exports = function(source) {
   var self = this;
@@ -19,7 +19,8 @@ module.exports = function(source) {
   options.filename = options.filename || this.resourcePath;
   options.Evaluator = CachedPathEvaluator;
 
-  var stylusOptions = this.options.stylus || {};
+  var configKey = options.config || 'stylus';
+  var stylusOptions = this.options[configKey] || {};
   // Instead of assigning to options, we run them manually later so their side effects apply earlier for
   // resolving paths.
   var use = options.use || stylusOptions.use || [];
@@ -81,7 +82,8 @@ module.exports = function(source) {
     if (typeof stylusOptions.importsCache === 'object') {
       importsCache = stylusOptions.importsCache;
     } else {
-      importsCache = globalImportsCache;
+      if(!globalImportsCaches[configKey]) globalImportsCaches[configKey] = {};
+      importsCache = globalImportsCaches[configKey];
     }
   }
 
