@@ -1,6 +1,6 @@
 {
   "name": "stylus-loader",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Stylus loader for webpack",
   "main": "index.js",
   "files": [
@@ -24,19 +24,19 @@
   },
   "dependencies": {
     "loader-utils": "^0.2.9",
-    "stylus": "^0.52.4",
+    "stylus": "^0.53.0",
     "when": "~3.6.x"
   },
   "devDependencies": {
     "benchmark": "^1.0.0",
-    "css-loader": "^0.14.0",
+    "css-loader": "^0.23.1",
     "mocha": "~2.1.0",
     "mocha-loader": "~0.7.1",
     "nib": "^1.0.4",
     "node-libs-browser": "^0.5.2",
     "raw-loader": "~0.5.1",
     "should": "~4.6.1",
-    "style-loader": "^0.12.2",
+    "style-loader": "^0.13.0",
     "testem": "^0.8.3",
     "webpack": "^1.9.8",
     "webpack-dev-server": "~1.7.0"
