@@ -102,7 +102,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 * Please see https://github.com/shama/stylus-loader/releases
-* 1.6.1 - Restore dependency on stylus
+* 2.0.0 - Remove dependency on stylus (@kossnocorps)
+* 1.6.1 - Remove version breaking change in 1.6.0
 * 1.6.0 - Remove dependency on stylus (@kossnocorps)
 * 1.3.0 - resolve use() calls (@mzgoddard), manual imports through path cache (@mzgoddard)
 * 1.2.0 - files in package.json (@SimenB), test running with testem (@mzgoddard), and some performance changes (@mzgoddard)
