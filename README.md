@@ -83,7 +83,11 @@ where `~` resolves to `node_modules/`
 
 ## Install
 
-`npm install stylus-loader --save-dev`
+`npm install stylus-loader stylus --save-dev`
+
+**Important**: in order to have ability use any `stylus` package version,
+it won't be installed automatically. So it's required to
+add it to `package.json` along with `stylus-loader`.
 
 ## Testing
 
