@@ -41,6 +41,9 @@
     "webpack": "^1.9.8",
     "webpack-dev-server": "~1.7.0"
   },
+  "peerDependencies": {
+    "stylus": ">=0.52.4"
+  },
   "keywords": [
     "webpack",
     "loader",
