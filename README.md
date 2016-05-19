@@ -102,6 +102,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 * Please see https://github.com/shama/stylus-loader/releases
+* 2.0.1 - Add peer dependency on stylus (@jchitel), fix PathCache for webpack 2 (@Unhelpful)
 * 2.0.0 - Remove dependency on stylus (@kossnocorps)
 * 1.6.1 - Remove version breaking change in 1.6.0
 * 1.6.0 - Remove dependency on stylus (@kossnocorps)
