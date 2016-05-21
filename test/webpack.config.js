@@ -26,6 +26,11 @@ if (process.env.WEBPACK_VERSION === '2.1.0-beta.7') {
         '.js',
         '.css',
         '.styl'
+      ],
+      modules: [
+        __dirname,
+        'node_modules',
+        path.join(__dirname, 'fixtures', 'web_modules')
       ]
     },
     stylus: {
