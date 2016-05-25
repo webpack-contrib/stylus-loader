@@ -36,7 +36,7 @@
     "raw-loader": "~0.5.1",
     "should": "~4.6.1",
     "style-loader": "^0.12.2",
-    "stylus": ">=0.52.4",
+    "stylus": ">=0.54.5",
     "testem": "^0.8.3",
     "webpack": "^1.9.8",
     "webpack-dev-server": "~1.7.0"
