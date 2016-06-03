@@ -43,7 +43,7 @@ Let's say `styles/index.styl` contains:
 ```
 
 With vanilla `stylus-loader`, the output would be ONLY the contents of
-`styles/color.styl`, repeat 3 times. Despite the `./color` imports in `a` and
+`styles/color.styl`, repeated 3 times. Despite the `./color` imports in `a` and
 `b` explicitly calling for `a/color.styl` and `b/color.styl` to be included,
 they won't be – merely by virtue of trying to import a relative path of the
 same name.
