@@ -70,7 +70,7 @@ module.exports = function(source) {
         styl.define(defineName, value[defineName]);
       }
     } else if (key === 'include') {
-      needsArray(value).forEach(styl.include);
+      needsArray(value).forEach(styl.include.bind(styl));
     } else if (key === 'import') {
       needsArray(value).forEach(function(stylusModule) {
         manualImports.push(stylusModule);
