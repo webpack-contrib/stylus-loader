@@ -1,7 +1,7 @@
 {
-  "name": "stylus-loader",
-  "version": "2.1.1",
-  "description": "Stylus loader for webpack",
+  "name": "stylus-relative-loader",
+  "version": "2.1.0",
+  "description": "Stylus loader for webpack, with fixed relative imports",
   "main": "index.js",
   "files": [
     "index.js",
@@ -13,14 +13,14 @@
     "test-one": "testem ci -l firefox",
     "test-build": "webpack --config test/webpack.config.js --output-path test/tmp --output-file bundle.js"
   },
-  "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
+  "author": "Brian Beck <brian.beck@formidable.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:shama/stylus-loader.git"
+    "url": "git@github.com:walmartlabs/stylus-relative-loader.git"
   },
   "bugs": {
-    "url": "https://github.com/shama/stylus-loader/issues"
+    "url": "https://github.com/walmartlabs/stylus-relative-loader/issues"
   },
   "dependencies": {
     "loader-utils": "^0.2.9",

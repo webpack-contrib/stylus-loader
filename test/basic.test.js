@@ -165,4 +165,11 @@ describe("basic", function() {
     css.should.match(/\.a-color/);
     css.should.match(/\.b-color/);
   });
+  it("imports the right file based on relative path", function() {
+    var css = require("!raw-loader!..!./fixtures/relative");
+    (typeof css).should.be.eql("string");
+    css.should.match(/\.a-color/);
+    css.should.match(/\.b-color/);
+    css.should.match(/\.c-color/);
+  });
 });
