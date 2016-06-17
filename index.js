@@ -16,6 +16,7 @@ module.exports = function(source) {
   this.cacheable && this.cacheable();
   var done = this.async();
   var options = loaderUtils.parseQuery(this.query);
+  options.dest = options.dest || '';
   options.filename = options.filename || this.resourcePath;
   options.Evaluator = CachedPathEvaluator;
 
@@ -122,7 +123,7 @@ module.exports = function(source) {
         .reduce(boundResolvers, path.dirname(options.filename), filename)
         .then(function(paths) { return carry.concat(paths); });
     }, [])
-    // Resolve dependencies of 
+    // Resolve dependencies of
     .then(function(paths) {
       paths.forEach(styl.import.bind(styl));
       paths.forEach(self.addDependency);
