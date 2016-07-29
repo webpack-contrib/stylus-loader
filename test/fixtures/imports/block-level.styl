@@ -1,0 +1,7 @@
+@require "outside-block.styl"
+
+.some-selector
+	@require "inside-block.styl"
+
+	.nested-again
+		@import "nested-inside-block.styl"
