@@ -114,7 +114,7 @@ module.exports = function(source) {
   };
 
   // Use plugins here so that resolve related side effects can be used while we resolve imports.
-  use.forEach(styl.use, styl);
+  (Array.isArray(use) ? use : [use]).forEach(styl.use, styl);
 
   when
     // Resolve manual imports like @import files.
