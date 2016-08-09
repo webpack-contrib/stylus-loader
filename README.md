@@ -102,6 +102,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 * Please see https://github.com/shama/stylus-loader/releases
+* 2.2.0 - Let stylus use option be just a function (@yuffiy), Track json calls as imports like use calls (@gnarf)
 * 2.1.2 - Fix support for stylus include config (@andrewburgess), Add block-level imports to listimports (@kenaniah)
 * 2.1.1 - Support Node 6 (@yyx990803), Test in webpack 1 and 2 (@phyllisstein)
 * 2.1.0 - Add support for stylus's include and set (@michaek)
