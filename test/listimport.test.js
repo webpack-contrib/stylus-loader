@@ -17,6 +17,11 @@ describe("listimport", function() {
     imports.should.be.eql(['neat-functions.js']);
   });
 
+  it("recognizes json()", function() {
+    var imports = require("!./helpers/stylus-import-loader.js!./fixtures/imports/json.styl");
+    imports.should.be.eql(['neat-json.json']);
+  });
+
   it("recognizes block-level imports", function() {
     var imports = require("!./helpers/stylus-import-loader.js!./fixtures/imports/block-level.styl");
     imports.should.be.eql(['outside-block.styl', 'inside-block.styl', 'nested-inside-block.styl'])
