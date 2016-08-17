@@ -164,5 +164,6 @@ describe("basic", function() {
     (typeof css).should.be.eql("string");
     css.should.match(/\.a-color/);
     css.should.match(/\.b-color/);
+    css.should.not.match(/\.c-color/);
   });
 });
