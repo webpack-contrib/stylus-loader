@@ -81,6 +81,16 @@ stylus: {
 
 where `~` resolves to `node_modules/`
 
+### Prefer webpack resolving
+
+`stylus-loader` currently prefers resolving paths with stylus's resovling utilities and then falling back to webpack when it can't find files. Use the `preferPathResolver` option with the value `'webpack'` to swap this. This has the benefit of using webpack's async resolving instead of stylus's sync resolving. If you have a lot of dependencies in your stylus files this'll let those dependencies be found in parallel.
+
+```js
+styus: {
+  preferPathResolver: 'webpack',
+}
+```
+
 ## Install
 
 `npm install stylus-loader stylus --save-dev`
