@@ -10,7 +10,6 @@ var PathCache = require('./lib/pathcache');
 var resolver = require('./lib/resolver');
 
 var globalImportsCaches = {};
-
 module.exports = function(source) {
   var self = this;
   this.cacheable && this.cacheable();
@@ -20,8 +19,14 @@ module.exports = function(source) {
   options.filename = options.filename || this.resourcePath;
   options.Evaluator = CachedPathEvaluator;
 
-  var configKey = options.config || 'stylus';
-  var stylusOptions = this.options[configKey] || {};
+  var configKey, stylusOptions;
+  if (this.stylus) {
+    configKey = options.config || 'default';
+    stylusOptions = this.stylus[configKey] || {};
+  } else {
+    configKey = options.config || 'stylus';
+    stylusOptions = this.options[configKey] || {};
+  }
   // Instead of assigning to options, we run them manually later so their side effects apply earlier for
   // resolving paths.
   var use = options.use || stylusOptions.use || [];
@@ -169,4 +174,44 @@ module.exports = function(source) {
       });
     })
     .catch(done);
+};
+
+var LoaderOptionsPlugin = require('webpack').LoaderOptionsPlugin;
+
+// Webpack 2 plugin for setting options that'll be available to stylus-loader.
+function OptionsPlugin(options) {
+  if (!LoaderOptionsPlugin) {
+    throw new Error(
+      'webpack.LoaderOptionPlugin is not available. A newer version of webpack is needed.'
+    );
+  }
+  var stylusOptions = {};
+  var test = options.test || /\.styl$/;
+  var include = options.include;
+  var exclude = options.exclude;
+
+  var loaderOptions = {
+    stylus: stylusOptions,
+  };
+  for (var key in options) {
+    if (['test', 'include', 'exclude'].indexOf(key) === -1) {
+      stylusOptions[key] = options[key];
+    }
+  }
+  if (test) {
+    loaderOptions.test = test;
+  }
+  if (include) {
+    loaderOptions.include = include;
+  }
+  if (exclude) {
+    loaderOptions.exclude = exclude;
+  }
+  this.plugin = new LoaderOptionsPlugin(loaderOptions);
+};
+
+module.exports.OptionsPlugin = OptionsPlugin;
+
+OptionsPlugin.prototype.apply = function(compiler) {
+  this.plugin.apply(compiler);
 };
