@@ -68,6 +68,24 @@ stylus: {
 }
 ```
 
+Multiple configs can be used by giving other configs different names and referring to the with the `config` query option.
+
+
+```js
+var stylus_plugin = require('stylus_plugin');
+module: {
+  loaders: [
+    {
+      test: /\.other\.styl$/,
+      loader: 'style-loader!css-loader!stylus-loader?config=stylusOther'
+    }
+  ]
+},
+stylusOther: {
+  use: [stylus_plugin()]
+}
+```
+
 #### Webpack 2
 
 Webpack 2 formalizes its options with a schema. Options can be provided to `stylus-loader` in the options field to `module.rules` or through LoaderOptionsPlugin or `stylus-loader`'s OptionsPlugin (a convenience wrapper around LoaderOptionsPlugin).
