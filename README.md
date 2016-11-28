@@ -68,6 +68,90 @@ stylus: {
 }
 ```
 
+Multiple configs can be used by giving other configs different names and referring to the with the `config` query option.
+
+
+```js
+var stylus_plugin = require('stylus_plugin');
+module: {
+  loaders: [
+    {
+      test: /\.other\.styl$/,
+      loader: 'style-loader!css-loader!stylus-loader?config=stylusOther'
+    }
+  ]
+},
+stylusOther: {
+  use: [stylus_plugin()]
+}
+```
+
+#### Webpack 2
+
+Webpack 2 formalizes its options with a schema. Options can be provided to `stylus-loader` in the options field to `module.rules` or through LoaderOptionsPlugin or `stylus-loader`'s OptionsPlugin (a convenience wrapper around LoaderOptionsPlugin).
+
+Config through module rules:
+
+```js
+module: {
+  rules: [
+    {
+      test: /\.styl$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        {
+          loader: 'stylus-loader',
+          options: {
+            use: [stylus_plugin()],
+          },
+        },
+      ],
+    }
+  ],
+},
+```
+
+Config through LoaderOptionsPlugin:
+
+```js
+module: {
+  rules: [
+    {
+      test: /\.styl$/,
+      loader: 'style-loader!css-loader!stylus-loader',
+    },
+  ],
+},
+plugins: [
+  new webpack.LoaderOptionsPlugin({
+    test: /\.styl$/,
+    stylus: {
+      // You can have multiple stylus configs with other names and use them
+      // with `stylus-loader?config=otherConfig`.
+      default: {
+        use: [stylus_plugin()],
+      },
+      otherConfig: {
+        use: [other_plugin()],
+      },
+    },
+  }),
+],
+```
+
+Config through `stylus-loader`'s OptionsPlugin (convenience wrapper for LoaderOptionsPlugin):
+
+```js
+plugins: [
+  new stylusLoader.OptionsPlugin({
+    default: {
+      use: [stylus_plugin()],
+    },
+  }),
+],
+```
+
 #### Using nib with stylus
 
 The easiest way of enabling `nib` is to import it in the stylus options:
