@@ -196,6 +196,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 * Please see https://github.com/shama/stylus-loader/releases
+* 2.4.0 - Add OptionsPlugin to help support webpack 2 (@mzgoddard)
 * 2.3.1 - Fix typo in README (@stevewillard)
 * 2.3.0 - Fix most use cases of relative path resolving (@mzgoddard), Add option to prefer a path resolver (webpack or stylus) (@mzgoddard)
 * 2.2.0 - Let stylus use option be just a function (@yuffiy), Track json calls as imports like use calls (@gnarf)
