@@ -23,6 +23,7 @@
     "url": "https://github.com/shama/stylus-loader/issues"
   },
   "dependencies": {
+    "stylus": ">=0.52.4",
     "loader-utils": "^0.2.9",
     "when": "~3.6.x"
   },
@@ -36,7 +37,6 @@
     "raw-loader": "~0.5.1",
     "should": "~4.6.1",
     "style-loader": "^0.12.2",
-    "stylus": ">=0.52.4",
     "testem": "^0.8.3",
     "webpack": "^1.9.8",
     "webpack-dev-server": "~1.7.0"
