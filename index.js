@@ -14,7 +14,7 @@ module.exports = function(source) {
   var self = this;
   this.cacheable && this.cacheable();
   var done = this.async();
-  var options = loaderUtils.parseQuery(this.query);
+  var options = loaderUtils.getOptions(this) || {};
   options.dest = options.dest || '';
   options.filename = options.filename || this.resourcePath;
   options.Evaluator = CachedPathEvaluator;
