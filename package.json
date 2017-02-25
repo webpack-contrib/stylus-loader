@@ -23,7 +23,7 @@
     "url": "https://github.com/shama/stylus-loader/issues"
   },
   "dependencies": {
-    "loader-utils": "^0.2.9",
+    "loader-utils": "^1.0.2",
     "when": "~3.6.x"
   },
   "devDependencies": {
