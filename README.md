@@ -200,6 +200,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 * Please see https://github.com/shama/stylus-loader/releases
+* 3.0.1 - Update install instructions mentioning how to get a version supporting webpack 1 (@mzgoddard)
 * 3.0.0 - Fix loader-utils deprecation warning (@ryani33), Drop webpack 1 and Node<4 support (@mzgoddard)
 * 2.5.1 - Fix paths mutation in options (@vio)
 * 2.5.0 - Define paths in global stylusOptions, in addtion to query params (@JounQin)
