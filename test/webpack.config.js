@@ -16,42 +16,29 @@ function includePlugin() {
   };
 }
 
-if (process.env.WEBPACK_VERSION === '2.1.0-beta.23') {
-  module.exports = {
-    context: __dirname,
-    entry: 'mocha-loader!./all.js',
-    resolve: {
-      extensions: [
-        '.js',
-        '.css',
-        '.styl'
-      ],
-      modules: [
-        __dirname,
-        'node_modules',
-        path.join(__dirname, 'fixtures', 'web_modules')
-      ]
-    },
-    plugins: [
-      new (require('..').OptionsPlugin)({
-        default: {
-          use: [
-            plugin(),
-            includePlugin(),
-          ],
-        },
-      }),
+module.exports = {
+  context: __dirname,
+  entry: 'mocha-loader!./all.js',
+  resolve: {
+    extensions: [
+      '.js',
+      '.css',
+      '.styl'
     ],
-  };
-} else {
-  module.exports = {
-    context: __dirname,
-    entry: "mocha-loader!./all.js",
-    resolve: {
-      extensions: ["", ".js", ".css", ".styl"]
-    },
-    stylus: {
-      use: [plugin(), includePlugin()]
-    }
-  };
-}
+    modules: [
+      __dirname,
+      'node_modules',
+      path.join(__dirname, 'fixtures', 'web_modules')
+    ]
+  },
+  plugins: [
+    new (require('..').OptionsPlugin)({
+      default: {
+        use: [
+          plugin(),
+          includePlugin(),
+        ],
+      },
+    }),
+  ],
+};
