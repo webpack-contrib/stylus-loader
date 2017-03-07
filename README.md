@@ -4,6 +4,18 @@ A [stylus](http://learnboost.github.io/stylus/) loader for [webpack](https://git
 [![build status](https://secure.travis-ci.org/shama/stylus-loader.svg)](https://travis-ci.org/shama/stylus-loader)
 [![NPM version](https://badge.fury.io/js/stylus-loader.svg)](https://badge.fury.io/js/stylus-loader)
 
+## Install
+
+`npm install stylus-loader stylus --save-dev`
+
+**Important**: in order to have ability use any `stylus` package version,
+it won't be installed automatically. So it's required to
+add it to `package.json` along with `stylus-loader`.
+
+The latest version supporting webpack 1 can be installed with:
+
+`npm install stylus-loader@webpack1 stylus --save-dev`
+
 ## Usage
 
 ```js
@@ -174,14 +186,6 @@ stylus: {
   preferPathResolver: 'webpack',
 }
 ```
-
-## Install
-
-`npm install stylus-loader stylus --save-dev`
-
-**Important**: in order to have ability use any `stylus` package version,
-it won't be installed automatically. So it's required to
-add it to `package.json` along with `stylus-loader`.
 
 ## Testing
 
