@@ -44,6 +44,10 @@ module.exports = function(source) {
   else if (this.sourceMap) {
     options.sourcemap = { comment: false };
   }
+  
+  if (!options.hasOwnProperty('dest')){
+    options.dest = '';
+  }
 
   var styl = stylus(source, options);
   var paths = [path.dirname(options.filename)];
