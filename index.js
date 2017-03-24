@@ -35,6 +35,7 @@ module.exports = function(source) {
   options.include = options.include || stylusOptions.include || [];
   options.set = options.set || stylusOptions.set || {};
   options.define = options.define || stylusOptions.define || {};
+  options.rawDefine = options.rawDefine || stylusOptions.rawDefine || {};
   options.paths = options.paths || stylusOptions.paths;
 
   if (options.sourceMap != null) {
@@ -75,6 +76,10 @@ module.exports = function(source) {
     } else if (key === 'define') {
       for (var defineName in value) {
         styl.define(defineName, value[defineName]);
+      }
+    } else if (key === 'rawDefine') {
+      for (var defineName in value) {
+        styl.define(defineName, value[defineName], true);
       }
     } else if (key === 'include') {
       needsArray(value).forEach(styl.include.bind(styl));
