@@ -164,6 +164,19 @@ plugins: [
 ],
 ```
 
+Passing in multidimensional objects
+
+```js
+plugins: [
+  new stylusLoader.OptionsPlugin({
+    default: {
+    rawDefine: { config: { go: 'deeper' } }
+
+    },
+  }),
+],
+```
+
 #### Using nib with stylus
 
 The easiest way of enabling `nib` is to import it in the stylus options:
