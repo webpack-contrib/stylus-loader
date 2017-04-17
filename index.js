@@ -18,7 +18,7 @@ module.exports = function(source) {
   var options = cloneDeep(loaderUtils.getOptions(this) || {});
   options.dest = options.dest || '';
   options.filename = options.filename || this.resourcePath;
-  options.Evaluator = CachedPathEvaluator;
+  options.Evaluator = options.pathCache !== false && CachedPathEvaluator;
 
   var configKey, stylusOptions;
   if (this.stylus) {
