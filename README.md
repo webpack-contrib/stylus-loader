@@ -229,4 +229,4 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## License
 Copyright (c) 2018 Kyle Robinson Young  
-Licensed under the MIT license.
+Licensed under the [MIT license](https://github.com/shama/stylus-loader/blob/master/LICENSE).
