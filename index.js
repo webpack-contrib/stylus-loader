@@ -16,8 +16,8 @@ module.exports = function(source) {
   this.cacheable && this.cacheable();
   var done = this.async();
   var options = cloneDeep(loaderUtils.getOptions(this) || {});
-  options.dest = options.dest || '';
   options.filename = options.filename || this.resourcePath;
+  options.dest = options.dest || path.dirname(options.filename);
   options.Evaluator = CachedPathEvaluator;
 
   var configKey, stylusOptions;
