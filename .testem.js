@@ -7,7 +7,7 @@ module.exports = {
   framework: 'mocha',
   src_files: ['test/**/*', '*.js', 'lib/*.js'],
   on_start: {
-    command: webpackBin + ' -d' + webpackConfig,
+    command: webpackBin + ' -d --mode=development --devtool module-source-map --output bundle.js' + webpackConfig,
     wait_for_text: '[emitted]'
   },
   routes: {

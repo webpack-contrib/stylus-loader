@@ -11,7 +11,7 @@
     "test": "testem ci",
     "test-dev": "testem -l firefox",
     "test-one": "testem ci -l firefox",
-    "test-build": "webpack --config test/webpack.config.js --output-path=test/tmp --output-filename=bundle.js"
+    "test-build": "webpack --mode development --devtool module-source-map --config test/webpack.config.js --output-path=test/tmp --output-filename=bundle.js"
   },
   "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
   "license": "MIT",
@@ -29,18 +29,19 @@
   },
   "devDependencies": {
     "benchmark": "^1.0.0",
-    "css-loader": "^0.14.0",
+    "css-loader": "^1.0.0",
     "mocha": "~2.1.0",
     "mocha-loader": "^1.0.0",
     "nib": "^1.0.4",
     "node-libs-browser": "^0.5.2",
     "raw-loader": "~0.5.1",
-    "should": "~4.6.1",
+    "should": "^13.2.3",
     "style-loader": "^0.12.2",
     "stylus": ">=0.52.4",
     "testem": "^0.8.3",
-    "webpack": "^2.2.0",
-    "webpack-dev-server": "^2.0.0"
+    "webpack": "^4.0.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
   },
   "peerDependencies": {
     "stylus": ">=0.52.4"
