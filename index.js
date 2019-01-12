@@ -26,7 +26,7 @@ module.exports = function(source) {
     stylusOptions = this.stylus[configKey] || {};
   } else if (this.options) {
     configKey = options.config || 'stylus';
-    stylusOptions = this.options[configKey] || {};
+    stylusOptions = this.options && this.options[configKey] || {};
   } else {
     stylusOptions = {};
   }
