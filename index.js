@@ -4,7 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var when = require('when');
 var whenNodefn = require('when/node/function');
-var cloneDeep = require('lodash.clonedeep');
+var cloneDeep = require('lodash/cloneDeep');
 
 var CachedPathEvaluator = require('./lib/evaluator');
 var PathCache = require('./lib/pathcache');
