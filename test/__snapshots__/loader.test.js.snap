@@ -1,0 +1,308 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`loader correctly compiles mixin calls inside imported files: css 1`] = `
+"body {
+  color: #639;
+}
+.rule {
+  color: #639;
+}
+main {
+  color: #639;
+}
+"
+`;
+
+exports[`loader correctly compiles mixin calls inside imported files: errors 1`] = `Array []`;
+
+exports[`loader correctly compiles mixin calls inside imported files: warnings 1`] = `Array []`;
+
+exports[`loader imports files in a directory included by a plugin: css 1`] = `
+".in-include {
+  content: 'plugin';
+}
+"
+`;
+
+exports[`loader imports files in a directory included by a plugin: errors 1`] = `Array []`;
+
+exports[`loader imports files in a directory included by a plugin: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and deps: css 1`] = `
+".imported-stylus {
+  border: 5px;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument and deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and deps: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and paths deps: css 1`] = `
+".other {
+  font-family: serif;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument and paths deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and paths deps: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and webpack deps: css 1`] = `
+".other {
+  font-size: 2em;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument and webpack deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and webpack deps: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument stylus paths style: css 1`] = `
+".other {
+  font-family: serif;
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument stylus paths style: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument stylus paths style: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument webpack style: css 1`] = `
+".not-real-nib {
+  color: #000;
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument webpack style: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument webpack style: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument: css 1`] = `
+"body {
+  background: url(\\"img.png\\");
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument: warnings 1`] = `Array []`;
+
+exports[`loader imports the right file based on context: css 1`] = `
+".a-color {
+  color: #aaa;
+}
+.b-color {
+  color: #bbb;
+}
+"
+`;
+
+exports[`loader imports the right file based on context: errors 1`] = `Array []`;
+
+exports[`loader imports the right file based on context: warnings 1`] = `Array []`;
+
+exports[`loader in a nested import load module from node_modules: css 1`] = `
+".not-real-nib {
+  color: #000;
+}
+"
+`;
+
+exports[`loader in a nested import load module from node_modules: errors 1`] = `Array []`;
+
+exports[`loader in a nested import load module from node_modules: warnings 1`] = `Array []`;
+
+exports[`loader in a nested import load module from paths: css 1`] = `
+".other {
+  font-family: serif;
+}
+"
+`;
+
+exports[`loader in a nested import load module from paths: errors 1`] = `Array []`;
+
+exports[`loader in a nested import load module from paths: warnings 1`] = `Array []`;
+
+exports[`loader in a nested import load module from webpack: css 1`] = `
+".other {
+  font-size: 2em;
+}
+"
+`;
+
+exports[`loader in a nested import load module from webpack: errors 1`] = `Array []`;
+
+exports[`loader in a nested import load module from webpack: warnings 1`] = `Array []`;
+
+exports[`loader in a nested import resolve css with webpack but not import: css 1`] = `
+"@import \\"css.css\\";
+"
+`;
+
+exports[`loader in a nested import resolve css with webpack but not import: errors 1`] = `Array []`;
+
+exports[`loader in a nested import resolve css with webpack but not import: warnings 1`] = `Array []`;
+
+exports[`loader resolve with webpack if stylus can't find it: css 1`] = `
+".other {
+  font-size: 2em;
+}
+"
+`;
+
+exports[`loader resolve with webpack if stylus can't find it: errors 1`] = `Array []`;
+
+exports[`loader resolve with webpack if stylus can't find it: warnings 1`] = `Array []`;
+
+exports[`loader resolves css with webpack but does not import it: css 1`] = `
+"@import \\"css.css\\";
+"
+`;
+
+exports[`loader resolves css with webpack but does not import it: errors 1`] = `Array []`;
+
+exports[`loader resolves css with webpack but does not import it: warnings 1`] = `Array []`;
+
+exports[`loader should allow stylus plugins to be configured in webpack.config.js: css 1`] = `
+"body {
+  width: 100%;
+}
+"
+`;
+
+exports[`loader should allow stylus plugins to be configured in webpack.config.js: errors 1`] = `Array []`;
+
+exports[`loader should allow stylus plugins to be configured in webpack.config.js: warnings 1`] = `Array []`;
+
+exports[`loader should compile an @import URL through the CSS loader: css 1`] = `
+"@import url(\\"http://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic\\");
+"
+`;
+
+exports[`loader should compile an @import URL through the CSS loader: errors 1`] = `Array []`;
+
+exports[`loader should compile an @import URL through the CSS loader: warnings 1`] = `Array []`;
+
+exports[`loader should import stylus: css 1`] = `
+".imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader should import stylus: errors 1`] = `Array []`;
+
+exports[`loader should import stylus: warnings 1`] = `Array []`;
+
+exports[`loader should work: css 1`] = `
+"body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader should work: errors 1`] = `Array []`;
+
+exports[`loader should work: warnings 1`] = `Array []`;
+
+exports[`loader shouldn't import css: css 1`] = `
+"@import \\"css.css\\";
+"
+`;
+
+exports[`loader shouldn't import css: errors 1`] = `Array []`;
+
+exports[`loader shouldn't import css: warnings 1`] = `Array []`;
+
+exports[`loader shouldn't process urls: css 1`] = `
+"body {
+  background: url(\\"img.png\\");
+}
+"
+`;
+
+exports[`loader shouldn't process urls: errors 1`] = `Array []`;
+
+exports[`loader shouldn't process urls: warnings 1`] = `Array []`;
+
+exports[`loader stylus can find modules in node_modules: css 1`] = `
+".not-real-nib {
+  color: #000;
+}
+"
+`;
+
+exports[`loader stylus can find modules in node_modules: errors 1`] = `Array []`;
+
+exports[`loader stylus can find modules in node_modules: warnings 1`] = `Array []`;
+
+exports[`loader with option, should resolve urls relatively: css 1`] = `
+".img {
+  content: url(\\"img.png\\");
+  background: url(\\"deep/deep-img.png\\");
+  background: url(\\"!!deep/deep-img.png\\");
+  background: url(\\"file!deep/deep-img.png\\");
+  background: url(\\"file?foo!deep/deep-img.png\\");
+}
+"
+`;
+
+exports[`loader with option, should resolve urls relatively: errors 1`] = `Array []`;
+
+exports[`loader with option, should resolve urls relatively: warnings 1`] = `Array []`;
+
+exports[`loader with paths, find deps and load like normal stylus: css 1`] = `
+".other {
+  font-family: serif;
+}
+"
+`;
+
+exports[`loader with paths, find deps and load like normal stylus: errors 1`] = `Array []`;
+
+exports[`loader with paths, find deps and load like normal stylus: warnings 1`] = `Array []`;

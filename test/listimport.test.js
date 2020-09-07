@@ -1,30 +1,71 @@
-var should = require("should");
+import path from 'path';
 
-describe("listimport", function() {
+import {
+  compile,
+  getCodeFromBundle,
+  getCompiler,
+  getErrors,
+  getWarnings,
+} from './helpers';
 
-  it("recognizes @import", function() {
-    var imports = require("!./helpers/stylus-import-loader.js!./fixtures/imports/import.styl");
-    imports.should.be.eql(['local-file.styl']);
-  });
+describe('listimport', () => {
+  const cases = [
+    {
+      name: 'recognizes @import',
+      asset: './imports/import.styl',
+    },
+    {
+      name: 'recognizes @require',
+      asset: './imports/require.styl',
+    },
+    {
+      name: 'recognizes use()',
+      asset: './imports/use.styl',
+    },
+    {
+      name: 'recognizes json()',
+      asset: './imports/json.styl',
+    },
+    {
+      name: 'recognizes block-level imports',
+      asset: './imports/block-level.styl',
+    },
+  ];
 
-  it("recognizes @require", function() {
-    var imports = require("!./helpers/stylus-import-loader.js!./fixtures/imports/require.styl");
-    imports.should.be.eql(['local-file.styl']);
-  });
+  for (const item of cases) {
+    it(item.name, async () => {
+      const testId = item.asset;
+      const compiler = getCompiler(
+        testId,
+        {},
+        {
+          module: {
+            rules: [
+              {
+                test: /\.styl$/i,
+                rules: [
+                  {
+                    loader: require.resolve('./helpers/testLoader'),
+                  },
+                  {
+                    loader: path.resolve(
+                      __dirname,
+                      './helpers/stylus-import-loader'
+                    ),
+                    options: {},
+                  },
+                ],
+              },
+            ],
+          },
+        }
+      );
+      const stats = await compile(compiler);
+      const codeFromBundle = getCodeFromBundle(stats, compiler);
 
-  it("recognizes use()", function() {
-    var imports = require("!./helpers/stylus-import-loader.js!./fixtures/imports/use.styl");
-    imports.should.be.eql(['neat-functions.js']);
-  });
-
-  it("recognizes json()", function() {
-    var imports = require("!./helpers/stylus-import-loader.js!./fixtures/imports/json.styl");
-    imports.should.be.eql(['neat-json.json']);
-  });
-
-  it("recognizes block-level imports", function() {
-    var imports = require("!./helpers/stylus-import-loader.js!./fixtures/imports/block-level.styl");
-    imports.should.be.eql(['outside-block.styl', 'inside-block.styl', 'nested-inside-block.styl'])
-  })
-
+      expect(codeFromBundle.css).toMatchSnapshot('css');
+      expect(getWarnings(stats)).toMatchSnapshot('warnings');
+      expect(getErrors(stats)).toMatchSnapshot('errors');
+    });
+  }
 });
