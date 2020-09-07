@@ -38,7 +38,8 @@
     "dist"
   ],
   "peerDependencies": {
-    "stylus": ">=0.52.4"
+    "stylus": ">=0.52.4",
+    "webpack": "^4.0.0 || ^5.0.0"
   },
   "dependencies": {
     "loader-utils": "^1.0.2",
