@@ -27,7 +27,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*jshint laxcomma:true */
+/* eslint-disable */
 var Stylus = require('stylus')
     , Compiler = Stylus.Compiler
     , nodes = Stylus.nodes
@@ -110,3 +110,4 @@ module.exports = function(options) {
   url.raw = true;
   return url;
 };
+/* eslint-enable */

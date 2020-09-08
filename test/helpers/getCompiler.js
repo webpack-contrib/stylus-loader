@@ -3,8 +3,6 @@ import path from 'path';
 import webpack from 'webpack';
 import { createFsFromVolume, Volume } from 'memfs';
 
-import { OptionsPlugin } from '../../src';
-
 export default (fixture, loaderOptions = {}, config = {}) => {
   const fullConfig = {
     mode: 'development',
@@ -33,19 +31,16 @@ export default (fixture, loaderOptions = {}, config = {}) => {
         },
       ],
     },
-    plugins: [
-      new OptionsPlugin({
-        default: {
-          use: [plugin(), includePlugin()],
-        },
-      }),
-    ],
+    plugins: [],
     resolve: {
       extensions: ['.js', '.css', '.styl'],
       modules: [
         'node_modules',
         path.join(__dirname, '../', 'fixtures', 'web_modules'),
       ],
+      alias: {
+        '~in-web-modules': path.join(__dirname, '../', 'fixtures', 'web_modules'),
+      },
     },
     ...config,
   };
@@ -62,17 +57,3 @@ export default (fixture, loaderOptions = {}, config = {}) => {
 
   return compiler;
 };
-
-function plugin() {
-  return function (style) {
-    style.define('add', function (a, b) {
-      return a.operate('+', b);
-    });
-  };
-}
-
-function includePlugin() {
-  return function (style) {
-    style.include(path.join(__dirname, '../', 'fixtures', 'include'));
-  };
-}

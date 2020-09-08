@@ -1,220 +1,151 @@
-var loaderUtils = require('loader-utils');
-var stylus = require('stylus');
-var path = require('path');
-var fs = require('fs');
-var when = require('when');
-var whenNodefn = require('when/node/function');
-var cloneDeep = require('lodash.clonedeep');
+import { promises as fs } from 'fs';
 
-var CachedPathEvaluator = require('./lib/evaluator');
-var PathCache = require('./lib/pathcache');
-var resolver = require('./lib/resolver');
+import stylus from 'stylus';
 
-var globalImportsCaches = {};
+import createEvaluator from './evaluator';
+import { getOptions, isObject, castArray } from './utils';
+import resolver from './lib/resolver';
 
-export default async function loader(source) {
-  var self = this;
-  this.cacheable && this.cacheable();
-  var done = this.async();
-  var options = cloneDeep(loaderUtils.getOptions(this) || {});
-  options.dest = options.dest || '';
+export default async function stylusLoader(source) {
+  const callback = this.async();
+
+  // get options passed to loader
+  const loaderOptions = getOptions(this);
+
+  // clone loader options to avoid modifying this.query
+  const options = loaderOptions ? { ...loaderOptions } : {};
+
+  // access Webpack config
+  const webpackConfig =
+    this._compilation && isObject(this._compilation.options)
+      ? this._compilation.options
+      : {};
+
+  // stylus works better with an absolute filename
   options.filename = options.filename || this.resourcePath;
-  options.Evaluator = CachedPathEvaluator;
 
-  var configKey, stylusOptions;
-  if (this.stylus) {
-    configKey = options.config || 'default';
-    stylusOptions = this.stylus[configKey] || {};
-  } else if (this.options) {
-    configKey = options.config || 'stylus';
-    stylusOptions = this.options[configKey] || {};
-  } else {
-    stylusOptions = {};
-  }
-  // Instead of assigning to options, we run them manually later so their side effects apply earlier for
-  // resolving paths.
-  var use = options.use || stylusOptions.use || [];
-  options.import = options.import || stylusOptions.import || [];
-  options.include = options.include || stylusOptions.include || [];
-  options.set = options.set || stylusOptions.set || {};
-  options.define = options.define || stylusOptions.define || {};
-  options.paths = options.paths || stylusOptions.paths;
-
+  // get sourcemap option in the order: options.sourceMap > options.sourcemap > this.sourceMap
   if (options.sourceMap != null) {
     options.sourcemap = options.sourceMap;
-    delete options.sourceMap;
-  }
-  else if (this.sourceMap) {
-    options.sourcemap = { comment: false };
-  }
-
-  var styl = stylus(source, options);
-  var paths = [path.dirname(options.filename)];
-
-  function needsArray(value) {
-    return (Array.isArray(value)) ? value : [value];
+  } else if (
+    options.sourcemap == null &&
+    this.sourceMap &&
+    (!webpackConfig.devtool || webpackConfig.devtool.indexOf('eval') !== 0)
+  ) {
+    options.sourcemap = {};
   }
 
-  if (options.paths && !Array.isArray(options.paths)) {
-    paths = paths.concat(options.paths);
-    options.paths = [options.paths];
-  }
-
-  var manualImports = [];
-  Object.keys(options).forEach(function(key) {
-    var value = options[key];
-    if (key === 'use') {
-      needsArray(value).forEach(function(plugin) {
-        if (typeof plugin === 'function') {
-          styl.use(plugin);
-        } else {
-          throw new Error('Plugin should be a function');
-        }
-      });
-    } else if (key === 'set') {
-      for (var name in value) {
-        styl.set(name, value[name]);
-      }
-    } else if (key === 'define') {
-      for (var defineName in value) {
-        styl.define(defineName, value[defineName]);
-      }
-    } else if (key === 'include') {
-      needsArray(value).forEach(styl.include.bind(styl));
-    } else if (key === 'import') {
-      needsArray(value).forEach(function(stylusModule) {
-        manualImports.push(stylusModule);
-      });
-    } else {
-      styl.set(key, value);
-
-      if (key === 'resolve url' && value) {
-        styl.define('url', resolver());
-      }
+  // set stylus sourcemap defaults
+  if (options.sourcemap) {
+    if (!isObject(options.sourcemap)) {
+      options.sourcemap = {};
     }
-  });
 
-  var shouldCacheImports = stylusOptions.importsCache !== false;
-
-  var importsCache;
-  if (stylusOptions.importsCache !== false) {
-    if (typeof stylusOptions.importsCache === 'object') {
-      importsCache = stylusOptions.importsCache;
-    } else {
-      if(!globalImportsCaches[configKey]) globalImportsCaches[configKey] = {};
-      importsCache = globalImportsCaches[configKey];
-    }
-  }
-
-  // Use input file system's readFile if available. The normal webpack input
-  // file system is cached with entries purged when they are detected to be
-  // changed on disk by the watcher.
-  var readFile;
-  try {
-    var inputFileSystem = this._compiler.inputFileSystem;
-    readFile = inputFileSystem.readFile.bind(inputFileSystem);
-  } catch (error) {
-    readFile = fs.readFile;
-  }
-
-  var boundResolvers = PathCache.resolvers(options, this.resolve);
-  var pathCacheHelpers = {
-    resolvers: boundResolvers,
-    readFile: readFile,
-  };
-
-  // Use plugins here so that resolve related side effects can be used while we resolve imports.
-  (Array.isArray(use) ? use : [use]).forEach(styl.use, styl);
-
-  when
-  // Resolve manual imports like @import files.
-    .reduce(manualImports, function resolveManualImports(carry, filename) {
-      return PathCache.resolvers
-        .reduce(boundResolvers, path.dirname(options.filename), filename)
-        .then(function(paths) { return carry.concat(paths); });
-    }, [])
-    // Resolve dependencies of
-    .then(function(paths) {
-      paths.forEach(styl.import.bind(styl));
-      paths.forEach(self.addDependency);
-
-      var readFile = whenNodefn.lift(pathCacheHelpers.readFile);
-      return when.reduce(paths, function(cache, filepath) {
-        return readFile(filepath)
-          .then(function(source) {
-            return PathCache.createFromFile(
-              pathCacheHelpers, cache, source.toString(), filepath
-            );
-          });
-      }, {
-        contexts: {},
-        sources: {},
-        imports: importsCache,
-      });
-    })
-    .then(function(cache) {
-      return PathCache
-        .createFromFile(pathCacheHelpers, cache, source, options.filename);
-    })
-    .then(function(importPathCache) {
-      // CachedPathEvaluator will use this PathCache to find its dependencies.
-      options.cache = importPathCache;
-      importPathCache.allDeps().forEach(function(f) {
-        self.addDependency(path.normalize(f));
-      });
-
-      // var paths = importPathCache.origins;
-
-      styl.render(function(err, css) {
-        if (err) {
-          done(err);
-        } else {
-          if (styl.sourcemap) {
-            styl.sourcemap.sourcesContent = styl.sourcemap.sources.map(function (file) {
-              return importPathCache.sources[path.resolve(file)]
-            });
-          }
-          done(null, css, styl.sourcemap);
-        }
-      });
-    })
-    .catch(done);
-};
-
-var LoaderOptionsPlugin = require('webpack').LoaderOptionsPlugin;
-
-// Webpack 2 plugin for setting options that'll be available to stylus-loader.
-export function OptionsPlugin(options) {
-  if (!LoaderOptionsPlugin) {
-    throw new Error(
-      'webpack.LoaderOptionPlugin is not available. A newer version of webpack is needed.'
+    options.sourcemap = Object.assign(
+      {
+        // enable loading source map content by default
+        content: true,
+        // source map comment is added by css-loader
+        comment: false,
+        // set sourceRoot for better handling of paths by css-loader
+        sourceRoot: this.rootContext,
+      },
+      options.sourcemap
     );
   }
-  var stylusOptions = {};
-  var test = options.test || /\.styl$/;
-  var include = options.include;
-  var exclude = options.exclude;
 
-  var loaderOptions = {
-    stylus: stylusOptions,
-  };
-  for (var key in options) {
-    if (['test', 'include', 'exclude'].indexOf(key) === -1) {
-      stylusOptions[key] = options[key];
+  // create stylus renderer instance
+  const styl = stylus(source, options);
+
+  // import of plugins passed as strings
+  if (options.use.length) {
+    for (const [i, plugin] of Object.entries(options.use)) {
+      if (typeof plugin === 'string') {
+        try {
+          options.use[i] = require(plugin)();
+        } catch (err) {
+          options.use.splice(i, 1);
+          err.message = `Stylus plugin '${plugin}' failed to load. Are you sure it's installed?`;
+          this.emitWarning(err);
+        }
+      }
     }
   }
-  if (test) {
-    loaderOptions.test = test;
-  }
-  if (include) {
-    loaderOptions.include = include;
-  }
-  if (exclude) {
-    loaderOptions.exclude = exclude;
-  }
-  this.plugin = new LoaderOptionsPlugin(loaderOptions);
-};
 
-OptionsPlugin.prototype.apply = function(compiler) {
-  this.plugin.apply(compiler);
-};
+  // add custom include paths
+  if ('include' in options) {
+    castArray(options.include).forEach(styl.include, styl);
+  }
+
+  // add custom stylus file imports
+  if ('import' in options) {
+    castArray(options.import).forEach(styl.import, styl);
+  }
+
+  // enable resolver for relative urls
+  if (options.resolveUrl) {
+    if (!isObject(options.resolveUrl)) {
+      options.resolveUrl = {};
+    }
+
+    styl.define('url', resolver(options));
+  }
+
+  // define global variables/functions
+  if (isObject(options.define)) {
+    const raw = options.defineRaw == null ? true : options.defineRaw;
+
+    for (const entry of Object.entries(options.define)) {
+      styl.define(...entry, raw);
+    }
+  }
+
+  // include regular CSS on @import
+  if (options.includeCSS) {
+    styl.set('include css', true);
+  }
+
+  styl.set('Evaluator', await createEvaluator(source, options, this));
+
+  // keep track of imported files (used by Stylus CLI watch mode)
+  options._imports = [];
+
+  // trigger callback before compiling
+  if (typeof options.beforeCompile === 'function') {
+    options.beforeCompile(styl, this, options);
+  }
+
+  // let stylus do its magic
+  styl.render(async (err, css) => {
+    if (err) {
+      this.addDependency(err.filename);
+      return callback(err);
+    }
+
+    // add all source files as dependencies
+    if (options._imports.length) {
+      for (const importData of options._imports) {
+        this.addDependency(importData.path);
+      }
+    }
+
+    if (styl.sourcemap) {
+      // css-loader will set the source map file name
+      delete styl.sourcemap.file;
+
+      // load source file contents into source map
+      if (options.sourcemap && options.sourcemap.content) {
+        try {
+          styl.sourcemap.sourcesContent = await Promise.all(
+            styl.sourcemap.sources.map((file) => fs.readFile(file, 'utf-8'))
+          );
+        } catch (e) {
+          return callback(e);
+        }
+      }
+    }
+
+    // profit
+    callback(null, css, styl.sourcemap);
+  });
+}

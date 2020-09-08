@@ -17,17 +17,6 @@ exports[`loader correctly compiles mixin calls inside imported files: errors 1`]
 
 exports[`loader correctly compiles mixin calls inside imported files: warnings 1`] = `Array []`;
 
-exports[`loader imports files in a directory included by a plugin: css 1`] = `
-".in-include {
-  content: 'plugin';
-}
-"
-`;
-
-exports[`loader imports files in a directory included by a plugin: errors 1`] = `Array []`;
-
-exports[`loader imports files in a directory included by a plugin: warnings 1`] = `Array []`;
-
 exports[`loader imports files listed in option argument and deps: css 1`] = `
 ".imported-stylus {
   border: 5px;
