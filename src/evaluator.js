@@ -7,6 +7,7 @@ import Parser from 'stylus/lib/parser';
 import DepsResolver from 'stylus/lib/visitor/deps-resolver';
 import nodes from 'stylus/lib/nodes';
 import utils from 'stylus/lib/utils';
+
 import { readFile } from './utils';
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
@@ -71,7 +72,8 @@ async function getDependencies(
   const deps = new Map();
 
   class ImportVisitor extends DepsResolver {
-    async visitImport(imported) {
+    // eslint-disable-next-line class-methods-use-this
+    visitImport(imported) {
       const importedPath = imported.path.first.string;
 
       if (!deps.has(importedPath)) {
@@ -89,7 +91,9 @@ async function getDependencies(
   const res = new Map();
 
   await Promise.all(
-    Array.from(deps.entries()).map(async ([importedPath, resolved]) => {
+    Array.from(deps.entries()).map(async (result) => {
+      let [importedPath, resolved] = result;
+
       try {
         resolved = await resolved;
       } catch (err) {
@@ -125,25 +129,23 @@ async function getDependencies(
       }
 
       // Recursively process resolved files as well to get nested deps
-      for (const resolved of found) {
-        if (!seen.has(resolved)) {
-          // await asset.addIncludedFile({ filePath: resolved });
-
-          let code;
+      for await (const detected of found) {
+        if (!seen.has(detected)) {
+          let source;
 
           try {
-            code = (await readFile(loaderContext.fs, resolved)).toString();
+            source = (await readFile(loaderContext.fs, detected)).toString();
           } catch (error) {
             loaderContext.emitError(error);
           }
 
-          for (const [path, resolvedPath] of await getDependencies(
-            code,
+          for (const [importPath, resolvedPath] of await getDependencies(
+            source,
             loaderContext,
             resolveFilename,
             options
           )) {
-            res.set(path, resolvedPath);
+            res.set(importPath, resolvedPath);
           }
         }
       }
@@ -164,8 +166,8 @@ export default async function createEvaluator(code, options, loaderContext) {
 
   const possibleImports = (
     await Promise.all(
-      [code, optionsImports].map((code) =>
-        getDependencies(code, loaderContext, resolveFilename, options)
+      [code, optionsImports].map((content) =>
+        getDependencies(content, loaderContext, resolveFilename, options)
       )
     )
   ).reduce((acc, map) => {
@@ -178,10 +180,10 @@ export default async function createEvaluator(code, options, loaderContext) {
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       const node = this.visit(imported.path).first;
-      const path = node.string;
+      const nodePath = node.string;
 
-      if (node.name !== 'url' && path && !URL_RE.test(path)) {
-        const resolved = deps.get(path);
+      if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
+        const resolved = deps.get(nodePath);
 
         if (resolved) {
           node.string = resolved;

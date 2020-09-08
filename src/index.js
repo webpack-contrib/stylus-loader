@@ -62,6 +62,7 @@ export default async function stylusLoader(source) {
     for (const [i, plugin] of Object.entries(options.use)) {
       if (typeof plugin === 'string') {
         try {
+          // eslint-disable-next-line import/no-dynamic-require,global-require
           options.use[i] = require(plugin)();
         } catch (err) {
           options.use.splice(i, 1);
@@ -108,12 +109,8 @@ export default async function stylusLoader(source) {
   styl.set('Evaluator', await createEvaluator(source, options, this));
 
   // keep track of imported files (used by Stylus CLI watch mode)
+  // eslint-disable-next-line no-underscore-dangle
   options._imports = [];
-
-  // trigger callback before compiling
-  if (typeof options.beforeCompile === 'function') {
-    options.beforeCompile(styl, this, options);
-  }
 
   // let stylus do its magic
   styl.render(async (err, css) => {
@@ -123,7 +120,9 @@ export default async function stylusLoader(source) {
     }
 
     // add all source files as dependencies
+    // eslint-disable-next-line no-underscore-dangle
     if (options._imports.length) {
+      // eslint-disable-next-line no-underscore-dangle
       for (const importData of options._imports) {
         this.addDependency(importData.path);
       }
@@ -145,7 +144,6 @@ export default async function stylusLoader(source) {
       }
     }
 
-    // profit
-    callback(null, css, styl.sourcemap);
+    return callback(null, css, styl.sourcemap);
   });
 }
