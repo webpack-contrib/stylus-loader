@@ -39,7 +39,12 @@ export default (fixture, loaderOptions = {}, config = {}) => {
         path.join(__dirname, '../', 'fixtures', 'web_modules'),
       ],
       alias: {
-        '~in-web-modules': path.join(__dirname, '../', 'fixtures', 'web_modules'),
+        '~in-web-modules': path.join(
+          __dirname,
+          '../',
+          'fixtures',
+          'web_modules'
+        ),
       },
     },
     ...config,

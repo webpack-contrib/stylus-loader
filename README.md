@@ -1,4 +1,5 @@
 # stylus-loader
+
 A [stylus](http://learnboost.github.io/stylus/) loader for [webpack](https://github.com/webpack/webpack).
 
 [![build status](https://secure.travis-ci.org/shama/stylus-loader.svg)](https://travis-ci.org/shama/stylus-loader)
@@ -29,10 +30,13 @@ Or within the webpack config:
 
 ```js
 module: {
-  loaders: [{
-    test: /\.styl$/,
-    loader: 'css-loader!stylus-loader?paths=node_modules/bootstrap-stylus/stylus/'
-  }]
+  loaders: [
+    {
+      test: /\.styl$/,
+      loader:
+        'css-loader!stylus-loader?paths=node_modules/bootstrap-stylus/stylus/',
+    },
+  ];
 }
 ```
 
@@ -43,8 +47,8 @@ Use in tandem with the [style-loader](https://github.com/webpack/style-loader) t
 ```js
 module: {
   loaders: [
-    { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' }
-  ]
+    { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' },
+  ];
 }
 ```
 
@@ -55,7 +59,7 @@ and then `require('./file.styl');` will compile and add the CSS to your page.
 ```js
 module: {
   resolve: {
-    extensions: ['', '.js', '.styl']
+    extensions: ['', '.js', '.styl'];
   }
 }
 ```
@@ -81,7 +85,6 @@ stylus: {
 ```
 
 Multiple configs can be used by giving other configs different names and referring to the with the `config` query option.
-
 
 ```js
 var stylus_plugin = require('stylus_plugin');
@@ -194,38 +197,39 @@ npm test
 open http://localhost:8080/test/
 ```
 
-
 ## Contributing
+
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
-* Please see https://github.com/shama/stylus-loader/releases
-* 3.0.1 - Update install instructions mentioning how to get a version supporting webpack 1 (@mzgoddard)
-* 3.0.0 - Fix loader-utils deprecation warning (@ryani33), Drop webpack 1 and Node<4 support (@mzgoddard)
-* 2.5.1 - Fix paths mutation in options (@vio)
-* 2.5.0 - Define paths in global stylusOptions, in addtion to query params (@JounQin)
-* 2.4.0 - Add OptionsPlugin to help support webpack 2 (@mzgoddard)
-* 2.3.1 - Fix typo in README (@stevewillard)
-* 2.3.0 - Fix most use cases of relative path resolving (@mzgoddard), Add option to prefer a path resolver (webpack or stylus) (@mzgoddard)
-* 2.2.0 - Let stylus use option be just a function (@yuffiy), Track json calls as imports like use calls (@gnarf)
-* 2.1.2 - Fix support for stylus include config (@andrewburgess), Add block-level imports to listimports (@kenaniah)
-* 2.1.1 - Support Node 6 (@yyx990803), Test in webpack 1 and 2 (@phyllisstein)
-* 2.1.0 - Add support for stylus's include and set (@michaek)
-* 2.0.1 - Add peer dependency on stylus (@jchitel), fix PathCache for webpack 2 (@Unhelpful)
-* 2.0.0 - Remove dependency on stylus (@kossnocorps)
-* 1.6.1 - Remove version breaking change in 1.6.0
-* 1.6.0 - Remove dependency on stylus (@kossnocorps)
-* 1.3.0 - resolve use() calls (@mzgoddard), manual imports through path cache (@mzgoddard)
-* 1.2.0 - files in package.json (@SimenB), test running with testem (@mzgoddard), and some performance changes (@mzgoddard)
-* 1.1.0 - Pass through sourceMap option to stylus instead of defaulting to inline. Inherit source-map from devtool (@jordansexton).
-* 1.0.0 - Basic source map support (@skozin). Remove nib as dep. stylus is now a direct dep (as peerDependencies are deprecated).
-* 0.6.0 - Support loader prefixes when resolving paths (@kpdecker).
-* 0.5.0 - Disable Stylus parser caching in listImports (@DaQuirm). Update to stylus@0.49.2 and nib@1.0.4 as peerDependencies (@kompot).
-* 0.4.0 - Allow configuration of plugins through webpack config (@bobzoller). Update to stylus 0.47.2 (@shanewilson).
-* 0.3.1 - Fix when dependency (@tkellen)
-* 0.3.0 - Define url resolver() when "resolve url" option is true (@mzgoddard).
-* 0.2.0 - Now tracks dependencies for @import statements making cacheable work. Update stylus dep.
-* 0.1.0 - Initial release
+
+- Please see https://github.com/shama/stylus-loader/releases
+- 3.0.1 - Update install instructions mentioning how to get a version supporting webpack 1 (@mzgoddard)
+- 3.0.0 - Fix loader-utils deprecation warning (@ryani33), Drop webpack 1 and Node<4 support (@mzgoddard)
+- 2.5.1 - Fix paths mutation in options (@vio)
+- 2.5.0 - Define paths in global stylusOptions, in addtion to query params (@JounQin)
+- 2.4.0 - Add OptionsPlugin to help support webpack 2 (@mzgoddard)
+- 2.3.1 - Fix typo in README (@stevewillard)
+- 2.3.0 - Fix most use cases of relative path resolving (@mzgoddard), Add option to prefer a path resolver (webpack or stylus) (@mzgoddard)
+- 2.2.0 - Let stylus use option be just a function (@yuffiy), Track json calls as imports like use calls (@gnarf)
+- 2.1.2 - Fix support for stylus include config (@andrewburgess), Add block-level imports to listimports (@kenaniah)
+- 2.1.1 - Support Node 6 (@yyx990803), Test in webpack 1 and 2 (@phyllisstein)
+- 2.1.0 - Add support for stylus's include and set (@michaek)
+- 2.0.1 - Add peer dependency on stylus (@jchitel), fix PathCache for webpack 2 (@Unhelpful)
+- 2.0.0 - Remove dependency on stylus (@kossnocorps)
+- 1.6.1 - Remove version breaking change in 1.6.0
+- 1.6.0 - Remove dependency on stylus (@kossnocorps)
+- 1.3.0 - resolve use() calls (@mzgoddard), manual imports through path cache (@mzgoddard)
+- 1.2.0 - files in package.json (@SimenB), test running with testem (@mzgoddard), and some performance changes (@mzgoddard)
+- 1.1.0 - Pass through sourceMap option to stylus instead of defaulting to inline. Inherit source-map from devtool (@jordansexton).
+- 1.0.0 - Basic source map support (@skozin). Remove nib as dep. stylus is now a direct dep (as peerDependencies are deprecated).
+- 0.6.0 - Support loader prefixes when resolving paths (@kpdecker).
+- 0.5.0 - Disable Stylus parser caching in listImports (@DaQuirm). Update to stylus@0.49.2 and nib@1.0.4 as peerDependencies (@kompot).
+- 0.4.0 - Allow configuration of plugins through webpack config (@bobzoller). Update to stylus 0.47.2 (@shanewilson).
+- 0.3.1 - Fix when dependency (@tkellen)
+- 0.3.0 - Define url resolver() when "resolve url" option is true (@mzgoddard).
+- 0.2.0 - Now tracks dependencies for @import statements making cacheable work. Update stylus dep.
+- 0.1.0 - Initial release
 
 ## License
 
