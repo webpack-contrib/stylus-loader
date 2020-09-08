@@ -53,7 +53,7 @@ describe('loader', () => {
 
   it('with option, should resolve urls relatively', async () => {
     const testId = './shallow.styl';
-    const compiler = getCompiler(testId, { 'resolve url': true });
+    const compiler = getCompiler(testId, { resolveUrl: true });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -64,7 +64,7 @@ describe('loader', () => {
 
   it('with paths, find deps and load like normal stylus', async () => {
     const testId = './import-paths.styl';
-    const compiler = getCompiler(testId, { paths: 'test/fixtures/paths' });
+    const compiler = getCompiler(testId, { paths: ['test/fixtures/paths'] });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -97,7 +97,7 @@ describe('loader', () => {
 
   it('in a nested import load module from paths', async () => {
     const testId = './shallow-paths.styl';
-    const compiler = getCompiler(testId, { paths: 'test/fixtures/paths' });
+    const compiler = getCompiler(testId, { paths: ['test/fixtures/paths'] });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -151,8 +151,16 @@ describe('loader', () => {
   });
 
   it('should allow stylus plugins to be configured in webpack.config.js', async () => {
+    function plugin() {
+      return (style) => {
+        style.define('add', (a, b) => {
+          return a.operate('+', b);
+        });
+      };
+    }
+
     const testId = './webpack.config-plugin.styl';
-    const compiler = getCompiler(testId);
+    const compiler = getCompiler(testId, { use: [plugin()] });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -186,17 +194,6 @@ describe('loader', () => {
   it('imports files listed in option argument', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(testId, { import: ['urls.styl'] });
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
-  it('imports files in a directory included by a plugin', async () => {
-    const testId = './import-include.styl';
-    const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 

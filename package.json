@@ -42,7 +42,7 @@
     "webpack": "^4.0.0 || ^5.0.0"
   },
   "dependencies": {
-    "loader-utils": "^1.0.2",
+    "loader-utils": "^2.0.0",
     "lodash.clonedeep": "^4.5.0",
     "schema-utils": "^2.7.1",
     "when": "~3.6.x"
