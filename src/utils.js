@@ -1,27 +1,33 @@
 import { klona } from 'klona/full';
 
-function isObject(value) {
-  return typeof value === 'object' && value !== null;
-}
-
-function castArray(value) {
-  if (value == null) {
-    return [];
-  } else if (Array.isArray(value)) {
-    return value;
-  }
-
-  return [value];
-}
-
 function getStylusOptions(loaderContext, loaderOptions) {
-  const options = klona(
+  const stylusOptions = klona(
     typeof loaderOptions.stylusOptions === 'function'
       ? loaderOptions.stylusOptions(loaderContext) || {}
       : loaderOptions.stylusOptions || {}
   );
 
-  return options;
+  stylusOptions.filename = loaderContext.resourcePath;
+
+  if (
+    typeof stylusOptions.use !== 'undefined' &&
+    stylusOptions.use.length > 0
+  ) {
+    for (const [i, plugin] of Object.entries(stylusOptions.use)) {
+      if (typeof plugin === 'string') {
+        try {
+          // eslint-disable-next-line import/no-dynamic-require,global-require
+          stylusOptions.use[i] = require(plugin)();
+        } catch (err) {
+          stylusOptions.use.splice(i, 1);
+          err.message = `Stylus plugin '${plugin}' failed to load. Are you sure it's installed?`;
+          loaderContext.emitWarning(err);
+        }
+      }
+    }
+  }
+
+  return stylusOptions;
 }
 
 function readFile(inputFileSystem, path) {
@@ -35,4 +41,4 @@ function readFile(inputFileSystem, path) {
   });
 }
 
-export { isObject, castArray, getStylusOptions, readFile };
+export { getStylusOptions, readFile };
