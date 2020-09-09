@@ -2,6 +2,8 @@ import { promises as fs } from 'fs';
 
 import stylus from 'stylus';
 
+import clone from 'clone';
+
 import createEvaluator from './evaluator';
 import { getOptions, isObject, castArray } from './utils';
 import resolver from './lib/resolver';
@@ -15,6 +17,8 @@ export default async function stylusLoader(source) {
   // clone loader options to avoid modifying this.query
   const options = loaderOptions ? { ...loaderOptions } : {};
 
+  const stylusOptions = clone(options.stylusOptions) || {};
+
   // access Webpack config
   const webpackConfig =
     this._compilation && isObject(this._compilation.options)
@@ -22,7 +26,7 @@ export default async function stylusLoader(source) {
       : {};
 
   // stylus works better with an absolute filename
-  options.filename = options.filename || this.resourcePath;
+  stylusOptions.filename = stylusOptions.filename || this.resourcePath;
 
   // get sourcemap option in the order: options.sourceMap > options.sourcemap > this.sourceMap
   if (options.sourceMap != null) {
@@ -38,10 +42,10 @@ export default async function stylusLoader(source) {
   // set stylus sourcemap defaults
   if (options.sourcemap) {
     if (!isObject(options.sourcemap)) {
-      options.sourcemap = {};
+      stylusOptions.sourcemap = {};
     }
 
-    options.sourcemap = Object.assign(
+    stylusOptions.sourcemap = Object.assign(
       {
         // enable loading source map content by default
         content: true,
@@ -55,17 +59,17 @@ export default async function stylusLoader(source) {
   }
 
   // create stylus renderer instance
-  const styl = stylus(source, options);
+  const styl = stylus(source, stylusOptions);
 
   // import of plugins passed as strings
-  if (options.use.length) {
-    for (const [i, plugin] of Object.entries(options.use)) {
+  if (stylusOptions.use.length) {
+    for (const [i, plugin] of Object.entries(stylusOptions.use)) {
       if (typeof plugin === 'string') {
         try {
           // eslint-disable-next-line import/no-dynamic-require,global-require
-          options.use[i] = require(plugin)();
+          stylusOptions.use[i] = require(plugin)();
         } catch (err) {
-          options.use.splice(i, 1);
+          stylusOptions.use.splice(i, 1);
           err.message = `Stylus plugin '${plugin}' failed to load. Are you sure it's installed?`;
           this.emitWarning(err);
         }
@@ -74,43 +78,41 @@ export default async function stylusLoader(source) {
   }
 
   // add custom include paths
-  if ('include' in options) {
-    castArray(options.include).forEach(styl.include, styl);
+  if ('include' in stylusOptions) {
+    castArray(stylusOptions.include).forEach(styl.include, styl);
   }
 
   // add custom stylus file imports
-  if ('import' in options) {
-    castArray(options.import).forEach(styl.import, styl);
+  if ('import' in stylusOptions) {
+    castArray(stylusOptions.import).forEach(styl.import, styl);
   }
 
   // enable resolver for relative urls
-  if (options.resolveUrl) {
-    if (!isObject(options.resolveUrl)) {
-      options.resolveUrl = {};
+  if (stylusOptions.resolveUrl) {
+    if (!isObject(stylusOptions.resolveUrl)) {
+      stylusOptions.resolveUrl = {};
     }
 
-    styl.define('url', resolver(options));
+    styl.define('url', resolver(stylusOptions));
   }
 
   // define global variables/functions
-  if (isObject(options.define)) {
-    const raw = options.defineRaw == null ? true : options.defineRaw;
-
-    for (const entry of Object.entries(options.define)) {
-      styl.define(...entry, raw);
+  if (isObject(stylusOptions.define)) {
+    for (const entry of Object.entries(stylusOptions.define)) {
+      styl.define(...entry);
     }
   }
 
   // include regular CSS on @import
-  if (options.includeCSS) {
+  if (stylusOptions.includeCSS) {
     styl.set('include css', true);
   }
 
-  styl.set('Evaluator', await createEvaluator(source, options, this));
+  styl.set('Evaluator', await createEvaluator(source, stylusOptions, this));
 
   // keep track of imported files (used by Stylus CLI watch mode)
   // eslint-disable-next-line no-underscore-dangle
-  options._imports = [];
+  stylusOptions._imports = [];
 
   // let stylus do its magic
   styl.render(async (err, css) => {
@@ -121,9 +123,9 @@ export default async function stylusLoader(source) {
 
     // add all source files as dependencies
     // eslint-disable-next-line no-underscore-dangle
-    if (options._imports.length) {
+    if (stylusOptions._imports.length) {
       // eslint-disable-next-line no-underscore-dangle
-      for (const importData of options._imports) {
+      for (const importData of stylusOptions._imports) {
         this.addDependency(importData.path);
       }
     }
@@ -133,7 +135,7 @@ export default async function stylusLoader(source) {
       delete styl.sourcemap.file;
 
       // load source file contents into source map
-      if (options.sourcemap && options.sourcemap.content) {
+      if (stylusOptions.sourcemap && stylusOptions.sourcemap.content) {
         try {
           styl.sourcemap.sourcesContent = await Promise.all(
             styl.sourcemap.sources.map((file) => fs.readFile(file, 'utf-8'))
