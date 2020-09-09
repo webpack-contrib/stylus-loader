@@ -192,17 +192,6 @@ exports[`loader resolves css with webpack but does not import it: errors 1`] = `
 
 exports[`loader resolves css with webpack but does not import it: warnings 1`] = `Array []`;
 
-exports[`loader should allow stylus plugins to be configured in webpack.config.js: css 1`] = `
-"body {
-  width: 100%;
-}
-"
-`;
-
-exports[`loader should allow stylus plugins to be configured in webpack.config.js: errors 1`] = `Array []`;
-
-exports[`loader should allow stylus plugins to be configured in webpack.config.js: warnings 1`] = `Array []`;
-
 exports[`loader should compile an @import URL through the CSS loader: css 1`] = `
 "@import url(\\"http://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic\\");
 "
@@ -222,6 +211,55 @@ exports[`loader should import stylus: css 1`] = `
 exports[`loader should import stylus: errors 1`] = `Array []`;
 
 exports[`loader should import stylus: warnings 1`] = `Array []`;
+
+exports[`loader should work "define" option: css 1`] = `
+"body {
+  width: 100%;
+}
+"
+`;
+
+exports[`loader should work "define" option: errors 1`] = `Array []`;
+
+exports[`loader should work "define" option: warnings 1`] = `Array []`;
+
+exports[`loader should work "use" option as Array<string>: css 1`] = `
+"body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader should work "use" option as Array<string>: errors 1`] = `Array []`;
+
+exports[`loader should work "use" option as Array<string>: warnings 1`] = `Array []`;
+
+exports[`loader should work "use" option: css 1`] = `
+"body {
+  width: 100%;
+}
+"
+`;
+
+exports[`loader should work "use" option: errors 1`] = `Array []`;
+
+exports[`loader should work "use" option: warnings 1`] = `Array []`;
+
+exports[`loader should work when stylusOptions is function: css 1`] = `
+"body {
+  width: 100%;
+}
+"
+`;
+
+exports[`loader should work when stylusOptions is function: errors 1`] = `Array []`;
+
+exports[`loader should work when stylusOptions is function: warnings 1`] = `Array []`;
 
 exports[`loader should work: css 1`] = `
 "body {

@@ -45,14 +45,14 @@ And run `webpack` via your preferred method.
 
 ## Options
 
-|                 Name                  |    Type     |      Default       | Description                                 |
-| :-----------------------------------: | :---------: | :----------------: | :------------------------------------------ |
-| **[`stylusOptions`](#stylusOptions)** | `{Object}`  |        `{}`        | Options for Stylus.                         |
-|     **[`sourceMap`](#sourcemap)**     | `{Boolean}` | `compiler.devtool` | Enables/Disables generation of source maps. |
+|                 Name                  |         Type         |      Default       | Description                                 |
+| :-----------------------------------: | :------------------: | :----------------: | :------------------------------------------ |
+| **[`stylusOptions`](#stylusOptions)** | `{Object\|Function}` |        `{}`        | Options for Stylus.                         |
+|     **[`sourceMap`](#sourcemap)**     |     `{Boolean}`      | `compiler.devtool` | Enables/Disables generation of source maps. |
 
 ### `stylusOptions`
 
-Type: `Object`
+Type: `Object|Function`
 Default: `{}`
 
 You can pass any Stylus specific options to the `stylus-loader` through the `stylusOptions` property in the [loader options](https://webpack.js.org/configuration/module/#rule-options-rule-query).
@@ -90,6 +90,46 @@ module.exports = {
                 },
                 includeCSS: false,
                 resolveUrl: false,
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
+#### `Function`
+
+Allows setting the options passed through to Less based off of the loader context.
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'stylus-loader',
+            options: {
+              stylusOptions: (loaderContext) => {
+                // More information about available properties https://webpack.js.org/api/loaders/
+                const { resourcePath, rootContext } = loaderContext;
+                const relativePath = path.relative(rootContext, resourcePath);
+
+                if (relativePath === 'styles/foo.styl') {
+                  return {
+                    paths: ['absolute/path/c', 'absolute/path/d'],
+                  };
+                }
+
+                return {
+                  paths: ['absolute/path/a', 'absolute/path/b'],
+                };
               },
             },
           },

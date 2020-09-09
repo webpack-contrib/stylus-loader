@@ -2,14 +2,12 @@ import { promises as fs } from 'fs';
 
 import stylus from 'stylus';
 
-import clone from 'clone';
-
 import { getOptions } from 'loader-utils';
 import validateOptions from 'schema-utils';
 
 import schema from './options.json';
 import createEvaluator from './evaluator';
-import { isObject, castArray } from './utils';
+import { getStylusOptions } from './utils';
 import resolver from './lib/resolver';
 
 export default async function stylusLoader(source) {
@@ -22,87 +20,40 @@ export default async function stylusLoader(source) {
 
   const callback = this.async();
 
-  const stylusOptions = clone(options.stylusOptions) || {};
+  const stylusOptions = getStylusOptions(this, options);
 
-  // access Webpack config
-  const webpackConfig =
-    this._compilation && isObject(this._compilation.options)
-      ? this._compilation.options
-      : {};
+  const useSourceMap =
+    typeof options.sourceMap === 'boolean' ? options.sourceMap : this.sourceMap;
 
-  // stylus works better with an absolute filename
-  stylusOptions.filename = stylusOptions.filename || this.resourcePath;
-
-  // get sourcemap option in the order: options.sourceMap > options.sourcemap > this.sourceMap
-  if (options.sourceMap != null) {
-    options.sourcemap = options.sourceMap;
-  } else if (
-    options.sourcemap == null &&
-    this.sourceMap &&
-    (!webpackConfig.devtool || webpackConfig.devtool.indexOf('eval') !== 0)
-  ) {
-    options.sourcemap = {};
+  if (useSourceMap) {
+    stylusOptions.sourcemap = {
+      content: true,
+      comment: false,
+      sourceRoot: this.rootContext,
+    };
   }
 
-  // set stylus sourcemap defaults
-  if (options.sourcemap) {
-    if (!isObject(options.sourcemap)) {
-      stylusOptions.sourcemap = {};
-    }
-
-    stylusOptions.sourcemap = Object.assign(
-      {
-        // enable loading source map content by default
-        content: true,
-        // source map comment is added by css-loader
-        comment: false,
-        // set sourceRoot for better handling of paths by css-loader
-        sourceRoot: this.rootContext,
-      },
-      options.sourcemap
-    );
-  }
-
-  // create stylus renderer instance
   const styl = stylus(source, stylusOptions);
 
-  // import of plugins passed as strings
-  if (stylusOptions.use.length) {
-    for (const [i, plugin] of Object.entries(stylusOptions.use)) {
-      if (typeof plugin === 'string') {
-        try {
-          // eslint-disable-next-line import/no-dynamic-require,global-require
-          stylusOptions.use[i] = require(plugin)();
-        } catch (err) {
-          stylusOptions.use.splice(i, 1);
-          err.message = `Stylus plugin '${plugin}' failed to load. Are you sure it's installed?`;
-          this.emitWarning(err);
-        }
-      }
+  if (typeof stylusOptions.include !== 'undefined') {
+    for (const included of stylusOptions.include) {
+      styl.include(included);
     }
   }
 
-  // add custom include paths
-  if ('include' in stylusOptions) {
-    castArray(stylusOptions.include).forEach(styl.include, styl);
-  }
-
-  // add custom stylus file imports
-  if ('import' in stylusOptions) {
-    castArray(stylusOptions.import).forEach(styl.import, styl);
-  }
-
-  // enable resolver for relative urls
-  if (stylusOptions.resolveUrl) {
-    if (!isObject(stylusOptions.resolveUrl)) {
-      stylusOptions.resolveUrl = {};
+  if (typeof stylusOptions.import !== 'undefined') {
+    for (const imported of stylusOptions.import) {
+      styl.import(imported);
     }
+  }
+
+  if (typeof stylusOptions.resolveUrl !== 'undefined') {
+    stylusOptions.resolveUrl = {};
 
     styl.define('url', resolver(stylusOptions));
   }
 
-  // define global variables/functions
-  if (isObject(stylusOptions.define)) {
+  if (typeof stylusOptions.define !== 'undefined') {
     for (const entry of Object.entries(stylusOptions.define)) {
       styl.define(...entry);
     }
@@ -126,7 +77,6 @@ export default async function stylusLoader(source) {
       return callback(err);
     }
 
-    // add all source files as dependencies
     // eslint-disable-next-line no-underscore-dangle
     if (stylusOptions._imports.length) {
       // eslint-disable-next-line no-underscore-dangle
@@ -136,7 +86,6 @@ export default async function stylusLoader(source) {
     }
 
     if (styl.sourcemap) {
-      // css-loader will set the source map file name
       delete styl.sourcemap.file;
 
       // load source file contents into source map

@@ -42,11 +42,9 @@
     "webpack": "^4.0.0 || ^5.0.0"
   },
   "dependencies": {
-    "clone": "^2.1.2",
+    "klona": "^2.0.3",
     "loader-utils": "^2.0.0",
-    "lodash.clonedeep": "^4.5.0",
-    "schema-utils": "^2.7.1",
-    "when": "~3.6.x"
+    "schema-utils": "^2.7.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.11.6",
@@ -84,7 +82,8 @@
     "testem": "^3.2.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "when": "~3.6.x"
   },
   "keywords": [
     "webpack",
