@@ -4,18 +4,23 @@ import stylus from 'stylus';
 
 import clone from 'clone';
 
+import { getOptions } from 'loader-utils';
+import validateOptions from 'schema-utils';
+
+import schema from './options.json';
 import createEvaluator from './evaluator';
-import { getOptions, isObject, castArray } from './utils';
+import { isObject, castArray } from './utils';
 import resolver from './lib/resolver';
 
 export default async function stylusLoader(source) {
+  const options = getOptions(this);
+
+  validateOptions(schema, options, {
+    name: 'Stylus Loader',
+    baseDataPath: 'options',
+  });
+
   const callback = this.async();
-
-  // get options passed to loader
-  const loaderOptions = getOptions(this);
-
-  // clone loader options to avoid modifying this.query
-  const options = loaderOptions ? { ...loaderOptions } : {};
 
   const stylusOptions = clone(options.stylusOptions) || {};
 

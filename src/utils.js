@@ -1,12 +1,3 @@
-export function getOptions(context) {
-  if (typeof context.getOptions === 'function') {
-    return context.getOptions();
-  }
-
-  // eslint-disable-next-line global-require
-  return require('loader-utils').getOptions(context);
-}
-
 export function isObject(value) {
   return typeof value === 'object' && value !== null;
 }
