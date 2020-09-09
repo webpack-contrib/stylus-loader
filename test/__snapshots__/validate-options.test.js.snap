@@ -8,37 +8,57 @@ exports[`validate options should throw an error on the "sourceMap" option with "
 
 exports[`validate options should throw an error on the "stylusOptions" option with "[]" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
- - options.stylusOptions should be an object:
-   object { … }
-   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions)."
+ - options.stylusOptions should be one of these:
+   object { … } | function
+   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions).
+   Details:
+    * options.stylusOptions should be an object:
+      object { … }
+    * options.stylusOptions should be an instance of function."
 `;
 
 exports[`validate options should throw an error on the "stylusOptions" option with "1" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
- - options.stylusOptions should be an object:
-   object { … }
-   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions)."
+ - options.stylusOptions should be one of these:
+   object { … } | function
+   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions).
+   Details:
+    * options.stylusOptions should be an object:
+      object { … }
+    * options.stylusOptions should be an instance of function."
 `;
 
 exports[`validate options should throw an error on the "stylusOptions" option with "false" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
- - options.stylusOptions should be an object:
-   object { … }
-   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions)."
+ - options.stylusOptions should be one of these:
+   object { … } | function
+   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions).
+   Details:
+    * options.stylusOptions should be an object:
+      object { … }
+    * options.stylusOptions should be an instance of function."
 `;
 
 exports[`validate options should throw an error on the "stylusOptions" option with "test" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
- - options.stylusOptions should be an object:
-   object { … }
-   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions)."
+ - options.stylusOptions should be one of these:
+   object { … } | function
+   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions).
+   Details:
+    * options.stylusOptions should be an object:
+      object { … }
+    * options.stylusOptions should be an instance of function."
 `;
 
 exports[`validate options should throw an error on the "stylusOptions" option with "true" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
- - options.stylusOptions should be an object:
-   object { … }
-   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions)."
+ - options.stylusOptions should be one of these:
+   object { … } | function
+   -> Options to pass through to \`Stylus\` (https://github.com/webpack-contrib/stylus-loader#stylusoptions).
+   Details:
+    * options.stylusOptions should be an object:
+      object { … }
+    * options.stylusOptions should be an instance of function."
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "/test/" value 1`] = `

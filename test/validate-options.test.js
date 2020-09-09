@@ -12,6 +12,10 @@ describe('validate options', () => {
             $development: process.env.NODE_ENV === 'development',
           },
         },
+        () => {},
+        () => {
+          return { resolveCss: true };
+        },
       ],
       failure: [1, true, false, 'test', []],
     },

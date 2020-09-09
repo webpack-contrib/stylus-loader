@@ -1,3 +1,5 @@
+import path from 'path';
+
 import {
   compile,
   getCodeFromBundle,
@@ -43,6 +45,36 @@ describe('loader', () => {
   it("shouldn't process urls", async () => {
     const testId = './urls.styl';
     const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should work when stylusOptions is function', async () => {
+    function plugin() {
+      return (style) => {
+        style.define('add', (a, b) => {
+          return a.operate('+', b);
+        });
+      };
+    }
+
+    const testId = './webpack.config-plugin.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: (loaderContext) => {
+        const { resourcePath, rootContext } = loaderContext;
+        const relativePath = path.relative(rootContext, resourcePath);
+
+        if (relativePath === 'webpack.config-plugin.styl') {
+          return { use: plugin() };
+        }
+
+        return {};
+      },
+    });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 

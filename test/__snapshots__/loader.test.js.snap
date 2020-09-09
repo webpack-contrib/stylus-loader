@@ -223,6 +223,17 @@ exports[`loader should import stylus: errors 1`] = `Array []`;
 
 exports[`loader should import stylus: warnings 1`] = `Array []`;
 
+exports[`loader should work when stylusOptions is function: css 1`] = `
+"body {
+  width: 100%;
+}
+"
+`;
+
+exports[`loader should work when stylusOptions is function: errors 1`] = `Array []`;
+
+exports[`loader should work when stylusOptions is function: warnings 1`] = `Array []`;
+
 exports[`loader should work: css 1`] = `
 "body {
   font: 12px Helvetica, Arial, sans-serif;

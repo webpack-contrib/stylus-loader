@@ -2,14 +2,12 @@ import { promises as fs } from 'fs';
 
 import stylus from 'stylus';
 
-import clone from 'clone';
-
 import { getOptions } from 'loader-utils';
 import validateOptions from 'schema-utils';
 
 import schema from './options.json';
 import createEvaluator from './evaluator';
-import { isObject, castArray } from './utils';
+import { getStylusOptions, isObject, castArray } from './utils';
 import resolver from './lib/resolver';
 
 export default async function stylusLoader(source) {
@@ -22,7 +20,7 @@ export default async function stylusLoader(source) {
 
   const callback = this.async();
 
-  const stylusOptions = clone(options.stylusOptions) || {};
+  const stylusOptions = getStylusOptions(this, options);
 
   // access Webpack config
   const webpackConfig =

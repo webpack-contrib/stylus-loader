@@ -1,8 +1,10 @@
-export function isObject(value) {
+import { klona } from 'klona/full';
+
+function isObject(value) {
   return typeof value === 'object' && value !== null;
 }
 
-export function castArray(value) {
+function castArray(value) {
   if (value == null) {
     return [];
   } else if (Array.isArray(value)) {
@@ -12,7 +14,17 @@ export function castArray(value) {
   return [value];
 }
 
-export function readFile(inputFileSystem, path) {
+function getStylusOptions(loaderContext, loaderOptions) {
+  const options = klona(
+    typeof loaderOptions.stylusOptions === 'function'
+      ? loaderOptions.stylusOptions(loaderContext) || {}
+      : loaderOptions.stylusOptions || {}
+  );
+
+  return options;
+}
+
+function readFile(inputFileSystem, path) {
   return new Promise((resolve, reject) => {
     inputFileSystem.readFile(path, (err, stats) => {
       if (err) {
@@ -22,3 +34,5 @@ export function readFile(inputFileSystem, path) {
     });
   });
 }
+
+export { isObject, castArray, getStylusOptions, readFile };
