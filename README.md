@@ -238,6 +238,39 @@ module.exports = {
 };
 ```
 
+### Using nib with stylus
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl$/,
+        use: [
+          {
+            loader: 'style-loader', // creates style nodes from JS strings
+          },
+          {
+            loader: 'css-loader', // translates CSS into CommonJS
+          },
+          {
+            loader: 'stylus-loader', // compiles Stylus to CSS
+            options: {
+              stylusOptions: {
+                use: [require('nib')()],
+                import: ['nib'],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
 ### In production
 
 Usually, it's recommended to extract the style sheets into a dedicated file in production using the [MiniCssExtractPlugin](https://github.com/webpack-contrib/mini-css-extract-plugin). This way your styles are not dependent on JavaScript.

@@ -18,6 +18,7 @@ async function resolveFilename(filename, currentDirectory, loaderContext) {
     mainFields: ['styl', 'style', 'main', '...'],
     mainFiles: ['index', '...'],
     extensions: ['.styl', '.css'],
+    restrictions: [/\.(css|styl)$/i],
   });
 
   const request = urlToRequest(
@@ -105,6 +106,7 @@ async function getDependencies(
       }
 
       let found;
+
       if (resolved) {
         found = Array.isArray(resolved) ? resolved : [resolved];
         res.set(importedPath, resolved);
@@ -118,13 +120,15 @@ async function getDependencies(
         const paths = (options.paths || []).concat(
           path.dirname(filepath || '.')
         );
+
         found = utils.find(importedPath, paths, filepath);
+
         if (!found) {
           found = utils.lookupIndex(originalPath, paths, filepath);
         }
 
         if (!found) {
-          throw new Error(`failed to locate file ${originalPath}`);
+          return;
         }
       }
 

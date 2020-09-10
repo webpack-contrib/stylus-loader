@@ -31,6 +31,21 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('should import css', async () => {
+    const testId = './import-css.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        includeCSS: true,
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('should import stylus', async () => {
     const testId = './import-styl.styl';
     const compiler = getCompiler(testId);
@@ -302,6 +317,39 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('should work "include" option', async () => {
+    const testId = './stylus.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        import: ['in-paths.styl'],
+        include: [`${__dirname}/fixtures/paths`],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should work "nib"', async () => {
+    const testId = './basic-nib';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line global-require
+        use: [require('nib')()],
+        import: ['nib'],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('imports files listed in option argument webpack style', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(testId, {
@@ -370,6 +418,28 @@ describe('loader', () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
     expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should emit error when unresolved import', async () => {
+    const testId = './import-unresolve.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should emit warning when use unresolved plugin', async () => {
+    const testId = './webpack.config-plugin.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        use: ['unresolved'],
+      },
+    });
+    const stats = await compile(compiler);
+
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
