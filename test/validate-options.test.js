@@ -8,9 +8,10 @@ describe('validate options', () => {
         { resolveCss: true },
         { includeCSS: false },
         {
-          define: {
-            $development: process.env.NODE_ENV === 'development',
-          },
+          define: [
+            ['$development', process.env.NODE_ENV === 'development'],
+            ['rawVar', 42, true],
+          ],
         },
         () => {},
         () => {
