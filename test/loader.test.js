@@ -251,7 +251,9 @@ describe('loader', () => {
     const testId = './webpack.config-plugin.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        define: [['add', (a, b) => a.operate('+', b)]],
+        define: {
+          add: (a, b) => a.operate('+', b),
+        },
       },
     });
     const stats = await compile(compiler);
