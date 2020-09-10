@@ -14,8 +14,8 @@ const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
 
 async function resolveFilename(filename, currentDirectory, loaderContext) {
   const resolve = loaderContext.getResolve({
-    conditionNames: ['styl', 'style'],
-    mainFields: ['styl', 'style', 'main', '...'],
+    conditionNames: ['styl', 'stylus', 'style'],
+    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
     mainFiles: ['index', '...'],
     extensions: ['.styl', '.css'],
     restrictions: [/\.(css|styl)$/i],
