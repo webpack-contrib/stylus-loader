@@ -248,7 +248,7 @@ describe('loader', () => {
   });
 
   it('should work with bootstrap', async () => {
-    const testId = './bootstrap.styl';
+    const testId = './lib-bootstrap.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
         use: ['bootstrap-styl'],
