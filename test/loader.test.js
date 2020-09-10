@@ -251,9 +251,26 @@ describe('loader', () => {
     const testId = './webpack.config-plugin.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        define: {
-          add: (a, b) => a.operate('+', b),
-        },
+        define: [['add', (a, b) => a.operate('+', b)]],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should work "define" option with raw', async () => {
+    const testId = './defineRaw.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        define: [
+          ['rawVar', { nestedVar: 42 }, true],
+          ['castedVar', { disc: 'outside' }, true],
+          ['rawDefine', ['rawVar'], true],
+        ],
       },
     });
     const stats = await compile(compiler);

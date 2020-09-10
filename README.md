@@ -85,9 +85,11 @@ module.exports = {
                 use: ['nib'],
                 include: [path.join(__dirname, 'src/styl/config')],
                 import: ['nib', path.join(__dirname, 'src/styl/mixins')],
-                define: {
-                  $development: process.env.NODE_ENV === 'development',
-                },
+                define: [
+                  // [key, value, raw]
+                  ['$development', process.env.NODE_ENV === 'development'],
+                  ['rawVar', 42, true],
+                ],
                 includeCSS: false,
                 resolveUrl: false,
               },

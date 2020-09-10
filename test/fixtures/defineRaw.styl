@@ -1,0 +1,19 @@
+unquoteList(strings)
+  unquote(join(' ', strings))
+
+hashLookup(obj, key)
+  obj[key]
+
+section.current-stylus-support
+  raw "hash property access must use brackets"
+  raw "hash property access must be last in selector :/"
+  answer rawVar['nestedVar']
+
+ul.frisbee-golf
+  list-style unquoteList(castedVar)
+
+section.type-checks
+  castedType type(castedVar)
+  rawType type(rawVar)
+  answer hashLookup(rawVar, 'nestedVar')
+  hooray "mixins can work around limits"

@@ -54,8 +54,10 @@ export default async function stylusLoader(source) {
   }
 
   if (typeof stylusOptions.define !== 'undefined') {
-    for (const entry of Object.entries(stylusOptions.define)) {
-      styl.define(...entry);
+    for (const defined of stylusOptions.define) {
+      const [key, value, raw] = defined;
+
+      styl.define(key, value, raw);
     }
   }
 
