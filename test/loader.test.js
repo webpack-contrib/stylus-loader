@@ -382,6 +382,21 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('imports files listed in option "style" package.json', async () => {
+    const testId = './stylus.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        import: ['~fakestylus'],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('imports files listed in option argument and deps', async () => {
     const testId = './basic.styl';
     const compiler = getCompiler(testId, {

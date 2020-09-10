@@ -17,6 +17,20 @@ exports[`loader correctly compiles mixin calls inside imported files: errors 1`]
 
 exports[`loader correctly compiles mixin calls inside imported files: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in option "style" package.json: css 1`] = `
+".imported-fake-stylus {
+  color: #000;
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option "style" package.json: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option "style" package.json: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in option argument and deps: css 1`] = `
 ".imported-stylus {
   border: 5px;
