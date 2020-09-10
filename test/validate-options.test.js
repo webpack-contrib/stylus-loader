@@ -13,6 +13,12 @@ describe('validate options', () => {
             ['rawVar', 42, true],
           ],
         },
+        {
+          define: {
+            $development: process.env.NODE_ENV === 'development',
+            rawVar: 42,
+          },
+        },
         () => {},
         () => {
           return { resolveCss: true };
