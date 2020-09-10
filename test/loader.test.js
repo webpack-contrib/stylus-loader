@@ -384,6 +384,17 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('imports files listed in glob', async () => {
+    const testId = './glob/index.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('imports files listed in option argument webpack style', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(testId, {
@@ -498,6 +509,15 @@ describe('loader', () => {
         use: ['unresolved'],
       },
     });
+    const stats = await compile(compiler);
+
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should emit error when import self', async () => {
+    const testId = './imports/self.styl';
+    const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
