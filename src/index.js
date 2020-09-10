@@ -71,10 +71,10 @@ export default async function stylusLoader(source) {
   stylusOptions._imports = [];
 
   // let stylus do its magic
-  styl.render(async (err, css) => {
-    if (err) {
-      this.addDependency(err.filename);
-      return callback(err);
+  styl.render(async (error, css) => {
+    if (error) {
+      this.addDependency(error.filename);
+      return callback(error);
     }
 
     // eslint-disable-next-line no-underscore-dangle
