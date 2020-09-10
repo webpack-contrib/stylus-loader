@@ -247,6 +247,21 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('should work with bootstrap', async () => {
+    const testId = './lib-bootstrap.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        use: ['bootstrap-styl'],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('should work "define" option', async () => {
     const testId = './webpack.config-plugin.styl';
     const compiler = getCompiler(testId, {

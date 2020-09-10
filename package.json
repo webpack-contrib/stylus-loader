@@ -57,6 +57,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.3.0",
     "benchmark": "^1.0.0",
+    "bootstrap-styl": "^5.0.9",
     "cross-env": "^7.0.2",
     "css-loader": "^4.2.2",
     "del": "^5.1.0",
