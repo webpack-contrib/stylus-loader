@@ -314,6 +314,46 @@ exports[`loader should not be resolved when url begin with "#": errors 1`] = `Ar
 
 exports[`loader should not be resolved when url begin with "#": warnings 1`] = `Array []`;
 
+exports[`loader should use .json file: css 1`] = `
+"@media screen and (min-width: 1px) and (max-width: 400px) {
+  body {
+    display: none;
+    color: #a27400;
+    background-color: #a27400;
+    border-color: rgba(255,202,69,0.5);
+    outline-color: #400040;
+    padding: 0;
+    outline: 0;
+    margin: 20px;
+    border: #f00;
+    text-decoration-color: rgba(0,0,0,0.5);
+    text-shadow: 0 1px rgba(0,0,0,0.5);
+  }
+}
+@media screen and (min-width: 1501px) {
+  body {
+    -webkit-transition: width 1s ease-out;
+  }
+}
+body {
+  display: none;
+  color: #a27400;
+  background-color: #a27400;
+  border-color: rgba(255,202,69,0.5);
+  outline-color: #400040;
+  padding: 0;
+  outline: 0;
+  margin: 20px;
+  -webkit-transition: width 1s ease-out;
+  border: #f00;
+}
+"
+`;
+
+exports[`loader should use .json file: errors 1`] = `Array []`;
+
+exports[`loader should use .json file: warnings 1`] = `Array []`;
+
 exports[`loader should work "define" option with raw: css 1`] = `
 "section.current-stylus-support {
   raw: \\"hash property access must use brackets\\";

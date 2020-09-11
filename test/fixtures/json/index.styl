@@ -1,0 +1,35 @@
+json('vars.json')
+
+@media queries-small
+  body
+    display nope
+    color darken(color, 50%)
+    background-color: darken(background-color, 50%)
+    border-color: fade-color
+    outline-color: darken(bg, 50%)
+    padding spacing
+    outline 1.5 * spacing
+    margin gutter * 2
+    if awesome
+      border red
+    text-decoration-color decoration-color
+    text-shadow 0 1px shadow-color
+
+@media queries-large
+  body
+    -webkit-transition animate-special-out
+
+vars = json('vars.json', { hash: true });
+
+body
+  display: vars.nope
+  color: darken(vars.color, 50%)
+  background-color: darken(vars.background-color, 50%)
+  border-color: vars.fade-color
+  outline-color: darken(vars.bg, 50%)
+  padding: vars.spacing
+  outline: 1.5 * vars.spacing
+  margin: vars.gutter * 2
+  -webkit-transition: vars.animate.special.out
+  if vars.awesome
+    border red

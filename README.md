@@ -308,6 +308,51 @@ module.exports = {
 };
 ```
 
+### Import JSON files
+
+Stylus does not provide resolving capabilities in the `json` function.
+Therefore webpack resolver does not work for `.json` files.
+Use [`stylus resolver`](#stylus-resolver).
+
+**index.styl**
+
+```styl
+// Suppose the file is located here `node_modules/vars/vars.json`
+json('vars.json')
+
+@media queries-small
+  body
+    display nope
+
+```
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'stylus-loader',
+            options: {
+              stylusOptions: {
+                // Specify the path. where to find files
+                paths: ['node_modules/vars'],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
 ### In production
 
 Usually, it's recommended to extract the style sheets into a dedicated file in production using the [MiniCssExtractPlugin](https://github.com/webpack-contrib/mini-css-extract-plugin). This way your styles are not dependent on JavaScript.
