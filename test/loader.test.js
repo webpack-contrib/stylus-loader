@@ -278,6 +278,33 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('should work with plugin using bootsrtap', async () => {
+    // eslint-disable-next-line global-require
+    const bootsrap = require('bootstrap-styl');
+
+    function plugin() {
+      return (styl) => {
+        bootsrap()(styl);
+
+        // assume that /lib/StylusLibA contains all the .styl files.
+        styl.include(`${__dirname}/lib/`);
+      };
+    }
+    const testId = './lib-bootstrap.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        use: [plugin()],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const isBootstrapImported = /MIT License/gi.test(codeFromBundle.css);
+
+    expect(isBootstrapImported).toBe(true);
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('should work "define" option', async () => {
     const testId = './webpack.config-plugin.styl';
     const compiler = getCompiler(testId, {

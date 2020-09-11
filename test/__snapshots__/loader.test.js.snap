@@ -7160,6 +7160,10 @@ exports[`loader should work with bootstrap: errors 1`] = `Array []`;
 
 exports[`loader should work with bootstrap: warnings 1`] = `Array []`;
 
+exports[`loader should work with plugin using bootsrtap: errors 1`] = `Array []`;
+
+exports[`loader should work with plugin using bootsrtap: warnings 1`] = `Array []`;
+
 exports[`loader should work: css 1`] = `
 "body {
   font: 12px Helvetica, Arial, sans-serif;
