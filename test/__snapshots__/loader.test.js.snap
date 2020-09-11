@@ -83,8 +83,30 @@ exports[`loader imports files listed in option argument and paths deps: errors 1
 
 exports[`loader imports files listed in option argument and paths deps: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in option argument and webpack alias: css 1`] = `
+".webpack-alias-1 {
+  color: #f00;
+}
+.webpack-alias-2 {
+  color: #ff7f50;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument and webpack alias: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and webpack alias: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in option argument and webpack deps: css 1`] = `
-".other {
+".imported-in-web-modules {
   font-size: 2em;
 }
 body {
@@ -181,7 +203,7 @@ exports[`loader in a nested import load module from paths: errors 1`] = `Array [
 exports[`loader in a nested import load module from paths: warnings 1`] = `Array []`;
 
 exports[`loader in a nested import load module from webpack: css 1`] = `
-".other {
+".imported-in-web-modules {
   font-size: 2em;
 }
 "
@@ -201,7 +223,7 @@ exports[`loader in a nested import resolve css with webpack but not import: erro
 exports[`loader in a nested import resolve css with webpack but not import: warnings 1`] = `Array []`;
 
 exports[`loader resolve with webpack if stylus can't find it: css 1`] = `
-".other {
+".imported-in-web-modules {
   font-size: 2em;
 }
 "
