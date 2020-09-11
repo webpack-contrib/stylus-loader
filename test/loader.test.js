@@ -141,7 +141,15 @@ describe('loader', () => {
 
   it("resolve with webpack if stylus can't find it", async () => {
     const testId = './import-webpack.styl';
-    const compiler = getCompiler(testId);
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          modules: [path.join(__dirname, 'fixtures', 'web_modules')],
+        },
+      }
+    );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -178,7 +186,15 @@ describe('loader', () => {
 
   it('in a nested import load module from webpack', async () => {
     const testId = './shallow-webpack.styl';
-    const compiler = getCompiler(testId);
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          modules: [path.join(__dirname, 'fixtures', 'web_modules')],
+        },
+      }
+    );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -397,11 +413,19 @@ describe('loader', () => {
 
   it('imports files listed in option argument webpack style', async () => {
     const testId = './stylus.styl';
-    const compiler = getCompiler(testId, {
-      stylusOptions: {
-        import: ['~fakenib'],
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['~fakenib'],
+        },
       },
-    });
+      {
+        resolve: {
+          modules: ['node_modules'],
+        },
+      }
+    );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -412,11 +436,19 @@ describe('loader', () => {
 
   it('imports files listed in option "style" package.json', async () => {
     const testId = './stylus.styl';
-    const compiler = getCompiler(testId, {
-      stylusOptions: {
-        import: ['~fakestylus'],
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['~fakestylus'],
+        },
       },
-    });
+      {
+        resolve: {
+          modules: ['node_modules'],
+        },
+      }
+    );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -458,11 +490,44 @@ describe('loader', () => {
 
   it('imports files listed in option argument and webpack deps', async () => {
     const testId = './basic.styl';
-    const compiler = getCompiler(testId, {
-      stylusOptions: {
-        import: ['import-webpack.styl'],
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['import-webpack.styl'],
+        },
       },
-    });
+      {
+        resolve: {
+          modules: [path.join(__dirname, 'fixtures', 'web_modules')],
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in option argument and webpack alias', async () => {
+    const testId = './basic.styl';
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['import-webpack-alias.styl'],
+        },
+      },
+      {
+        resolve: {
+          alias: {
+            alias: path.resolve(__dirname, 'fixtures', 'alias'),
+          },
+        },
+      }
+    );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
