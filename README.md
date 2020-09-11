@@ -45,10 +45,11 @@ And run `webpack` via your preferred method.
 
 ## Options
 
-|                 Name                  |         Type         |      Default       | Description                                 |
-| :-----------------------------------: | :------------------: | :----------------: | :------------------------------------------ |
-| **[`stylusOptions`](#stylusOptions)** | `{Object\|Function}` |        `{}`        | Options for Stylus.                         |
-|     **[`sourceMap`](#sourcemap)**     |     `{Boolean}`      | `compiler.devtool` | Enables/Disables generation of source maps. |
+|                   Name                    |         Type         |      Default       | Description                                    |
+| :---------------------------------------: | :------------------: | :----------------: | :--------------------------------------------- |
+|   **[`stylusOptions`](#stylusOptions)**   | `{Object\|Function}` |        `{}`        | Options for Stylus.                            |
+|       **[`sourceMap`](#sourcemap)**       |     `{Boolean}`      | `compiler.devtool` | Enables/Disables generation of source maps.    |
+| **[`webpackImporter`](#webpackimporter)** |     `{Boolean}`      |       `true`       | Enables/Disables the default Webpack importer. |
 
 ### `stylusOptions`
 
@@ -104,7 +105,7 @@ module.exports = {
 
 #### `Function`
 
-Allows setting the options passed through to Less based off of the loader context.
+Allows setting the options passed through to Stylus based off of the loader context.
 
 ```js
 module.exports = {
@@ -166,6 +167,40 @@ module.exports = {
             loader: 'stylus-loader',
             options: {
               sourceMap: true,
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
+### `webpackImporter`
+
+Type: `Boolean`
+Default: `true`
+
+Enables/Disables the default Webpack importer.
+
+This can improve performance in some cases.
+Use it with caution because aliases and `@import` at-rules starting with `~` will not work.
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl/i,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'stylus-loader',
+            options: {
+              webpackImporter: false,
             },
           },
         ],
@@ -276,6 +311,56 @@ module.exports = {
 ### In production
 
 Usually, it's recommended to extract the style sheets into a dedicated file in production using the [MiniCssExtractPlugin](https://github.com/webpack-contrib/mini-css-extract-plugin). This way your styles are not dependent on JavaScript.
+
+### webpack resolver
+
+Webpack provides an [advanced mechanism to resolve files](https://webpack.js.org/configuration/resolve/).
+The `stylus-loader` applies the webpack resolver when processing queries.
+Thus you can import your Stylus modules from `node_modules`.
+Just prepend them with a `~` which tells webpack to look up the [`modules`](https://webpack.js.org/configuration/resolve/#resolve-modules).
+
+```styl
+@import '~bootstrap-styl/bootstrap/index.styl';
+```
+
+It's important to only prepend it with `~`, because `~/` resolves to the home-directory.
+Webpack needs to distinguish between `bootstrap` and `~bootstrap`, because CSS and Styl files have no special syntax for importing relative files.
+Writing `@import "file"` is the same as `@import "./file";`
+
+### Stylus resolver
+
+If you specify the `paths` option, modules will be searched in the given `paths`.
+This is Stylus default behavior.
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'stylus-loader',
+            options: {
+              stylusOptions: {
+                paths: [path.resolve(__dirname, 'node_modules')],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
 
 ### Extracting style sheets
 
