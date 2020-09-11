@@ -68,7 +68,14 @@ export default async function stylusLoader(source) {
     styl.set('include css', true);
   }
 
-  styl.set('Evaluator', await createEvaluator(source, stylusOptions, this));
+  const shouldUseWebpackImporter =
+    typeof options.webpackImporter === 'boolean'
+      ? options.webpackImporter
+      : true;
+
+  if (shouldUseWebpackImporter) {
+    styl.set('Evaluator', await createEvaluator(source, stylusOptions, this));
+  }
 
   // keep track of imported files (used by Stylus CLI watch mode)
   // eslint-disable-next-line no-underscore-dangle
