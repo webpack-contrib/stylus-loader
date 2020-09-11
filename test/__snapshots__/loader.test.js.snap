@@ -474,6 +474,28 @@ exports[`loader should work "use" option: errors 1`] = `Array []`;
 
 exports[`loader should work "use" option: warnings 1`] = `Array []`;
 
+exports[`loader should work indented import: css 1`] = `
+"body {
+  color: #f00;
+}
+.some-class body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+.some-class a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.concat-class-import .not-real-nib {
+  color: #000;
+}
+"
+`;
+
+exports[`loader should work indented import: errors 1`] = `Array []`;
+
+exports[`loader should work indented import: warnings 1`] = `Array []`;
+
 exports[`loader should work when stylusOptions is function: css 1`] = `
 "body {
   width: 100%;

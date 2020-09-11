@@ -205,6 +205,17 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('should work indented import', async () => {
+    const testId = './shallow-indent.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('in a nested import load module from node_modules', async () => {
     const testId = './shallow-fakenib.styl';
     const compiler = getCompiler(testId);
