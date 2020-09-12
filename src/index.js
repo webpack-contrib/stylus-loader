@@ -33,7 +33,16 @@ export default async function stylusLoader(source) {
     };
   }
 
-  const styl = stylus(source, stylusOptions);
+  let data = source;
+
+  if (typeof options.additionalData !== 'undefined') {
+    data =
+      typeof options.additionalData === 'function'
+        ? `${options.additionalData(data, this)}`
+        : `${options.additionalData}\n${data}`;
+  }
+
+  const styl = stylus(data, stylusOptions);
 
   if (typeof stylusOptions.include !== 'undefined') {
     for (const included of stylusOptions.include) {

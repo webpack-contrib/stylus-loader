@@ -20,6 +20,17 @@
     "webpackImporter": {
       "description": "Enables/Disables default `webpack` importer (https://github.com/webpack-contrib/stylus-loader#webpackimporter).",
       "type": "boolean"
+    },
+    "additionalData": {
+      "description": "Prepends/Appends `Stylus` code to the actual entry file (https://github.com/webpack-contrib/stylus-loader#additionalData).",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function"
+        }
+      ]
     }
   },
   "additionalProperties": false
