@@ -45,11 +45,12 @@ And run `webpack` via your preferred method.
 
 ## Options
 
-|                   Name                    |         Type         |      Default       | Description                                    |
-| :---------------------------------------: | :------------------: | :----------------: | :--------------------------------------------- |
-|   **[`stylusOptions`](#stylusOptions)**   | `{Object\|Function}` |        `{}`        | Options for Stylus.                            |
-|       **[`sourceMap`](#sourcemap)**       |     `{Boolean}`      | `compiler.devtool` | Enables/Disables generation of source maps.    |
-| **[`webpackImporter`](#webpackimporter)** |     `{Boolean}`      |       `true`       | Enables/Disables the default Webpack importer. |
+|                   Name                    |         Type         |      Default       | Description                                              |
+| :---------------------------------------: | :------------------: | :----------------: | :------------------------------------------------------- |
+|   **[`stylusOptions`](#stylusOptions)**   | `{Object\|Function}` |        `{}`        | Options for Stylus.                                      |
+|       **[`sourceMap`](#sourcemap)**       |     `{Boolean}`      | `compiler.devtool` | Enables/Disables generation of source maps.              |
+| **[`webpackImporter`](#webpackimporter)** |     `{Boolean}`      |       `true`       | Enables/Disables the default Webpack importer.           |
+|  **[`additionalData`](#additionalData)**  | `{String\|Function}` |    `undefined`     | Prepends/Appends `Stylus` code to the actual entry file. |
 
 ### `stylusOptions`
 
@@ -201,6 +202,76 @@ module.exports = {
             loader: 'stylus-loader',
             options: {
               webpackImporter: false,
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
+### `additionalData`
+
+Type: `String|Function`
+Default: `undefined`
+
+Prepends `Stylus` code before the actual entry file.
+In this case, the `stylus-loader` will not override the source but just **prepend** the entry's content.
+
+This is especially useful when some of your Stylus variables depend on the environment:
+
+> ℹ Since you're injecting code, this will break the source mappings in your entry file. Often there's a simpler solution than this, like multiple Stylus entry files.
+
+#### `String`
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'stylus-loader',
+            options: {
+              additionalData: `@env: ${process.env.NODE_ENV};`,
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
+#### `Function`
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'stylus-loader',
+            options: {
+              additionalData: (content, loaderContext) => {
+                // More information about available properties https://webpack.js.org/api/loaders/
+                const { resourcePath, rootContext } = loaderContext;
+                const relativePath = path.relative(rootContext, resourcePath);
+
+                if (relativePath === 'styles/foo.styl') {
+                  return 'value = 100px' + content;
+                }
+
+                return 'value 200px' + content;
+              },
             },
           },
         ],

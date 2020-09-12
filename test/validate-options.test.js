@@ -34,6 +34,10 @@ describe('validate options', () => {
       success: [true, false],
       failure: ['string'],
     },
+    additionalData: {
+      success: ['color = coral', () => 'bg = coral'],
+      failure: [1, true, false, /test/, [], {}],
+    },
     unknown: {
       success: [],
       failure: [1, true, false, 'test', /test/, [], {}, { foo: 'bar' }],
