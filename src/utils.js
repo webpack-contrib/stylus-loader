@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { klona } from 'klona/full';
 
 function getStylusOptions(loaderContext, loaderOptions) {
@@ -30,9 +32,9 @@ function getStylusOptions(loaderContext, loaderOptions) {
   return stylusOptions;
 }
 
-function readFile(inputFileSystem, path) {
+function readFile(inputFileSystem, filepath) {
   return new Promise((resolve, reject) => {
-    inputFileSystem.readFile(path, (err, stats) => {
+    inputFileSystem.readFile(filepath, (err, stats) => {
       if (err) {
         reject(err);
       }
@@ -41,4 +43,49 @@ function readFile(inputFileSystem, path) {
   });
 }
 
-export { getStylusOptions, readFile };
+const IS_NATIVE_WIN32_PATH = /^[a-z]:[/\\]|^\\\\/i;
+const ABSOLUTE_SCHEME = /^[A-Za-z0-9+\-.]+:/;
+
+function getURLType(source) {
+  if (source[0] === '/') {
+    if (source[1] === '/') {
+      return 'scheme-relative';
+    }
+
+    return 'path-absolute';
+  }
+
+  if (IS_NATIVE_WIN32_PATH.test(source)) {
+    return 'path-absolute';
+  }
+
+  return ABSOLUTE_SCHEME.test(source) ? 'absolute' : 'path-relative';
+}
+
+function normalizeSourceMap(map, rootContext) {
+  const newMap = map;
+
+  // result.map.file is an optional property that provides the output filename.
+  // Since we don't know the final filename in the webpack build chain yet, it makes no sense to have it.
+  // eslint-disable-next-line no-param-reassign
+  delete newMap.file;
+
+  // eslint-disable-next-line no-param-reassign
+  newMap.sourceRoot = '';
+
+  // eslint-disable-next-line no-param-reassign
+  newMap.sources = newMap.sources.map((source) => {
+    const sourceType = getURLType(source);
+
+    // Do no touch `scheme-relative`, `path-absolute` and `absolute` types
+    if (sourceType === 'path-relative') {
+      return path.resolve(rootContext, path.normalize(source));
+    }
+
+    return source;
+  });
+
+  return newMap;
+}
+
+export { getStylusOptions, readFile, normalizeSourceMap };
