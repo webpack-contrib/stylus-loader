@@ -1,5 +1,3 @@
-import { promises as fs } from 'fs';
-
 import stylus from 'stylus';
 
 import { getOptions } from 'loader-utils';
@@ -7,7 +5,7 @@ import validateOptions from 'schema-utils';
 
 import schema from './options.json';
 import createEvaluator from './evaluator';
-import { getStylusOptions } from './utils';
+import { getStylusOptions, readFile, normalizeSourceMap } from './utils';
 import resolver from './lib/resolver';
 
 export default async function stylusLoader(source) {
@@ -27,9 +25,9 @@ export default async function stylusLoader(source) {
 
   if (useSourceMap) {
     stylusOptions.sourcemap = {
-      content: true,
       comment: false,
       sourceRoot: this.rootContext,
+      basePath: this.rootContext,
     };
   }
 
@@ -105,21 +103,22 @@ export default async function stylusLoader(source) {
       }
     }
 
-    if (styl.sourcemap) {
-      delete styl.sourcemap.file;
+    let map = styl.sourcemap;
 
-      // load source file contents into source map
-      if (stylusOptions.sourcemap && stylusOptions.sourcemap.content) {
-        try {
-          styl.sourcemap.sourcesContent = await Promise.all(
-            styl.sourcemap.sources.map((file) => fs.readFile(file, 'utf-8'))
-          );
-        } catch (e) {
-          return callback(e);
-        }
+    if (map && useSourceMap) {
+      map = normalizeSourceMap(map, this.rootContext);
+
+      try {
+        map.sourcesContent = await Promise.all(
+          map.sources.map(async (file) =>
+            (await readFile(this.fs, file)).toString()
+          )
+        );
+      } catch (errorFs) {
+        return callback(errorFs);
       }
     }
 
-    return callback(null, css, styl.sourcemap);
+    return callback(null, css, map);
   });
 }

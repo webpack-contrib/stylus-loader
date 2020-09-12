@@ -56,14 +56,13 @@ function resolveRequests(context, possibleRequests, resolve) {
 
 async function getDependencies(
   code,
+  filepath,
   loaderContext,
   resolve,
   options,
   parcelOptions,
   seen = new Set()
 ) {
-  const filepath = loaderContext.resourcePath;
-
   seen.add(filepath);
 
   nodes.filename = filepath;
@@ -145,6 +144,7 @@ async function getDependencies(
 
           for (const [importPath, resolvedPath] of await getDependencies(
             source,
+            detected,
             loaderContext,
             resolveFilename,
             options
@@ -171,7 +171,13 @@ export default async function createEvaluator(code, options, loaderContext) {
   const possibleImports = (
     await Promise.all(
       [code, optionsImports].map((content) =>
-        getDependencies(content, loaderContext, resolveFilename, options)
+        getDependencies(
+          content,
+          loaderContext.resourcePath,
+          loaderContext,
+          resolveFilename,
+          options
+        )
       )
     )
   ).reduce((acc, map) => {
