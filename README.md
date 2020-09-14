@@ -84,16 +84,66 @@ module.exports = {
             loader: 'stylus-loader',
             options: {
               stylusOptions: {
+                /**
+                 * Specify Stylus plugins to use. Plugins may be passed as
+                 * strings instead of importing them in your Webpack config.
+                 *
+                 * @type {(string|Function)[]}
+                 * @default []
+                 */
                 use: ['nib'],
+
+                /**
+                 * Add path(s) to the import lookup paths.
+                 *
+                 * @type {string[]}
+                 * @default []
+                 */
                 include: [path.join(__dirname, 'src/styl/config')],
+
+                /**
+                 * Import the specified Stylus files/paths.
+                 *
+                 * @type {string[]}
+                 * @default []
+                 */
                 import: ['nib', path.join(__dirname, 'src/styl/mixins')],
+
+                /**
+                 * Define Stylus variables or functions.
+                 *
+                 * @type {Array|Object}
+                 * @default {}
+                 */
+                // Array is the recommended syntax: [key, value, raw]
                 define: [
-                  // [key, value, raw]
                   ['$development', process.env.NODE_ENV === 'development'],
                   ['rawVar', 42, true],
                 ],
+                // Object is deprecated syntax (there is no possibility to specify "raw')
+                // define: {
+                //   $development: process.env.NODE_ENV === 'development',
+                //   rawVar: 42,
+                // },
+
+                /**
+                 * Include regular CSS on @import.
+                 *
+                 * @type {boolean}
+                 * @default false
+                 */
                 includeCSS: false,
-                resolveUrl: false,
+
+                /**
+                 * Resolve relative url()'s inside imported files.
+                 *
+                 * @see https://stylus-lang.com/docs/js.html#stylusresolveroptions
+                 *
+                 * @type {boolean|Object}
+                 * @default true
+                 */
+                resolveUrl: true,
+                // resolveUrl: { noCheck: true },
               },
             },
           },
