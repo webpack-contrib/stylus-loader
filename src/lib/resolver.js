@@ -8,16 +8,16 @@ export default function resolver(options = {}) {
   // eslint-disable-next-line no-underscore-dangle
   const _paths = options.paths || [];
 
-  function url(imported) {
+  function resolve(url) {
     const paths = _paths.concat(this.paths);
     const { filename } = this;
 
     // Compile the url
-    const compiler = new Compiler(imported);
+    const compiler = new Compiler(url);
 
     compiler.isURL = true;
 
-    const query = imported.nodes
+    const query = url.nodes
       .map((node) => {
         return compiler.visit(node);
       })
@@ -29,6 +29,17 @@ export default function resolver(options = {}) {
       }
 
       const parsedUrl = parse(urlSegment);
+
+      const literal = new nodes.Literal(parsedUrl.href);
+
+      // Absolute or hash
+      if (
+        parsedUrl.protocol ||
+        !parsedUrl.pathname ||
+        parsedUrl.pathname[0] === '/'
+      ) {
+        return literal;
+      }
 
       if (parsedUrl.protocol) {
         return parsedUrl.href;
@@ -61,7 +72,8 @@ export default function resolver(options = {}) {
     return new nodes.Literal(`url("${components.join('!')}")`);
   }
 
-  url.raw = true;
+  resolve.options = options;
+  resolve.raw = true;
 
-  return url;
+  return resolve;
 }

@@ -54,7 +54,7 @@ export default async function stylusLoader(source) {
     }
   }
 
-  if (typeof stylusOptions.resolveUrl !== 'undefined') {
+  if (stylusOptions.resolveUrl) {
     stylusOptions.resolveUrl = {};
 
     styl.define('url', resolver(stylusOptions));

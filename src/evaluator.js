@@ -189,8 +189,12 @@ export default async function createEvaluator(code, options, loaderContext) {
 
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
+      this.return += 1;
+
       const node = this.visit(imported.path).first;
       const nodePath = node.string;
+
+      this.return -= 1;
 
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
         const resolved = deps.get(nodePath);

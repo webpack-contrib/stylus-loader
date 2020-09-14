@@ -305,7 +305,7 @@ exports[`loader should not be resolved when url begin with "#": css 1`] = `
   cursor: pointer;
   shape-rendering: crispEdges;
   fill: url(\\"#MyGradient\\");
-  background-image: url(\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M256 40c118.621 0 216 96.075 216 216 0 119.291-96.61 216-216 216-119.244 0-216-96.562-216-216 0-119.203 96.602-216 216-216m0-32C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm-11.49 120h22.979c6.823 0 12.274 5.682 11.99 12.5l-7 168c-.268 6.428-5.556 11.5-11.99 11.5h-8.979c-6.433 0-11.722-5.073-11.99-11.5l-7-168c-.283-6.818 5.167-12.5 11.99-12.5zM256 340c-15.464 0-28 12.536-28 28s12.536 28 28 28 28-12.536 28-28-12.536-28-28-28z'%3E%3C/path%3E%3C/svg%3E\\");
+  background-image: url(\\"data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20512%20512%27%3E%3Cpath%20d=%27M256%2040c118.621%200%20216%2096.075%20216%20216%200%20119.291-96.61%20216-216%20216-119.244%200-216-96.562-216-216%200-119.203%2096.602-216%20216-216m0-32C119.043%208%208%20119.083%208%20256c0%20136.997%20111.043%20248%20248%20248s248-111.003%20248-248C504%20119.083%20392.957%208%20256%208zm-11.49%20120h22.979c6.823%200%2012.274%205.682%2011.99%2012.5l-7%20168c-.268%206.428-5.556%2011.5-11.99%2011.5h-8.979c-6.433%200-11.722-5.073-11.99-11.5l-7-168c-.283-6.818%205.167-12.5%2011.99-12.5zM256%20340c-15.464%200-28%2012.536-28%2028s12.536%2028%2028%2028%2028-12.536%2028-28-12.536-28-28-28z%27%3E%3C/path%3E%3C/svg%3E\\");
 }
 "
 `;
@@ -718,8 +718,8 @@ th {
 }
 @font-face {
   font-family: \\"Glyphicons Halflings\\";
-  src: url(\\"../fonts/glyphicons-halflings-regular.eot\\");
-  src: url(\\"../fonts/glyphicons-halflings-regular.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"../fonts/glyphicons-halflings-regular.woff2\\") format(\\"woff2\\"), url(\\"../fonts/glyphicons-halflings-regular.woff\\") format(\\"woff\\"), url(\\"../fonts/glyphicons-halflings-regular.ttf\\") format(\\"truetype\\"), url(\\"../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular\\") format(\\"svg\\");
+  src: url(\\"../../node_modules/bootstrap-styl/fonts/glyphicons-halflings-regular.eot\\");
+  src: url(\\"../../node_modules/bootstrap-styl/fonts/glyphicons-halflings-regular.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"../../node_modules/bootstrap-styl/fonts/glyphicons-halflings-regular.woff2\\") format(\\"woff2\\"), url(\\"../../node_modules/bootstrap-styl/fonts/glyphicons-halflings-regular.woff\\") format(\\"woff\\"), url(\\"../../node_modules/bootstrap-styl/fonts/glyphicons-halflings-regular.ttf\\") format(\\"truetype\\"), url(\\"../../node_modules/bootstrap-styl/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular\\") format(\\"svg\\");
 }
 .glyphicon {
   position: relative;
