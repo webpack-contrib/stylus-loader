@@ -84,16 +84,70 @@ module.exports = {
             loader: 'stylus-loader',
             options: {
               stylusOptions: {
+                /**
+                 * Specify Stylus plugins to use. Plugins may be passed as
+                 * strings instead of importing them in your Webpack config.
+                 *
+                 * @type {(string|Function)[]}
+                 * @default []
+                 */
                 use: ['nib'],
+
+                /**
+                 * Add path(s) to the import lookup paths.
+                 *
+                 * @type {string[]}
+                 * @default []
+                 */
                 include: [path.join(__dirname, 'src/styl/config')],
+
+                /**
+                 * Import the specified Stylus files/paths.
+                 *
+                 * @type {string[]}
+                 * @default []
+                 */
                 import: ['nib', path.join(__dirname, 'src/styl/mixins')],
+
+                /**
+                 * Define Stylus variables or functions.
+                 *
+                 * @type {Array|Object}
+                 * @default {}
+                 */
                 define: [
                   // [key, value, raw]
                   ['$development', process.env.NODE_ENV === 'development'],
                   ['rawVar', 42, true],
                 ],
+
+                /**
+                 * Include regular CSS on @import.
+                 *
+                 * @type {boolean}
+                 * @default false
+                 */
                 includeCSS: false,
-                resolveUrl: false,
+
+                /**
+                 * Resolve relative url()'s inside imported files.
+                 *
+                 * @see https://stylus-lang.com/docs/js.html#stylusresolveroptions
+                 *
+                 * @type {boolean}
+                 * @default true
+                 */
+                resolveUrl: true,
+
+                /**
+                 * Like resolveUrl but without file existence check
+                 *
+                 * @see https://stylus-lang.com/docs/executable.html#resolving-relative-urls-inside-imports
+                 *
+                 * @type {boolean}
+                 * @default false
+                 */
+                resolveUrlNocheck: false,
               },
             },
           },
