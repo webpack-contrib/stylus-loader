@@ -16,6 +16,11 @@ function getStylusOptions(loaderContext, loaderOptions) {
       ? stylusOptions.resolveUrl
       : true;
 
+  stylusOptions.nocheck =
+    typeof stylusOptions.resolveUrlNocheck === 'boolean'
+      ? stylusOptions.resolveUrlNocheck
+      : false;
+
   if (
     typeof stylusOptions.use !== 'undefined' &&
     stylusOptions.use.length > 0

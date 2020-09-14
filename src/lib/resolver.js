@@ -10,7 +10,7 @@ export default function resolver(options = {}) {
 
   function resolve(url) {
     const paths = _paths.concat(this.paths);
-    const { filename } = this;
+    const { filename } = url;
 
     // Compile the url
     const compiler = new Compiler(url);
@@ -23,11 +23,10 @@ export default function resolver(options = {}) {
       })
       .join('');
 
-    const components = query.split(/!/g).map((urlSegment) => {
-      if (!urlSegment) {
-        return urlSegment;
-      }
+    const components = query.split(/!/g);
+    const resolvedFilePath = resolveUrl(components.pop(), this.filename);
 
+    function resolveUrl(urlSegment, name) {
       const parsedUrl = parse(urlSegment);
 
       const literal = new nodes.Literal(parsedUrl.href);
@@ -45,10 +44,19 @@ export default function resolver(options = {}) {
         return parsedUrl.href;
       }
 
-      // Lookup
-      const found = utils.lookup(parsedUrl.pathname, paths, '', true);
+      let found;
+
+      // Check that file exists
+      if (!options.nocheck) {
+        found = utils.lookup(parsedUrl.pathname, paths, '', true);
+
+        if (!found) {
+          return parsedUrl.href;
+        }
+      }
+
       if (!found) {
-        return parsedUrl.href;
+        found = parsedUrl.href;
       }
 
       let tail = '';
@@ -60,14 +68,20 @@ export default function resolver(options = {}) {
         tail += parsedUrl.hash;
       }
 
-      let res = path.relative(path.dirname(filename), found) + tail;
+      let res =
+        path.relative(
+          path.dirname(name),
+          options.nocheck ? path.join(path.dirname(filename), found) : found
+        ) + tail;
 
       if (path.sep === '\\') {
         res = res.replace(/\\/g, '/');
       }
 
       return res;
-    });
+    }
+
+    components.push(resolvedFilePath);
 
     return new nodes.Literal(`url("${components.join('!')}")`);
   }
