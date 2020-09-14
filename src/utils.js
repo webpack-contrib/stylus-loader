@@ -12,14 +12,11 @@ function getStylusOptions(loaderContext, loaderOptions) {
   stylusOptions.filename = loaderContext.resourcePath;
 
   stylusOptions.resolveUrl =
-    typeof stylusOptions.resolveUrl === 'boolean'
+    typeof stylusOptions.resolveUrl === 'boolean' && !stylusOptions.resolveUrl
+      ? false
+      : typeof stylusOptions.resolveUrl === 'object'
       ? stylusOptions.resolveUrl
-      : true;
-
-  stylusOptions.nocheck =
-    typeof stylusOptions.resolveUrlNocheck === 'boolean'
-      ? stylusOptions.resolveUrlNocheck
-      : false;
+      : {};
 
   if (
     typeof stylusOptions.use !== 'undefined' &&

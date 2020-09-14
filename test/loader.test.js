@@ -128,11 +128,13 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('with option resolveUrlNocheck, should resolve missing urls relatively', async () => {
+  it('with option resolveUrl noCheck, should resolve missing urls relatively', async () => {
     const testId = './shallow.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        resolveUrlNocheck: true,
+        resolveUrl: {
+          noCheck: true,
+        },
       },
     });
     const stats = await compile(compiler);

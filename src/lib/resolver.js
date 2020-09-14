@@ -47,7 +47,7 @@ export default function resolver(options = {}) {
       let found;
 
       // Check that file exists
-      if (!options.nocheck) {
+      if (!options.noCheck) {
         found = utils.lookup(parsedUrl.pathname, paths, '', true);
 
         if (!found) {
@@ -71,7 +71,7 @@ export default function resolver(options = {}) {
       let res =
         path.relative(
           path.dirname(name),
-          options.nocheck ? path.join(path.dirname(filename), found) : found
+          options.noCheck ? path.join(path.dirname(filename), found) : found
         ) + tail;
 
       if (path.sep === '\\') {
