@@ -121,10 +121,10 @@ module.exports = {
                   ['rawVar', 42, true],
                 ],
                 // Object is deprecated syntax (there is no possibility to specify "raw')
-                define: {
-                  $development: process.env.NODE_ENV === 'development',
-                  rawVar: 42,
-                },
+                // define: {
+                //   $development: process.env.NODE_ENV === 'development',
+                //   rawVar: 42,
+                // },
 
                 /**
                  * Include regular CSS on @import.
@@ -143,7 +143,7 @@ module.exports = {
                  * @default true
                  */
                 resolveUrl: true,
-                resolveUrl: { nocheck: true },
+                // resolveUrl: { noCheck: true },
               },
             },
           },
