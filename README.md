@@ -115,11 +115,16 @@ module.exports = {
                  * @type {Array|Object}
                  * @default {}
                  */
+                // Array is the recommended syntax: [key, value, raw]
                 define: [
-                  // [key, value, raw]
                   ['$development', process.env.NODE_ENV === 'development'],
                   ['rawVar', 42, true],
                 ],
+                // Object is deprecated syntax (there is no possibility to specify "raw')
+                define: {
+                  $development: process.env.NODE_ENV === 'development',
+                  rawVar: 42,
+                },
 
                 /**
                  * Include regular CSS on @import.
@@ -134,20 +139,11 @@ module.exports = {
                  *
                  * @see https://stylus-lang.com/docs/js.html#stylusresolveroptions
                  *
-                 * @type {boolean}
+                 * @type {boolean|Object}
                  * @default true
                  */
                 resolveUrl: true,
-
-                /**
-                 * Like resolveUrl but without file existence check
-                 *
-                 * @see https://stylus-lang.com/docs/executable.html#resolving-relative-urls-inside-imports
-                 *
-                 * @type {boolean}
-                 * @default false
-                 */
-                resolveUrlNocheck: false,
+                resolveUrl: { nocheck: true },
               },
             },
           },
