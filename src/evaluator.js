@@ -111,17 +111,13 @@ async function getDependencies(
                 true
               );
 
-              // eslint-disable-next-line no-console
-              console.log({
-                globRoot,
-                parsedGlob,
-                norm: getAbsoluteContext(globRoot),
-              });
-
-              return path.posix.join(
-                getAbsoluteContext(globRoot),
-                parsedGlob.glob
-              );
+              return {
+                isGlob: true,
+                path: path.posix.join(
+                  getAbsoluteContext(globRoot),
+                  parsedGlob.glob
+                ),
+              };
             })
           );
 
@@ -150,11 +146,17 @@ async function getDependencies(
   await Promise.all(
     Array.from(deps.entries()).map(async (result) => {
       let [importedPath, resolved] = result;
+      let pathIsGlob;
 
       try {
         resolved = await resolved;
       } catch (err) {
         resolved = null;
+      }
+
+      if (resolved !== null && resolved.isGlob) {
+        pathIsGlob = true;
+        resolved = resolved.path;
       }
 
       if (typeof importedPath === 'undefined') {
@@ -188,11 +190,9 @@ async function getDependencies(
         }
       }
 
-      if (resolved && fastGlob.isDynamicPattern(resolved)) {
-        if (!isDirectory(loaderContext.fs, resolved)) {
-          found = await fastGlob(resolved);
-          found = found.filter((file) => /\.styl$/i.test(file));
-        }
+      if (pathIsGlob) {
+        found = await fastGlob(resolved);
+        found = found.filter((file) => /\.styl$/i.test(file));
       }
 
       // Recursively process resolved files as well to get nested deps
