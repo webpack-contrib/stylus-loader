@@ -17,13 +17,14 @@ async function resolveFilename(
   filename,
   currentDirectory,
   loaderContext,
-  webpackResolvers,
+  webpackFileResolver,
+  webpackGlobResolver,
   resolveGlob
 ) {
   const resolve =
     typeof resolveGlob === 'undefined'
-      ? webpackResolvers.files
-      : webpackResolvers.glob;
+      ? webpackFileResolver
+      : webpackGlobResolver;
 
   const request = urlToRequest(
     filename,
@@ -62,7 +63,8 @@ async function getDependencies(
   code,
   filepath,
   loaderContext,
-  webpackResolvers,
+  webpackFileResolver,
+  webpackGlobResolver,
   options,
   seen = new Set()
 ) {
@@ -84,7 +86,12 @@ async function getDependencies(
       }
 
       if (fastGlob.isDynamicPattern(importedPath)) {
-        if (!isDirectory(loaderContext.fs, importedPath)) {
+        if (
+          !isDirectory(
+            loaderContext.fs,
+            path.join(path.dirname(filepath), importedPath)
+          )
+        ) {
           deps.set(
             importedPath,
             Promise.resolve().then(async () => {
@@ -99,9 +106,16 @@ async function getDependencies(
                 parsedGlob.base,
                 path.dirname(filepath),
                 loaderContext,
-                webpackResolvers,
+                webpackFileResolver,
+                webpackGlobResolver,
                 true
               );
+
+              // eslint-disable-next-line no-console
+              console.log({
+                globRoot,
+                parsedGlob,
+              });
 
               return `${globRoot}/${parsedGlob.glob}`;
             })
@@ -117,7 +131,8 @@ async function getDependencies(
           importedPath,
           loaderContext.rootContext,
           loaderContext,
-          webpackResolvers
+          webpackFileResolver,
+          webpackGlobResolver
         )
       );
     }
@@ -171,12 +186,7 @@ async function getDependencies(
 
       if (resolved && fastGlob.isDynamicPattern(resolved)) {
         if (!isDirectory(loaderContext.fs, resolved)) {
-          try {
-            found = await fastGlob(resolved);
-          } catch (error) {
-            loaderContext.emitError(error);
-          }
-
+          found = await fastGlob(resolved);
           found = found.filter((file) => /\.styl$/i.test(file));
         }
       }
@@ -196,7 +206,8 @@ async function getDependencies(
             source,
             detected,
             loaderContext,
-            webpackResolvers,
+            webpackFileResolver,
+            webpackGlobResolver,
             options
           )) {
             res.set(importPath, resolvedPath);
@@ -210,21 +221,20 @@ async function getDependencies(
 }
 
 export default async function createEvaluator(code, options, loaderContext) {
-  const webpackResolvers = {
-    files: loaderContext.getResolve({
-      conditionNames: ['styl', 'stylus', 'style'],
-      mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-      mainFiles: ['index', '...'],
-      extensions: ['.styl', '.css'],
-      restrictions: [/\.(css|styl)$/i],
-    }),
-    glob: loaderContext.getResolve({
-      conditionNames: ['styl', 'stylus', 'style'],
-      mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-      mainFiles: ['index', '...'],
-      resolveToContext: true,
-    }),
-  };
+  const webpackFileResolver = loaderContext.getResolve({
+    conditionNames: ['styl', 'stylus', 'style'],
+    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+    mainFiles: ['index', '...'],
+    extensions: ['.styl', '.css'],
+    restrictions: [/\.(css|styl)$/i],
+  });
+
+  const webpackGlobResolver = loaderContext.getResolve({
+    conditionNames: ['styl', 'stylus', 'style'],
+    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+    mainFiles: ['index', '...'],
+    resolveToContext: true,
+  });
 
   let optionsImports = '';
 
@@ -241,7 +251,8 @@ export default async function createEvaluator(code, options, loaderContext) {
           content,
           loaderContext.resourcePath,
           loaderContext,
-          webpackResolvers,
+          webpackFileResolver,
+          webpackGlobResolver,
           options
         )
       )
