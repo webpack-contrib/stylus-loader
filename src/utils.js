@@ -1,6 +1,5 @@
 import path from 'path';
 
-import glob from 'glob';
 import { klona } from 'klona/full';
 
 function getStylusOptions(loaderContext, loaderOptions) {
@@ -51,18 +50,6 @@ function readFile(inputFileSystem, filepath) {
   });
 }
 
-function asyncGlob(filePath, options = {}) {
-  return new Promise((resolve, reject) => {
-    glob(filePath, options, (error, files) => {
-      if (error) {
-        reject(error);
-      }
-
-      resolve(files);
-    });
-  });
-}
-
 const IS_NATIVE_WIN32_PATH = /^[a-z]:[/\\]|^\\\\/i;
 const ABSOLUTE_SCHEME = /^[A-Za-z0-9+\-.]+:/;
 
@@ -108,4 +95,16 @@ function normalizeSourceMap(map, rootContext) {
   return newMap;
 }
 
-export { getStylusOptions, readFile, asyncGlob, normalizeSourceMap };
+function isDirectory(inputFileSystem, filePath) {
+  let stats;
+
+  try {
+    stats = inputFileSystem.statSync(filePath);
+  } catch (ignoreError) {
+    return false;
+  }
+
+  return stats.isDirectory();
+}
+
+export { getStylusOptions, readFile, normalizeSourceMap, isDirectory };
