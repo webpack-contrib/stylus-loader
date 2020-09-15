@@ -95,22 +95,18 @@ async function getDependencies(
 
           deps.set(
             importedPath,
-            Promise.resolve()
-              .then(() => {
-                parsedGlob = parseGlob(importedPath);
+            Promise.resolve().then(async () => {
+              parsedGlob = parseGlob(importedPath);
 
-                return resolveFilename(
-                  parsedGlob.base,
-                  path.dirname(filepath),
-                  loaderContext,
-                  true
-                );
-              })
-              .then((globRoot) => {
-                // eslint-disable-next-line no-console
-                console.log(globRoot);
-                return `${globRoot}/${parsedGlob.glob}`;
-              })
+              const globRoot = await resolveFilename(
+                parsedGlob.base,
+                path.dirname(filepath),
+                loaderContext,
+                true
+              );
+
+              return `${globRoot}/${parsedGlob.glob}`;
+            })
           );
         } else {
           deps.set(
@@ -173,7 +169,13 @@ async function getDependencies(
       }
 
       if (isGlob(resolved)) {
-        found = await asyncGlob(resolved);
+        try {
+          found = await asyncGlob(resolved);
+        } catch (error) {
+          loaderContext.emitError(error);
+        }
+
+        found = found.filter((file) => /\.styl$/i.test(file));
       }
 
       // Recursively process resolved files as well to get nested deps
