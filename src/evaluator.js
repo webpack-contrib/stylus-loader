@@ -2,24 +2,39 @@ import path from 'path';
 
 import Evaluator from 'stylus/lib/visitor/evaluator';
 
+import isGlob from 'is-glob';
+import parseGlob from 'parse-glob';
 import { urlToRequest } from 'loader-utils';
 import Parser from 'stylus/lib/parser';
 import DepsResolver from 'stylus/lib/visitor/deps-resolver';
 import nodes from 'stylus/lib/nodes';
 import utils from 'stylus/lib/utils';
 
-import { readFile } from './utils';
+import { readFile, asyncGlob } from './utils';
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
 
-async function resolveFilename(filename, currentDirectory, loaderContext) {
-  const resolve = loaderContext.getResolve({
-    conditionNames: ['styl', 'stylus', 'style'],
-    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-    mainFiles: ['index', '...'],
-    extensions: ['.styl', '.css'],
-    restrictions: [/\.(css|styl)$/i],
-  });
+async function resolveFilename(
+  filename,
+  currentDirectory,
+  loaderContext,
+  resolveGlob
+) {
+  const resolve =
+    typeof resolveGlob === 'undefined'
+      ? loaderContext.getResolve({
+          conditionNames: ['styl', 'stylus', 'style'],
+          mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+          mainFiles: ['index', '...'],
+          extensions: ['.styl', '.css'],
+          restrictions: [/\.(css|styl)$/i],
+        })
+      : loaderContext.getResolve({
+          conditionNames: ['styl', 'stylus', 'style'],
+          mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+          mainFiles: ['index', '...'],
+          resolveToContext: true,
+        });
 
   const request = urlToRequest(
     filename,
@@ -58,9 +73,7 @@ async function getDependencies(
   code,
   filepath,
   loaderContext,
-  resolve,
   options,
-  parcelOptions,
   seen = new Set()
 ) {
   seen.add(filepath);
@@ -77,10 +90,38 @@ async function getDependencies(
       const importedPath = imported.path.first.string;
 
       if (!deps.has(importedPath)) {
-        deps.set(
-          importedPath,
-          resolve(importedPath, loaderContext.rootContext, loaderContext)
-        );
+        if (isGlob(importedPath)) {
+          let parsedGlob;
+
+          deps.set(
+            importedPath,
+            Promise.resolve()
+              .then(() => {
+                parsedGlob = parseGlob(importedPath);
+
+                return resolveFilename(
+                  parsedGlob.base,
+                  path.dirname(filepath),
+                  loaderContext,
+                  true
+                );
+              })
+              .then((globRoot) => {
+                // eslint-disable-next-line no-console
+                console.log(globRoot);
+                return `${globRoot}/${parsedGlob.glob}`;
+              })
+          );
+        } else {
+          deps.set(
+            importedPath,
+            resolveFilename(
+              importedPath,
+              loaderContext.rootContext,
+              loaderContext
+            )
+          );
+        }
       }
     }
   }
@@ -131,6 +172,10 @@ async function getDependencies(
         }
       }
 
+      if (isGlob(resolved)) {
+        found = await asyncGlob(resolved);
+      }
+
       // Recursively process resolved files as well to get nested deps
       for await (const detected of found) {
         if (!seen.has(detected)) {
@@ -146,7 +191,6 @@ async function getDependencies(
             source,
             detected,
             loaderContext,
-            resolveFilename,
             options
           )) {
             res.set(importPath, resolvedPath);
@@ -175,7 +219,6 @@ export default async function createEvaluator(code, options, loaderContext) {
           content,
           loaderContext.resourcePath,
           loaderContext,
-          resolveFilename,
           options
         )
       )

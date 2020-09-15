@@ -460,8 +460,29 @@ describe('loader', () => {
   });
 
   it('imports files listed in glob', async () => {
-    const testId = './glob/index.styl';
+    const testId = './import-glob.styl';
     const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in glob with webpack import', async () => {
+    const testId = './import-glob-webpack.styl';
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          alias: {
+            globAlias: path.resolve(__dirname, 'fixtures', 'glob'),
+          },
+        },
+      }
+    );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 

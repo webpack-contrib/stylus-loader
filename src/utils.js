@@ -1,5 +1,6 @@
 import path from 'path';
 
+import glob from 'glob';
 import { klona } from 'klona/full';
 
 function getStylusOptions(loaderContext, loaderOptions) {
@@ -41,11 +42,23 @@ function getStylusOptions(loaderContext, loaderOptions) {
 
 function readFile(inputFileSystem, filepath) {
   return new Promise((resolve, reject) => {
-    inputFileSystem.readFile(filepath, (err, stats) => {
-      if (err) {
-        reject(err);
+    inputFileSystem.readFile(filepath, (error, stats) => {
+      if (error) {
+        reject(error);
       }
       resolve(stats);
+    });
+  });
+}
+
+function asyncGlob(filePath, options = {}) {
+  return new Promise((resolve, reject) => {
+    glob(filePath, options, (error, files) => {
+      if (error) {
+        reject(error);
+      }
+
+      resolve(files);
     });
   });
 }
@@ -95,4 +108,4 @@ function normalizeSourceMap(map, rootContext) {
   return newMap;
 }
 
-export { getStylusOptions, readFile, normalizeSourceMap };
+export { getStylusOptions, readFile, asyncGlob, normalizeSourceMap };
