@@ -1,7 +1,5 @@
 import path from 'path';
 
-import fastGlob from 'fast-glob';
-import normalizePath from 'normalize-path';
 import { klona } from 'klona/full';
 
 function getStylusOptions(loaderContext, loaderOptions) {
@@ -109,14 +107,4 @@ function isDirectory(inputFileSystem, filePath) {
   return stats.isDirectory();
 }
 
-function getAbsoluteContext(context) {
-  return fastGlob.escapePath(normalizePath(path.resolve(context)));
-}
-
-export {
-  getStylusOptions,
-  readFile,
-  normalizeSourceMap,
-  isDirectory,
-  getAbsoluteContext,
-};
+export { getStylusOptions, readFile, normalizeSourceMap, isDirectory };

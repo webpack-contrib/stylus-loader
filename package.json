@@ -45,7 +45,6 @@
     "fast-glob": "^3.2.4",
     "klona": "^2.0.3",
     "loader-utils": "^2.0.0",
-    "normalize-path": "^3.0.0",
     "schema-utils": "^2.7.1"
   },
   "devDependencies": {

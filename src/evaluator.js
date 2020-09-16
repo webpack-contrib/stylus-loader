@@ -9,7 +9,7 @@ import DepsResolver from 'stylus/lib/visitor/deps-resolver';
 import nodes from 'stylus/lib/nodes';
 import utils from 'stylus/lib/utils';
 
-import { readFile, isDirectory, getAbsoluteContext } from './utils';
+import { readFile, isDirectory } from './utils';
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
 
@@ -113,10 +113,7 @@ async function getDependencies(
 
               return {
                 isGlob: true,
-                path: path.posix.join(
-                  getAbsoluteContext(globRoot),
-                  parsedGlob.glob
-                ),
+                path: path.posix.join(globRoot, parsedGlob.glob),
               };
             })
           );
