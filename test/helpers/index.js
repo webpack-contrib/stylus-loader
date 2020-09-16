@@ -7,6 +7,7 @@ import getWarnings from './getWarnings';
 import normalizeErrors from './normalizeErrors';
 import readAsset from './readAsset';
 import readsAssets from './readAssets';
+import validateDependencies from './validateDependencies';
 
 export {
   compile,
@@ -18,4 +19,5 @@ export {
   normalizeErrors,
   readAsset,
   readsAssets,
+  validateDependencies,
 };

@@ -6,6 +6,7 @@ import {
   getCompiler,
   getErrors,
   getWarnings,
+  validateDependencies,
 } from './helpers';
 
 describe('loader', () => {
@@ -165,19 +166,6 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    const { fileDependencies } = stats.compilation;
-
-    const fixturesDir = path.resolve(__dirname, 'fixtures');
-    const fixtures = [
-      path.resolve(fixturesDir, 'basic.styl'),
-      path.resolve(fixturesDir, 'deep', 'import-fakenib.styl'),
-      path.resolve(fixturesDir, 'node_modules', 'fakenib', 'index.styl'),
-      path.resolve(fixturesDir, 'shallow-indent.styl'),
-    ];
-
-    fixtures.forEach((fixture) => {
-      expect(fileDependencies.has(fixture)).toBe(true);
-    });
 
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
@@ -223,6 +211,21 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const { fileDependencies } = stats.compilation;
+
+    validateDependencies(fileDependencies);
+
+    const fixturesDir = path.resolve(__dirname, 'fixtures');
+    const fixtures = [
+      path.resolve(fixturesDir, 'basic.styl'),
+      path.resolve(fixturesDir, 'deep', 'import-fakenib.styl'),
+      path.resolve(fixturesDir, 'node_modules', 'fakenib', 'index.styl'),
+      path.resolve(fixturesDir, 'shallow-indent.styl'),
+    ];
+
+    fixtures.forEach((fixture) => {
+      expect(fileDependencies.has(fixture)).toBe(true);
+    });
 
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');

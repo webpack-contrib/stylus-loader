@@ -1,3 +1,5 @@
+import path from 'path';
+
 import stylus from 'stylus';
 
 import { getOptions } from 'loader-utils';
@@ -93,7 +95,7 @@ export default async function stylusLoader(source) {
   // let stylus do its magic
   styl.render(async (error, css) => {
     if (error) {
-      this.addDependency(error.filename);
+      this.addDependency(path.normalize(error.filename));
       return callback(error);
     }
 
@@ -101,7 +103,7 @@ export default async function stylusLoader(source) {
     if (stylusOptions._imports.length) {
       // eslint-disable-next-line no-underscore-dangle
       for (const importData of stylusOptions._imports) {
-        this.addDependency(importData.path);
+        this.addDependency(path.normalize(importData.path));
       }
     }
 
