@@ -113,6 +113,38 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('with option, should not resolve urls relatively', async () => {
+    const testId = './shallow.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        resolveUrl: false,
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('with option resolveUrl noCheck, should resolve missing urls relatively', async () => {
+    const testId = './shallow.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        resolveUrl: {
+          noCheck: true,
+        },
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('with paths, find deps and load like normal stylus', async () => {
     const testId = './import-paths.styl';
     const compiler = getCompiler(testId, {

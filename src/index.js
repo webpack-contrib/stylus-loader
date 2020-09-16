@@ -54,10 +54,12 @@ export default async function stylusLoader(source) {
     }
   }
 
-  if (typeof stylusOptions.resolveUrl !== 'undefined') {
-    stylusOptions.resolveUrl = {};
-
-    styl.define('url', resolver(stylusOptions));
+  if (stylusOptions.resolveUrl !== false) {
+    stylusOptions.resolveUrl = {
+      ...stylusOptions.resolveUrl,
+      paths: options.paths,
+    };
+    styl.define('url', resolver(stylusOptions.resolveUrl));
   }
 
   if (typeof stylusOptions.define !== 'undefined') {
