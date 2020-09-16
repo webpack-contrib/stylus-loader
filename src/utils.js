@@ -41,9 +41,9 @@ function getStylusOptions(loaderContext, loaderOptions) {
 
 function readFile(inputFileSystem, filepath) {
   return new Promise((resolve, reject) => {
-    inputFileSystem.readFile(filepath, (err, stats) => {
-      if (err) {
-        reject(err);
+    inputFileSystem.readFile(filepath, (error, stats) => {
+      if (error) {
+        reject(error);
       }
       resolve(stats);
     });
@@ -95,4 +95,16 @@ function normalizeSourceMap(map, rootContext) {
   return newMap;
 }
 
-export { getStylusOptions, readFile, normalizeSourceMap };
+function isDirectory(inputFileSystem, filePath) {
+  let stats;
+
+  try {
+    stats = inputFileSystem.statSync(filePath);
+  } catch (ignoreError) {
+    return false;
+  }
+
+  return stats.isDirectory();
+}
+
+export { getStylusOptions, readFile, normalizeSourceMap, isDirectory };

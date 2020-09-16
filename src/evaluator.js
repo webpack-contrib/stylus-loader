@@ -2,24 +2,29 @@ import path from 'path';
 
 import Evaluator from 'stylus/lib/visitor/evaluator';
 
+import fastGlob from 'fast-glob';
 import { urlToRequest } from 'loader-utils';
 import Parser from 'stylus/lib/parser';
 import DepsResolver from 'stylus/lib/visitor/deps-resolver';
 import nodes from 'stylus/lib/nodes';
 import utils from 'stylus/lib/utils';
 
-import { readFile } from './utils';
+import { readFile, isDirectory } from './utils';
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
 
-async function resolveFilename(filename, currentDirectory, loaderContext) {
-  const resolve = loaderContext.getResolve({
-    conditionNames: ['styl', 'stylus', 'style'],
-    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-    mainFiles: ['index', '...'],
-    extensions: ['.styl', '.css'],
-    restrictions: [/\.(css|styl)$/i],
-  });
+async function resolveFilename(
+  filename,
+  currentDirectory,
+  loaderContext,
+  webpackFileResolver,
+  webpackGlobResolver,
+  resolveGlob
+) {
+  const resolve =
+    typeof resolveGlob === 'undefined'
+      ? webpackFileResolver
+      : webpackGlobResolver;
 
   const request = urlToRequest(
     filename,
@@ -58,9 +63,9 @@ async function getDependencies(
   code,
   filepath,
   loaderContext,
-  resolve,
+  webpackFileResolver,
+  webpackGlobResolver,
   options,
-  parcelOptions,
   seen = new Set()
 ) {
   seen.add(filepath);
@@ -76,12 +81,57 @@ async function getDependencies(
     visitImport(imported) {
       const importedPath = imported.path.first.string;
 
-      if (!deps.has(importedPath)) {
-        deps.set(
-          importedPath,
-          resolve(importedPath, loaderContext.rootContext, loaderContext)
-        );
+      if (!importedPath || deps.has(importedPath)) {
+        return;
       }
+
+      if (fastGlob.isDynamicPattern(importedPath)) {
+        if (
+          !isDirectory(
+            loaderContext.fs,
+            path.join(path.dirname(filepath), importedPath)
+          )
+        ) {
+          deps.set(
+            importedPath,
+            Promise.resolve().then(async () => {
+              const [parsedGlob] = fastGlob.generateTasks(importedPath);
+
+              parsedGlob.glob =
+                parsedGlob.base === '.'
+                  ? importedPath
+                  : importedPath.slice(parsedGlob.base.length + 1);
+
+              const globRoot = await resolveFilename(
+                parsedGlob.base,
+                path.dirname(filepath),
+                loaderContext,
+                webpackFileResolver,
+                webpackGlobResolver,
+                true
+              );
+
+              return {
+                isGlob: true,
+                path: path.posix.join(globRoot, parsedGlob.glob),
+              };
+            })
+          );
+
+          return;
+        }
+      }
+
+      deps.set(
+        importedPath,
+        resolveFilename(
+          importedPath,
+          loaderContext.rootContext,
+          loaderContext,
+          webpackFileResolver,
+          webpackGlobResolver
+        )
+      );
     }
   }
 
@@ -93,11 +143,17 @@ async function getDependencies(
   await Promise.all(
     Array.from(deps.entries()).map(async (result) => {
       let [importedPath, resolved] = result;
+      let pathIsGlob;
 
       try {
         resolved = await resolved;
       } catch (err) {
         resolved = null;
+      }
+
+      if (resolved !== null && resolved.isGlob) {
+        pathIsGlob = true;
+        resolved = resolved.path;
       }
 
       if (typeof importedPath === 'undefined') {
@@ -131,6 +187,11 @@ async function getDependencies(
         }
       }
 
+      if (pathIsGlob) {
+        found = await fastGlob(resolved);
+        found = found.filter((file) => /\.styl$/i.test(file));
+      }
+
       // Recursively process resolved files as well to get nested deps
       for await (const detected of found) {
         if (!seen.has(detected)) {
@@ -146,7 +207,8 @@ async function getDependencies(
             source,
             detected,
             loaderContext,
-            resolveFilename,
+            webpackFileResolver,
+            webpackGlobResolver,
             options
           )) {
             res.set(importPath, resolvedPath);
@@ -160,6 +222,21 @@ async function getDependencies(
 }
 
 export default async function createEvaluator(code, options, loaderContext) {
+  const webpackFileResolver = loaderContext.getResolve({
+    conditionNames: ['styl', 'stylus', 'style'],
+    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+    mainFiles: ['index', '...'],
+    extensions: ['.styl', '.css'],
+    restrictions: [/\.(css|styl)$/i],
+  });
+
+  const webpackGlobResolver = loaderContext.getResolve({
+    conditionNames: ['styl', 'stylus', 'style'],
+    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+    mainFiles: ['index', '...'],
+    resolveToContext: true,
+  });
+
   let optionsImports = '';
 
   if (options.import) {
@@ -175,7 +252,8 @@ export default async function createEvaluator(code, options, loaderContext) {
           content,
           loaderContext.resourcePath,
           loaderContext,
-          resolveFilename,
+          webpackFileResolver,
+          webpackGlobResolver,
           options
         )
       )
