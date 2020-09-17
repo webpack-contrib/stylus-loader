@@ -426,6 +426,21 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('with paths, find deps with spaces and load like normal stylus', async () => {
+    const testId = './import-paths space.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        paths: [path.resolve(__dirname, 'fixtures', 'paths with space')],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('should work "include" option', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(testId, {
