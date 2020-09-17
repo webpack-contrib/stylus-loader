@@ -7338,3 +7338,14 @@ exports[`loader with paths, find deps and load like normal stylus: css 1`] = `
 exports[`loader with paths, find deps and load like normal stylus: errors 1`] = `Array []`;
 
 exports[`loader with paths, find deps and load like normal stylus: warnings 1`] = `Array []`;
+
+exports[`loader with paths, find deps with spaces and load like normal stylus: css 1`] = `
+".other-space {
+  font-family: serif;
+}
+"
+`;
+
+exports[`loader with paths, find deps with spaces and load like normal stylus: errors 1`] = `Array []`;
+
+exports[`loader with paths, find deps with spaces and load like normal stylus: warnings 1`] = `Array []`;
