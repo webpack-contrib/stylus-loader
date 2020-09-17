@@ -156,10 +156,6 @@ async function getDependencies(
         resolved = resolved.path;
       }
 
-      if (typeof importedPath === 'undefined') {
-        return;
-      }
-
       let found;
 
       if (resolved) {
@@ -193,28 +189,38 @@ async function getDependencies(
       }
 
       // Recursively process resolved files as well to get nested deps
-      for await (const detected of found) {
-        if (!seen.has(detected)) {
-          let source;
+      const nestedDeps = [];
 
-          try {
-            source = (await readFile(loaderContext.fs, detected)).toString();
-          } catch (error) {
-            loaderContext.emitError(error);
-          }
+      for (const detected of found) {
+        nestedDeps.push(
+          (async () => {
+            if (!seen.has(detected)) {
+              let source;
 
-          for (const [importPath, resolvedPath] of await getDependencies(
-            source,
-            detected,
-            loaderContext,
-            webpackFileResolver,
-            webpackGlobResolver,
-            options
-          )) {
-            res.set(importPath, resolvedPath);
-          }
-        }
+              try {
+                source = (
+                  await readFile(loaderContext.fs, detected)
+                ).toString();
+              } catch (error) {
+                loaderContext.emitError(error);
+              }
+
+              for (const [importPath, resolvedPath] of await getDependencies(
+                source,
+                detected,
+                loaderContext,
+                webpackFileResolver,
+                webpackGlobResolver,
+                options
+              )) {
+                res.set(importPath, resolvedPath);
+              }
+            }
+          })()
+        );
       }
+
+      await Promise.all(nestedDeps);
     })
   );
 
