@@ -7282,6 +7282,7 @@ exports[`loader with option resolveUrl noCheck, should resolve missing urls rela
   content: url(\\"img.png\\");
   content: url(\\"not-exist.png\\");
   background: url(\\"deep/deep-img.png\\");
+  background: url(\\"http://example.com/img.png\\");
   background: url(\\"!!deep/deep-img.png\\");
   background: url(\\"file!deep/deep-img.png\\");
   background: url(\\"file?foo!deep/deep-img.png\\");
@@ -7298,6 +7299,7 @@ exports[`loader with option, should not resolve urls relatively: css 1`] = `
   content: url(\\"../img.png\\");
   content: url(\\"../not-exist.png\\");
   background: url(\\"deep-img.png\\");
+  background: url(\\"http://example.com/img.png\\");
   background: url(\\"!!deep-img.png\\");
   background: url(\\"file!deep-img.png\\");
   background: url(\\"file?foo!deep-img.png\\");
@@ -7314,6 +7316,7 @@ exports[`loader with option, should resolve urls relatively: css 1`] = `
   content: url(\\"img.png\\");
   content: url(\\"../not-exist.png\\");
   background: url(\\"deep/deep-img.png\\");
+  background: url(\\"http://example.com/img.png\\");
   background: url(\\"!!deep/deep-img.png\\");
   background: url(\\"file!deep/deep-img.png\\");
   background: url(\\"file?foo!deep/deep-img.png\\");

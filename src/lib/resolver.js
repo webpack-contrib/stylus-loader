@@ -40,10 +40,6 @@ export default function resolver(options = {}) {
         return literal;
       }
 
-      if (parsedUrl.protocol) {
-        return parsedUrl.href;
-      }
-
       let found;
 
       // Check that file exists
