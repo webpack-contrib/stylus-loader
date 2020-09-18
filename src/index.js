@@ -58,9 +58,10 @@ export default async function stylusLoader(source) {
 
   if (stylusOptions.resolveUrl !== false) {
     stylusOptions.resolveUrl = {
-      ...stylusOptions.resolveUrl,
       paths: options.paths,
+      nocheck: stylusOptions.resolveUrl.noCheck,
     };
+
     styl.define('url', resolver(stylusOptions.resolveUrl));
   }
 
@@ -100,7 +101,7 @@ export default async function stylusLoader(source) {
     }
 
     // eslint-disable-next-line no-underscore-dangle
-    if (stylusOptions._imports.length) {
+    if (stylusOptions._imports.length > 0) {
       // eslint-disable-next-line no-underscore-dangle
       for (const importData of stylusOptions._imports) {
         this.addDependency(path.normalize(importData.path));

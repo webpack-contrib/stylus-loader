@@ -4,11 +4,11 @@ import { parse } from 'url';
 
 import { Compiler, nodes, utils } from 'stylus';
 
-export default function resolver(options = {}) {
+export default function deepResolver(options = {}) {
   // eslint-disable-next-line no-underscore-dangle
   const _paths = options.paths || [];
 
-  function resolve(url) {
+  function resolver(url) {
     const paths = _paths.concat(this.paths);
     const { filename } = url;
 
@@ -43,7 +43,7 @@ export default function resolver(options = {}) {
       let found;
 
       // Check that file exists
-      if (!options.noCheck) {
+      if (!options.nocheck) {
         found = utils.lookup(parsedUrl.pathname, paths, '', true);
 
         if (!found) {
@@ -64,17 +64,17 @@ export default function resolver(options = {}) {
         tail += parsedUrl.hash;
       }
 
-      let res =
+      let result =
         path.relative(
           path.dirname(name),
-          options.noCheck ? path.join(path.dirname(filename), found) : found
+          options.nocheck ? path.join(path.dirname(filename), found) : found
         ) + tail;
 
       if (path.sep === '\\') {
-        res = res.replace(/\\/g, '/');
+        result = result.replace(/\\/g, '/');
       }
 
-      return res;
+      return result;
     }
 
     components.push(resolvedFilePath);
@@ -82,8 +82,8 @@ export default function resolver(options = {}) {
     return new nodes.Literal(`url("${components.join('!')}")`);
   }
 
-  resolve.options = options;
-  resolve.raw = true;
+  resolver.options = options;
+  resolver.raw = true;
 
-  return resolve;
+  return resolver;
 }

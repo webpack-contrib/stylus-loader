@@ -555,7 +555,8 @@ describe('loader', () => {
       {
         resolve: {
           alias: {
-            globAlias: path.resolve(__dirname, 'fixtures', 'glob'),
+            globAlias: path.resolve(__dirname, 'fixtures', 'glob-webpack'),
+            globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
           },
         },
       }
