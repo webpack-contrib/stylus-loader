@@ -74,7 +74,15 @@ async function getDependencies(
   nodes.filename = filepath;
 
   const parser = new Parser(code, options);
-  const ast = parser.parse();
+
+  let ast;
+
+  try {
+    ast = parser.parse();
+  } catch (error) {
+    loaderContext.emitError(error);
+  }
+
   const deps = new Map();
 
   class ImportVisitor extends DepsResolver {
@@ -206,6 +214,9 @@ async function getDependencies(
         found = found.filter((file) => /\.styl$/i.test(file));
       }
 
+      // TODO
+      // this.deps = this.deps.concat(found);
+
       // Recursively process resolved files as well to get nested deps
       const nestedDeps = [];
 
@@ -222,6 +233,11 @@ async function getDependencies(
               } catch (error) {
                 loaderContext.emitError(error);
               }
+
+              // TODO
+              // dir = dirname(file)
+              // if (!~this.paths.indexOf(dir)) this.paths.push(dir);
+              // , block = new nodes.Block
 
               for (const [importPath, resolvedPath] of await getDependencies(
                 source,
@@ -291,12 +307,6 @@ export default async function createEvaluator(code, options, loaderContext) {
 
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
-      try {
-        return super.visitImport(imported);
-      } catch (ignoreError) {
-        // Then use the webpack resolver
-      }
-
       this.return += 1;
 
       const node = this.visit(imported.path).first;
