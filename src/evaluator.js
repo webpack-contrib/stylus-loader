@@ -92,38 +92,6 @@ async function getDependencies(
         return;
       }
 
-      let found;
-      let oldPath;
-
-      const literal = /\.css(?:"|$)/.test(nodePath);
-
-      if (!literal && !/\.styl$/i.test(nodePath)) {
-        oldPath = nodePath;
-        nodePath += '.styl';
-      }
-
-      found = utils.find(nodePath, this.paths, this.filename);
-
-      if (!found && oldPath)
-        found = utils.lookupIndex(oldPath, this.paths, this.filename);
-
-      if (found) {
-        // This is resolved glob
-        if (found.length > 1) {
-          return;
-        }
-
-        deps.set(
-          importedPath,
-          path.resolve(
-            loaderContext.rootContext,
-            path.relative(loaderContext.rootContext, ...found)
-          )
-        );
-
-        return;
-      }
-
       if (fastGlob.isDynamicPattern(importedPath)) {
         if (
           !isDirectory(
@@ -159,6 +127,33 @@ async function getDependencies(
 
           return;
         }
+      }
+
+      let found;
+      let oldPath;
+
+      const literal = /\.css(?:"|$)/.test(nodePath);
+
+      if (!literal && !/\.styl$/i.test(nodePath)) {
+        oldPath = nodePath;
+        nodePath += '.styl';
+      }
+
+      found = utils.find(nodePath, this.paths, this.filename);
+
+      if (!found && oldPath)
+        found = utils.lookupIndex(oldPath, this.paths, this.filename);
+
+      if (found) {
+        deps.set(
+          importedPath,
+          path.resolve(
+            loaderContext.rootContext,
+            path.relative(loaderContext.rootContext, ...found)
+          )
+        );
+
+        return;
       }
 
       deps.set(
@@ -291,7 +286,7 @@ export default async function createEvaluator(code, options, loaderContext) {
     return acc;
   }, []);
 
-  const deps = new Map(possibleImports);
+  const resolvedDependencies = new Map(possibleImports);
 
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
@@ -309,7 +304,7 @@ export default async function createEvaluator(code, options, loaderContext) {
       this.return -= 1;
 
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
-        const resolved = deps.get(nodePath);
+        const resolved = resolvedDependencies.get(nodePath);
 
         if (resolved) {
           node.string = resolved;

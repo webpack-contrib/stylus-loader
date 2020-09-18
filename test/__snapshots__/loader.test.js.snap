@@ -24,6 +24,12 @@ exports[`loader imports files listed in glob with webpack import: css 1`] = `
 .b-glob {
   background: #808080;
 }
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
 .glob-in-node {
   color: #fff;
 }
