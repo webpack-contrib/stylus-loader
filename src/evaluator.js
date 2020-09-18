@@ -2,6 +2,7 @@ import path from 'path';
 
 import Evaluator from 'stylus/lib/visitor/evaluator';
 
+import normalizePath from 'normalize-path';
 import fastGlob from 'fast-glob';
 import { urlToRequest } from 'loader-utils';
 import Parser from 'stylus/lib/parser';
@@ -193,7 +194,7 @@ async function getDependencies(
 
       if (resolved.isGlob) {
         pathIsGlob = true;
-        resolved = resolved.path;
+        resolved = normalizePath(resolved.path);
       }
 
       resolvedPaths.set(importedPath, resolved);
