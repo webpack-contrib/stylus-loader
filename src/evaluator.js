@@ -79,9 +79,48 @@ async function getDependencies(
   class ImportVisitor extends DepsResolver {
     // eslint-disable-next-line class-methods-use-this
     visitImport(imported) {
-      const importedPath = imported.path.first.string;
+      const node = imported.path.first;
+
+      if (node.name === 'url') {
+        return;
+      }
+
+      const importedPath = (!node.val.isNull && node.val) || node.name;
+      let nodePath = importedPath;
 
       if (!importedPath || deps.has(importedPath)) {
+        return;
+      }
+
+      let found;
+      let oldPath;
+
+      const literal = /\.css(?:"|$)/.test(nodePath);
+
+      if (!literal && !/\.styl$/i.test(nodePath)) {
+        oldPath = nodePath;
+        nodePath += '.styl';
+      }
+
+      found = utils.find(nodePath, this.paths, this.filename);
+
+      if (!found && oldPath)
+        found = utils.lookupIndex(oldPath, this.paths, this.filename);
+
+      if (found) {
+        // This is resolved glob
+        if (found.length > 1) {
+          return;
+        }
+
+        deps.set(
+          importedPath,
+          path.resolve(
+            loaderContext.rootContext,
+            path.relative(loaderContext.rootContext, ...found)
+          )
+        );
+
         return;
       }
 
@@ -138,50 +177,33 @@ async function getDependencies(
   new ImportVisitor(ast, options).visit(ast);
 
   // Recursively process depdendencies, and return a map with all resolved paths.
-  const res = new Map();
+  const resolvedPaths = new Map();
 
   await Promise.all(
     Array.from(deps.entries()).map(async (result) => {
-      let [importedPath, resolved] = result;
+      const [importedPath] = result;
+      let [, resolved] = result;
       let pathIsGlob;
 
       try {
         resolved = await resolved;
-      } catch (err) {
-        resolved = null;
+      } catch (ignoreError) {
+        /*
+         * The stylus can still resolve the paths obtained with `use` option
+         * example `nib`, `bootstrap`, or will generate an error
+         * */
+
+        return;
       }
 
-      if (resolved !== null && resolved.isGlob) {
+      if (resolved.isGlob) {
         pathIsGlob = true;
         resolved = resolved.path;
       }
 
-      let found;
+      resolvedPaths.set(importedPath, resolved);
 
-      if (resolved) {
-        found = Array.isArray(resolved) ? resolved : [resolved];
-        res.set(importedPath, resolved);
-      } else {
-        // support optional .styl
-        const originalPath = importedPath;
-        if (!/\.styl$/i.test(importedPath)) {
-          importedPath += '.styl';
-        }
-
-        const paths = (options.paths || []).concat(
-          path.dirname(filepath || '.')
-        );
-
-        found = utils.find(importedPath, paths, filepath);
-
-        if (!found) {
-          found = utils.lookupIndex(originalPath, paths, filepath);
-        }
-
-        if (!found) {
-          return;
-        }
-      }
+      let found = Array.isArray(resolved) ? resolved : [resolved];
 
       if (pathIsGlob) {
         found = await fastGlob(resolved);
@@ -213,7 +235,7 @@ async function getDependencies(
                 webpackGlobResolver,
                 options
               )) {
-                res.set(importPath, resolvedPath);
+                resolvedPaths.set(importPath, resolvedPath);
               }
             }
           })()
@@ -224,7 +246,7 @@ async function getDependencies(
     })
   );
 
-  return res;
+  return resolvedPaths;
 }
 
 export default async function createEvaluator(code, options, loaderContext) {
@@ -273,6 +295,12 @@ export default async function createEvaluator(code, options, loaderContext) {
 
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
+      try {
+        return super.visitImport(imported);
+      } catch (ignoreError) {
+        // Then use the webpack resolver
+      }
+
       this.return += 1;
 
       const node = this.visit(imported.path).first;
