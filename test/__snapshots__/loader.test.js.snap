@@ -199,11 +199,11 @@ exports[`loader imports files listed in option argument: errors 1`] = `Array []`
 exports[`loader imports files listed in option argument: warnings 1`] = `Array []`;
 
 exports[`loader imports the right file based on context: css 1`] = `
-".c-color {
-  color: #ccc;
+".a-color {
+  color: #aaa;
 }
-.c-color {
-  color: #ccc;
+.b-color {
+  color: #bbb;
 }
 "
 `;
