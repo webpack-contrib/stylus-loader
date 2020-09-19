@@ -59,6 +59,8 @@ function resolveRequests(context, possibleRequests, resolve) {
       return resolveRequests(context, tailPossibleRequests, resolve);
     });
 }
+const seen = new Set();
+const resolvedDependencies = new Map();
 
 async function getDependencies(
   code,
@@ -66,9 +68,10 @@ async function getDependencies(
   loaderContext,
   webpackFileResolver,
   webpackGlobResolver,
-  options,
-  seen = new Set()
+  options
 ) {
+  // options = { ...options, filename: filepath };
+
   seen.add(filepath);
 
   nodes.filename = filepath;
@@ -108,9 +111,9 @@ async function getDependencies(
             path.join(path.dirname(filepath), importedPath)
           )
         ) {
-          deps.set(
-            importedPath,
-            Promise.resolve().then(async () => {
+          deps.set(importedPath, {
+            filename: filepath,
+            resolved: Promise.resolve().then(async () => {
               const [parsedGlob] = fastGlob.generateTasks(importedPath);
 
               parsedGlob.glob =
@@ -131,8 +134,8 @@ async function getDependencies(
                 isGlob: true,
                 path: path.posix.join(globRoot, parsedGlob.glob),
               };
-            })
-          );
+            }),
+          });
 
           return;
         }
@@ -154,39 +157,37 @@ async function getDependencies(
         found = utils.lookupIndex(oldPath, this.paths, this.filename);
 
       if (found) {
-        deps.set(
-          importedPath,
-          path.resolve(
+        deps.set(importedPath, {
+          filename: filepath,
+          resolved: path.resolve(
             loaderContext.rootContext,
             path.relative(loaderContext.rootContext, ...found)
-          )
-        );
+          ),
+        });
 
         return;
       }
 
-      deps.set(
-        importedPath,
-        resolveFilename(
+      deps.set(importedPath, {
+        filename: filepath,
+        resolved: resolveFilename(
           importedPath,
-          loaderContext.rootContext,
+          path.dirname(filepath),
           loaderContext,
           webpackFileResolver,
           webpackGlobResolver
-        )
-      );
+        ),
+      });
     }
   }
 
   new ImportVisitor(ast, options).visit(ast);
 
   // Recursively process depdendencies, and return a map with all resolved paths.
-  const resolvedPaths = new Map();
-
   await Promise.all(
     Array.from(deps.entries()).map(async (result) => {
-      const [importedPath] = result;
-      let [, resolved] = result;
+      const [importedPath, importedData] = result;
+      let { filename, resolved } = importedData;
       let pathIsGlob;
 
       try {
@@ -205,7 +206,11 @@ async function getDependencies(
         resolved = normalizePath(resolved.path);
       }
 
-      resolvedPaths.set(importedPath, resolved);
+      if (!resolvedDependencies.has(filename)) {
+        resolvedDependencies.set(filename, []);
+      }
+
+      resolvedDependencies.get(filename).push({ importedPath, resolved });
 
       let found = Array.isArray(resolved) ? resolved : [resolved];
 
@@ -239,16 +244,14 @@ async function getDependencies(
               // if (!~this.paths.indexOf(dir)) this.paths.push(dir);
               // , block = new nodes.Block
 
-              for (const [importPath, resolvedPath] of await getDependencies(
+              await getDependencies(
                 source,
                 detected,
                 loaderContext,
                 webpackFileResolver,
                 webpackGlobResolver,
                 options
-              )) {
-                resolvedPaths.set(importPath, resolvedPath);
-              }
+              );
             }
           })()
         );
@@ -257,8 +260,6 @@ async function getDependencies(
       await Promise.all(nestedDeps);
     })
   );
-
-  return resolvedPaths;
 }
 
 export default async function createEvaluator(code, options, loaderContext) {
@@ -285,25 +286,18 @@ export default async function createEvaluator(code, options, loaderContext) {
       .join('\n');
   }
 
-  const possibleImports = (
-    await Promise.all(
-      [code, optionsImports].map((content) =>
-        getDependencies(
-          content,
-          loaderContext.resourcePath,
-          loaderContext,
-          webpackFileResolver,
-          webpackGlobResolver,
-          options
-        )
+  await Promise.all(
+    [code, optionsImports].map((content) =>
+      getDependencies(
+        content,
+        loaderContext.resourcePath,
+        loaderContext,
+        webpackFileResolver,
+        webpackGlobResolver,
+        options
       )
     )
-  ).reduce((acc, map) => {
-    acc.push(...map);
-    return acc;
-  }, []);
-
-  const resolvedDependencies = new Map(possibleImports);
+  );
 
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
@@ -315,10 +309,17 @@ export default async function createEvaluator(code, options, loaderContext) {
       this.return -= 1;
 
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
-        const resolved = resolvedDependencies.get(nodePath);
+        let resolvedDeps = resolvedDependencies.get(imported.path.filename);
 
-        if (resolved) {
-          node.string = resolved;
+        resolvedDeps =
+          typeof resolvedDeps !== 'undefined'
+            ? resolvedDeps.filter((i) => {
+                return i.importedPath === nodePath;
+              })
+            : [];
+
+        if (resolvedDeps.length > 0) {
+          node.string = resolvedDeps[0].resolved;
         }
       }
 
