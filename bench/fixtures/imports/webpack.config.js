@@ -1,12 +1,3 @@
-// Just run "webpack-dev-server"
-function plugin() {
-  return (style) => {
-    style.define('add', (a, b) => {
-      return a.operate('+', b);
-    });
-  };
-}
-
 module.exports = {
   context: __dirname,
   entry: './index.js',
@@ -14,22 +5,20 @@ module.exports = {
     path: `${__dirname}/tmp`,
     filename: 'bundle.js',
   },
-  resolve: {
-    extensions: ['', '.js', '.css', '.styl'],
-  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.styl$/,
-        loader: `style-loader!css-loader!${require('path').join(
-          __dirname,
-          '../../../index'
-        )}`,
+        use: [
+          {
+            loader: require('path').join(__dirname, './testLoader.js'),
+          },
+          {
+            loader: require('path').join(__dirname, '../../../dist/cjs.js'),
+            options: {},
+          },
+        ],
       },
     ],
-  },
-  stylus: {
-    use: [plugin()],
-    // importsCache: false,
   },
 };

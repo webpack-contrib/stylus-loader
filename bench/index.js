@@ -1,112 +1,88 @@
-// A little odd but benchmarkjs evals its tests to make more reliable sampling
-// of performance. This is unneccessary for such a large thing like webpack +
-// stylus-loader but benchmark already handles a lot of math around
-// benchmarking so we are using it currrently. The eval does lead to needing to
-// pass some values through the global context.
-global.fs = require('fs');
+const fs = require('fs');
+const path = require('path');
 
-var Benchmark = require('benchmark');
-var webpack = require('webpack');
-var MemoryFileSystem = require('webpack-dev-server/node_modules/webpack-dev-middleware/node_modules/memory-fs');
-var when = require('when');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const Benchmark = require('benchmark');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const MemoryFileSystem = require('memory-fs');
+const stylus = require('stylus');
+const webpack = require('webpack');
 
-var importWebpackConfig = require('./fixtures/imports/webpack.config');
+const importWebpackConfig = require('./fixtures/imports/webpack.config');
 
 function resolveOnComplete(fn) {
-  return function () {
-    var _this = this;
-    var args = arguments;
-    return when.promise(function (resolve) {
-      var result = fn.apply(_this, args);
-      result.on('complete', function () {
+  return () => {
+    const _this = this;
+    const args = arguments;
+
+    return new Promise((resolve) => {
+      const result = fn.apply(_this, args);
+      result.on('complete', () => {
         resolve();
       });
     });
   };
 }
 
-when
-  .resolve()
+const sourceFile = path.resolve(__dirname, 'fixtures', 'imports', 'index.styl');
+const source = fs.readFileSync(sourceFile).toString();
+
+const styl = stylus(source);
+
+const compiler = webpack(importWebpackConfig);
+compiler.outputFileSystem = new MemoryFileSystem();
+
+Promise.resolve()
   .then(
-    resolveOnComplete(function () {
-      var suite = new Benchmark.Suite();
+    resolveOnComplete(() => {
+      const suite = new Benchmark.Suite();
       suite
-        .add('imports', {
+        .add('Native stylus', {
           defer: true,
-          fn: function (deferred) {
-            var compiler = webpack(importWebpackConfig, function (
-              error,
-              stats
-            ) {
-              deferred.resolve();
-            });
-            compiler.outputFileSystem = new MemoryFileSystem();
+          fn(deferred) {
+            styl
+              .set('filename', sourceFile)
+              // eslint-disable-next-line no-unused-vars
+              .render((error, css) => {
+                if (error) {
+                  throw error;
+                }
+
+                deferred.resolve();
+              });
           },
         })
-        .on('cycle', function (event) {
+        .on('cycle', (event) => {
+          // eslint-disable-next-line no-console
           console.log(String(event.target));
         })
         .run({ async: true });
+
       return suite;
     })
   )
   .then(
-    resolveOnComplete(function () {
-      global.n = 0;
-      global.dirname = __dirname;
-      global.done = function () {};
-      var suite = new Benchmark.Suite()
-        .add('lr imports', {
+    resolveOnComplete(() => {
+      const suite = new Benchmark.Suite();
+      suite
+        .add('Stylus loader', {
           defer: true,
-          fn: function (deferred) {
-            try {
-              global.done = function () {
-                global.done = function () {};
-                deferred.resolve();
-              };
-              global.n++;
-              global.fs.writeFile(
-                global.dirname + '/fixtures/imports/aa.styl',
-                ['.aa {', '  color: #aaa;', '}', n % 2 == 0 ? '' : ' '].join(
-                  '\n'
-                ),
-                function (error) {
-                  global.compiler.run(function () {
-                    (done || global.done)();
-                  });
-                }
-              );
-            } catch (error) {
-              console.log(error);
-            }
+          fn(deferred) {
+            compiler.run((error, stats) => {
+              if (error) {
+                throw error;
+              }
+
+              deferred.resolve();
+            });
           },
         })
-        // add listeners
-        .on('error', console.error.bind(console))
-        .on('cycle', function (event) {
+        .on('cycle', (event) => {
+          // eslint-disable-next-line no-console
           console.log(String(event.target));
-        });
-
-      var webpackConfig = Object.create(importWebpackConfig);
-      webpackConfig.watch = true;
-      webpackConfig.keepAlive = true;
-      webpackConfig.catch = true;
-      var compiler = (global.compiler = webpack(webpackConfig));
-      compiler.outputFileSystem = new MemoryFileSystem();
-      done = function () {
-        done = null;
-        suite.run({ async: true });
-      };
-      compiler.run(function () {
-        (done || global.done || function () {})();
-      });
+        })
+        .run({ async: true });
 
       return suite;
     })
-  )
-  .then(function () {
-    fs.writeFile(
-      __dirname + '/fixtures/imports/aa.styl',
-      ['.aa {', '  color: #aaa;', '}', ''].join('\n')
-    );
-  });
+  );
