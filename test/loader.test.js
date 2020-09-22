@@ -206,7 +206,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('should work indented import', async () => {
+  it('should work indented import', async () => {
     const testId = './shallow-indent.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -222,11 +222,6 @@ describe('loader', () => {
       path.resolve(fixturesDir, 'node_modules', 'fakenib', 'index.styl'),
       path.resolve(fixturesDir, 'shallow-indent.styl'),
     ];
-
-    /*
-     * Todo for webpack@5
-     * when ...node_modules/stylus/lib/functions/index.styl breaks fileDependencies
-     * */
 
     fixtures.forEach((fixture) => {
       expect(fileDependencies.has(fixture)).toBe(true);
@@ -252,11 +247,6 @@ describe('loader', () => {
       path.resolve(fixturesDir, 'node_modules', 'fakenib', 'index.styl'),
       path.resolve(fixturesDir, 'import-binop.styl'),
     ];
-
-    /*
-     * Todo for webpack@5
-     * when ...node_modules/stylus/lib/functions/index.styl breaks fileDependencies
-     * */
 
     fixtures.forEach((fixture) => {
       expect(fileDependencies.has(fixture)).toBe(true);
