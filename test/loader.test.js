@@ -232,7 +232,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('should work binop import', async () => {
+  it('should work binop import', async () => {
     const testId = './import-binop.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -243,7 +243,7 @@ describe('loader', () => {
 
     const fixturesDir = path.resolve(__dirname, 'fixtures');
     const fixtures = [
-      path.resolve(fixturesDir, 'deep', 'import-fakenib.styl'),
+      path.resolve(fixturesDir, 'deep', 'import-fakenib-binop.styl'),
       path.resolve(fixturesDir, 'node_modules', 'fakenib', 'index.styl'),
       path.resolve(fixturesDir, 'import-binop.styl'),
     ];
