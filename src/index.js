@@ -96,8 +96,13 @@ export default async function stylusLoader(source) {
   // let stylus do its magic
   styl.render(async (error, css) => {
     if (error) {
-      this.addDependency(path.normalize(error.filename));
-      return callback(error);
+      if (error.filename) {
+        this.addDependency(path.normalize(error.filename));
+      }
+
+      callback(error);
+
+      return;
     }
 
     // eslint-disable-next-line no-underscore-dangle
@@ -119,11 +124,13 @@ export default async function stylusLoader(source) {
             (await readFile(this.fs, file)).toString()
           )
         );
-      } catch (errorFs) {
-        return callback(errorFs);
+      } catch (fsError) {
+        callback(fsError);
+
+        return;
       }
     }
 
-    return callback(null, css, map);
+    callback(null, css, map);
   });
 }

@@ -74,7 +74,15 @@ async function getDependencies(
   nodes.filename = filepath;
 
   const parser = new Parser(code, options);
-  const ast = parser.parse();
+
+  let ast;
+
+  try {
+    ast = parser.parse();
+  } catch (error) {
+    loaderContext.emitError(error);
+  }
+
   const deps = new Map();
 
   class ImportVisitor extends DepsResolver {
