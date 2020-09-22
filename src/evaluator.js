@@ -80,13 +80,20 @@ async function getDependencies(
   class ImportVisitor extends DepsResolver {
     // eslint-disable-next-line class-methods-use-this
     visitImport(imported) {
-      const node = imported.path.first;
+      let node = imported.path.first;
 
       if (node.name === 'url') {
         return;
       }
 
+      if (!node.val) {
+        const evaluator = new Evaluator(ast);
+
+        node = evaluator.visit.call(evaluator, node).first;
+      }
+
       const importedPath = (!node.val.isNull && node.val) || node.name;
+
       let nodePath = importedPath;
 
       if (!importedPath || deps.has(importedPath)) {
