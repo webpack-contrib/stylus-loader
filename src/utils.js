@@ -11,30 +11,16 @@ function getStylusOptions(loaderContext, loaderOptions) {
 
   stylusOptions.filename = loaderContext.resourcePath;
 
+  // Keep track of imported files (used by Stylus CLI watch mode)
+  // eslint-disable-next-line no-underscore-dangle
+  stylusOptions._imports = [];
+
   stylusOptions.resolveUrl =
     typeof stylusOptions.resolveUrl === 'boolean' && !stylusOptions.resolveUrl
       ? false
       : typeof stylusOptions.resolveUrl === 'object'
       ? stylusOptions.resolveUrl
       : {};
-
-  if (
-    typeof stylusOptions.use !== 'undefined' &&
-    stylusOptions.use.length > 0
-  ) {
-    for (const [i, plugin] of Object.entries(stylusOptions.use)) {
-      if (typeof plugin === 'string') {
-        try {
-          // eslint-disable-next-line import/no-dynamic-require,global-require
-          stylusOptions.use[i] = require(plugin)();
-        } catch (err) {
-          stylusOptions.use.splice(i, 1);
-          err.message = `Stylus plugin '${plugin}' failed to load. Are you sure it's installed?`;
-          loaderContext.emitWarning(err);
-        }
-      }
-    }
-  }
 
   return stylusOptions;
 }
