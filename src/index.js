@@ -7,8 +7,12 @@ import validateOptions from 'schema-utils';
 
 import schema from './options.json';
 import createEvaluator from './evaluator';
-import { getStylusOptions, readFile, normalizeSourceMap } from './utils';
-import resolver from './lib/resolver';
+import {
+  getStylusOptions,
+  urlResolver,
+  readFile,
+  normalizeSourceMap,
+} from './utils';
 
 export default async function stylusLoader(source) {
   const options = getOptions(this);
@@ -88,15 +92,8 @@ export default async function stylusLoader(source) {
     }
   }
 
-  styl.define('url', stylus.resolver(stylusOptions.resolveUrl));
-
   if (stylusOptions.resolveUrl !== false) {
-    stylusOptions.resolveUrl = {
-      paths: options.paths,
-      nocheck: stylusOptions.resolveUrl.noCheck,
-    };
-
-    styl.define('url', resolver(stylusOptions.resolveUrl));
+    styl.define('url', urlResolver(stylusOptions.resolveUrl));
   }
 
   if (typeof stylusOptions.define !== 'undefined') {

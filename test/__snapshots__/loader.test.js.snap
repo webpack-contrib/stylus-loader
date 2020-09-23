@@ -7331,7 +7331,7 @@ exports[`loader stylus can find modules in node_modules: warnings 1`] = `Array [
 exports[`loader with option resolveUrl noCheck, should resolve missing urls relatively: css 1`] = `
 ".img {
   content: url(\\"img.png\\");
-  content: url(\\"not-exist.png\\");
+  content: url(\\"../not-exist.png\\");
   background: url(\\"deep/deep-img.png\\");
   background: url(\\"http://example.com/img.png\\");
   background: url(\\"!!deep/deep-img.png\\");
@@ -7347,9 +7347,9 @@ exports[`loader with option resolveUrl noCheck, should resolve missing urls rela
 
 exports[`loader with option, should not resolve urls relatively: css 1`] = `
 ".img {
-  content: url(\\"img.png\\");
+  content: url(\\"../img.png\\");
   content: url(\\"../not-exist.png\\");
-  background: url(\\"deep/deep-img.png\\");
+  background: url(\\"deep-img.png\\");
   background: url(\\"http://example.com/img.png\\");
   background: url(\\"!!deep-img.png\\");
   background: url(\\"file!deep-img.png\\");
