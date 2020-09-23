@@ -260,7 +260,7 @@ async function getDependencies(
   return resolvedPaths;
 }
 
-export default async function createEvaluator(code, options, loaderContext) {
+export default async function createEvaluator(loaderContext, code, options) {
   const webpackFileResolver = loaderContext.getResolve({
     conditionNames: ['styl', 'stylus', 'style'],
     mainFields: ['styl', 'style', 'stylus', 'main', '...'],

@@ -67,7 +67,7 @@ export default async function stylusLoader(source) {
       : true;
 
   if (shouldUseWebpackImporter) {
-    styl.set('Evaluator', await createEvaluator(source, stylusOptions, this));
+    styl.set('Evaluator', await createEvaluator(this, source, stylusOptions));
   }
 
   if (
@@ -92,8 +92,8 @@ export default async function stylusLoader(source) {
     }
   }
 
-  if (stylusOptions.resolveUrl !== false) {
-    styl.define('url', urlResolver(stylusOptions.resolveUrl));
+  if (stylusOptions.resolveURL !== false) {
+    styl.define('url', urlResolver(stylusOptions.resolveURL));
   }
 
   if (typeof stylusOptions.define !== 'undefined') {

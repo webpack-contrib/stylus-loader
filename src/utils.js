@@ -17,12 +17,13 @@ function getStylusOptions(loaderContext, loaderOptions) {
   // eslint-disable-next-line no-underscore-dangle
   stylusOptions._imports = [];
 
-  stylusOptions.resolveUrl =
-    typeof stylusOptions.resolveUrl === 'boolean' && !stylusOptions.resolveUrl
+  // https://github.com/stylus/stylus/issues/2119
+  stylusOptions.resolveURL =
+    typeof stylusOptions.resolveURL === 'boolean' && !stylusOptions.resolveURL
       ? false
-      : typeof stylusOptions.resolveUrl === 'object'
-      ? stylusOptions.resolveUrl
-      : {};
+      : typeof stylusOptions.resolveURL === 'object'
+      ? stylusOptions.resolveURL
+      : { nocheck: true };
 
   return stylusOptions;
 }
