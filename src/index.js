@@ -7,8 +7,12 @@ import validateOptions from 'schema-utils';
 
 import schema from './options.json';
 import createEvaluator from './evaluator';
-import { getStylusOptions, readFile, normalizeSourceMap } from './utils';
-import resolver from './lib/resolver';
+import {
+  getStylusOptions,
+  urlResolver,
+  readFile,
+  normalizeSourceMap,
+} from './utils';
 
 export default async function stylusLoader(source) {
   const options = getOptions(this);
@@ -17,21 +21,6 @@ export default async function stylusLoader(source) {
     name: 'Stylus Loader',
     baseDataPath: 'options',
   });
-
-  const callback = this.async();
-
-  const stylusOptions = getStylusOptions(this, options);
-
-  const useSourceMap =
-    typeof options.sourceMap === 'boolean' ? options.sourceMap : this.sourceMap;
-
-  if (useSourceMap) {
-    stylusOptions.sourcemap = {
-      comment: false,
-      sourceRoot: this.rootContext,
-      basePath: this.rootContext,
-    };
-  }
 
   let data = source;
 
@@ -42,7 +31,80 @@ export default async function stylusLoader(source) {
         : `${options.additionalData}\n${data}`;
   }
 
+  const callback = this.async();
+
+  const stylusOptions = getStylusOptions(this, options);
   const styl = stylus(data, stylusOptions);
+
+  // include regular CSS on @import
+  if (stylusOptions.includeCSS) {
+    styl.set('include css', true);
+  }
+
+  if (stylusOptions.disableCache) {
+    styl.set('cache', false);
+  }
+
+  const useSourceMap =
+    typeof options.sourceMap === 'boolean' ? options.sourceMap : this.sourceMap;
+
+  if (stylusOptions.sourcemap || useSourceMap) {
+    styl.set(
+      'sourcemap',
+      useSourceMap
+        ? {
+            comment: false,
+            sourceRoot: this.rootContext,
+            basePath: this.rootContext,
+          }
+        : stylusOptions.sourcemap
+    );
+  }
+
+  const shouldUseWebpackImporter =
+    typeof options.webpackImporter === 'boolean'
+      ? options.webpackImporter
+      : true;
+
+  if (shouldUseWebpackImporter) {
+    styl.set('Evaluator', await createEvaluator(source, stylusOptions, this));
+  }
+
+  if (
+    typeof stylusOptions.use !== 'undefined' &&
+    stylusOptions.use.length > 0
+  ) {
+    for (const [i, plugin] of Object.entries(stylusOptions.use)) {
+      if (typeof plugin === 'string') {
+        try {
+          const resolved = require.resolve(plugin);
+
+          // eslint-disable-next-line import/no-dynamic-require, global-require
+          stylusOptions.use[i] = require(resolved)(stylusOptions);
+        } catch (error) {
+          callback(
+            `Failed to load "${plugin}" Stylus plugin. Are you sure it's installed?\n${error}`
+          );
+
+          return;
+        }
+      }
+    }
+  }
+
+  if (stylusOptions.resolveUrl !== false) {
+    styl.define('url', urlResolver(stylusOptions.resolveUrl));
+  }
+
+  if (typeof stylusOptions.define !== 'undefined') {
+    const definitions = Array.isArray(stylusOptions.define)
+      ? stylusOptions.define
+      : Object.entries(stylusOptions.define);
+
+    for (const defined of definitions) {
+      styl.define(...defined);
+    }
+  }
 
   if (typeof stylusOptions.include !== 'undefined') {
     for (const included of stylusOptions.include) {
@@ -56,44 +118,6 @@ export default async function stylusLoader(source) {
     }
   }
 
-  if (stylusOptions.resolveUrl !== false) {
-    stylusOptions.resolveUrl = {
-      paths: options.paths,
-      nocheck: stylusOptions.resolveUrl.noCheck,
-    };
-
-    styl.define('url', resolver(stylusOptions.resolveUrl));
-  }
-
-  if (typeof stylusOptions.define !== 'undefined') {
-    const definitions = Array.isArray(stylusOptions.define)
-      ? stylusOptions.define
-      : Object.entries(stylusOptions.define);
-
-    for (const defined of definitions) {
-      styl.define(...defined);
-    }
-  }
-
-  // include regular CSS on @import
-  if (stylusOptions.includeCSS) {
-    styl.set('include css', true);
-  }
-
-  const shouldUseWebpackImporter =
-    typeof options.webpackImporter === 'boolean'
-      ? options.webpackImporter
-      : true;
-
-  if (shouldUseWebpackImporter) {
-    styl.set('Evaluator', await createEvaluator(source, stylusOptions, this));
-  }
-
-  // keep track of imported files (used by Stylus CLI watch mode)
-  // eslint-disable-next-line no-underscore-dangle
-  stylusOptions._imports = [];
-
-  // let stylus do its magic
   styl.render(async (error, css) => {
     if (error) {
       if (error.filename) {

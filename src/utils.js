@@ -1,6 +1,8 @@
+import { parse } from 'url';
 import path from 'path';
 
 import { klona } from 'klona/full';
+import { Compiler, nodes, utils } from 'stylus';
 
 function getStylusOptions(loaderContext, loaderOptions) {
   const stylusOptions = klona(
@@ -11,6 +13,10 @@ function getStylusOptions(loaderContext, loaderOptions) {
 
   stylusOptions.filename = loaderContext.resourcePath;
 
+  // Keep track of imported files (used by Stylus CLI watch mode)
+  // eslint-disable-next-line no-underscore-dangle
+  stylusOptions._imports = [];
+
   stylusOptions.resolveUrl =
     typeof stylusOptions.resolveUrl === 'boolean' && !stylusOptions.resolveUrl
       ? false
@@ -18,25 +24,82 @@ function getStylusOptions(loaderContext, loaderOptions) {
       ? stylusOptions.resolveUrl
       : {};
 
-  if (
-    typeof stylusOptions.use !== 'undefined' &&
-    stylusOptions.use.length > 0
-  ) {
-    for (const [i, plugin] of Object.entries(stylusOptions.use)) {
-      if (typeof plugin === 'string') {
-        try {
-          // eslint-disable-next-line import/no-dynamic-require,global-require
-          stylusOptions.use[i] = require(plugin)();
-        } catch (err) {
-          stylusOptions.use.splice(i, 1);
-          err.message = `Stylus plugin '${plugin}' failed to load. Are you sure it's installed?`;
-          loaderContext.emitWarning(err);
-        }
+  return stylusOptions;
+}
+
+function urlResolver(options = {}) {
+  function resolver(url) {
+    const compiler = new Compiler(url);
+    const { filename } = url;
+
+    compiler.isURL = true;
+
+    // eslint-disable-next-line no-param-reassign
+    const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join('');
+    const splitted = visitedUrl.split('!');
+
+    // eslint-disable-next-line no-param-reassign
+    url = parse(splitted.pop());
+
+    // Parse literal
+    const literal = new nodes.Literal(`url("${url.href}")`);
+    let { pathname } = url;
+    let { dest } = this.options;
+    let tail = '';
+    let res;
+
+    // Absolute or hash
+    if (url.protocol || !pathname || pathname[0] === '/') {
+      return literal;
+    }
+
+    // Check that file exists
+    if (!options.nocheck) {
+      // eslint-disable-next-line no-underscore-dangle
+      const _paths = options.paths || [];
+
+      pathname = utils.lookup(pathname, _paths.concat(this.paths));
+
+      if (!pathname) {
+        return literal;
       }
     }
+
+    if (this.includeCSS && path.extname(pathname) === '.css') {
+      return new nodes.Literal(url.href);
+    }
+
+    if (url.search) {
+      tail += url.search;
+    }
+
+    if (url.hash) {
+      tail += url.hash;
+    }
+
+    if (dest && path.extname(dest) === '.css') {
+      dest = path.dirname(dest);
+    }
+
+    res =
+      path.relative(
+        dest || path.dirname(this.filename),
+        options.nocheck ? path.join(path.dirname(filename), pathname) : pathname
+      ) + tail;
+
+    if (path.sep === '\\') {
+      res = res.replace(/\\/g, '/');
+    }
+
+    splitted.push(res);
+
+    return new nodes.Literal(`url("${splitted.join('!')}")`);
   }
 
-  return stylusOptions;
+  resolver.options = options;
+  resolver.raw = true;
+
+  return resolver;
 }
 
 function readFile(inputFileSystem, filepath) {
@@ -45,6 +108,7 @@ function readFile(inputFileSystem, filepath) {
       if (error) {
         reject(error);
       }
+
       resolve(stats);
     });
   });
@@ -107,4 +171,10 @@ function isDirectory(inputFileSystem, filePath) {
   return stats.isDirectory();
 }
 
-export { getStylusOptions, readFile, normalizeSourceMap, isDirectory };
+export {
+  getStylusOptions,
+  urlResolver,
+  readFile,
+  normalizeSourceMap,
+  isDirectory,
+};
