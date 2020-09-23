@@ -140,10 +140,10 @@ module.exports = {
                  * @see https://stylus-lang.com/docs/js.html#stylusresolveroptions
                  *
                  * @type {boolean|Object}
-                 * @default true
+                 * @default { nocheck: true }
                  */
-                resolveUrl: true,
-                // resolveUrl: { noCheck: true },
+                resolveURL: true,
+                // resolveURL: { nocheck: true },
               },
             },
           },

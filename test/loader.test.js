@@ -103,7 +103,7 @@ describe('loader', () => {
     const testId = './shallow.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        resolveUrl: true,
+        resolveURL: true,
       },
     });
     const stats = await compile(compiler);
@@ -118,7 +118,7 @@ describe('loader', () => {
     const testId = './shallow.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        resolveUrl: false,
+        resolveURL: false,
       },
     });
     const stats = await compile(compiler);
@@ -129,12 +129,12 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('with option resolveUrl noCheck, should resolve missing urls relatively', async () => {
+  it('with option resolveURL nocheck, should resolve missing urls relatively', async () => {
     const testId = './shallow.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        resolveUrl: {
-          noCheck: true,
+        resolveURL: {
+          nocheck: true,
         },
       },
     });
