@@ -17,6 +17,42 @@ exports[`loader correctly compiles mixin calls inside imported files: errors 1`]
 
 exports[`loader correctly compiles mixin calls inside imported files: warnings 1`] = `Array []`;
 
+exports[`loader imports and paths deps: css 1`] = `
+".other {
+  font-family: serif;
+}
+"
+`;
+
+exports[`loader imports and paths deps: errors 1`] = `Array []`;
+
+exports[`loader imports and paths deps: warnings 1`] = `Array []`;
+
+exports[`loader imports and webpack alias: css 1`] = `
+".webpack-alias-1 {
+  color: #f00;
+}
+.webpack-alias-2 {
+  color: #ff7f50;
+}
+"
+`;
+
+exports[`loader imports and webpack alias: errors 1`] = `Array []`;
+
+exports[`loader imports and webpack alias: warnings 1`] = `Array []`;
+
+exports[`loader imports and webpack deps: css 1`] = `
+".imported-in-web-modules {
+  font-size: 2em;
+}
+"
+`;
+
+exports[`loader imports and webpack deps: errors 1`] = `Array []`;
+
+exports[`loader imports and webpack deps: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in glob with webpack import: css 1`] = `
 ".a-glob {
   color: #000;
@@ -96,66 +132,6 @@ exports[`loader imports files listed in option argument and deps: errors 1`] = `
 
 exports[`loader imports files listed in option argument and deps: warnings 1`] = `Array []`;
 
-exports[`loader imports files listed in option argument and paths deps: css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-"
-`;
-
-exports[`loader imports files listed in option argument and paths deps: errors 1`] = `Array []`;
-
-exports[`loader imports files listed in option argument and paths deps: warnings 1`] = `Array []`;
-
-exports[`loader imports files listed in option argument and webpack alias: css 1`] = `
-".webpack-alias-1 {
-  color: #f00;
-}
-.webpack-alias-2 {
-  color: #ff7f50;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-"
-`;
-
-exports[`loader imports files listed in option argument and webpack alias: errors 1`] = `Array []`;
-
-exports[`loader imports files listed in option argument and webpack alias: warnings 1`] = `Array []`;
-
-exports[`loader imports files listed in option argument and webpack deps: css 1`] = `
-".imported-in-web-modules {
-  font-size: 2em;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-"
-`;
-
-exports[`loader imports files listed in option argument and webpack deps: errors 1`] = `Array []`;
-
-exports[`loader imports files listed in option argument and webpack deps: warnings 1`] = `Array []`;
-
 exports[`loader imports files listed in option argument stylus paths style: css 1`] = `
 ".other {
   font-family: serif;
@@ -197,6 +173,28 @@ exports[`loader imports files listed in option argument: css 1`] = `
 exports[`loader imports files listed in option argument: errors 1`] = `Array []`;
 
 exports[`loader imports files listed in option argument: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option as glob: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option as glob: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option as glob: warnings 1`] = `Array []`;
 
 exports[`loader imports the right file based on context: css 1`] = `
 ".a-color {
@@ -435,7 +433,7 @@ exports[`loader should work "include" option: css 1`] = `
 ".other {
   font-family: serif;
 }
-.imported-stylus {
+.include-stylus {
   border: 5px;
 }
 "
