@@ -478,87 +478,6 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('with paths, find deps with spaces and load like normal stylus', async () => {
-    const testId = './import-paths space.styl';
-    const compiler = getCompiler(testId, {
-      stylusOptions: {
-        paths: [path.resolve(__dirname, 'fixtures', 'paths with space')],
-      },
-    });
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
-  it('should work "include" option', async () => {
-    const testId = './stylus.styl';
-    const compiler = getCompiler(testId, {
-      stylusOptions: {
-        import: ['in-paths.styl'],
-        include: [`${__dirname}/fixtures/paths`],
-      },
-    });
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
-  it('should work "nib"', async () => {
-    const testId = './basic-nib';
-    const compiler = getCompiler(testId, {
-      stylusOptions: {
-        // eslint-disable-next-line global-require
-        use: [require('nib')()],
-        import: ['nib'],
-      },
-    });
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
-  it('imports files listed in glob', async () => {
-    const testId = './import-glob.styl';
-    const compiler = getCompiler(testId);
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
-  it('imports files listed in glob with webpack import', async () => {
-    const testId = './import-glob-webpack.styl';
-    const compiler = getCompiler(
-      testId,
-      {},
-      {
-        resolve: {
-          alias: {
-            globAlias: path.resolve(__dirname, 'fixtures', 'glob-webpack'),
-            globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
-          },
-        },
-      }
-    );
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
   it('imports files listed in option argument webpack style', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(
@@ -620,11 +539,90 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument and paths deps', async () => {
-    const testId = './basic.styl';
+  it('with paths, find deps with spaces and load like normal stylus', async () => {
+    const testId = './import-paths space.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        import: ['import-paths.styl'],
+        paths: [path.resolve(__dirname, 'fixtures', 'paths with space')],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should work "include" option', async () => {
+    const testId = './include-option.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        include: [`${__dirname}/fixtures/paths`],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should work "nib"', async () => {
+    const testId = './basic-nib';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line global-require
+        use: [require('nib')()],
+        import: ['nib'],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in glob', async () => {
+    const testId = './import-glob.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in glob with webpack import', async () => {
+    const testId = './import-glob-webpack.styl';
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          alias: {
+            globAlias: path.resolve(__dirname, 'fixtures', 'glob-webpack'),
+            globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
+          },
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports and paths deps', async () => {
+    const testId = './import-paths.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
         paths: [`${__dirname}/fixtures/paths`],
       },
     });
@@ -636,15 +634,11 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument and webpack deps', async () => {
-    const testId = './basic.styl';
+  it('imports and webpack deps', async () => {
+    const testId = './import-webpack.styl';
     const compiler = getCompiler(
       testId,
-      {
-        stylusOptions: {
-          import: ['import-webpack.styl'],
-        },
-      },
+      {},
       {
         resolve: {
           modules: [path.join(__dirname, 'fixtures', 'web_modules')],
@@ -659,15 +653,11 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument and webpack alias', async () => {
-    const testId = './basic.styl';
+  it('imports and webpack alias', async () => {
+    const testId = './import-webpack-alias.styl';
     const compiler = getCompiler(
       testId,
-      {
-        stylusOptions: {
-          import: ['import-webpack-alias.styl'],
-        },
-      },
+      {},
       {
         resolve: {
           alias: {
