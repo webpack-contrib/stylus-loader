@@ -1,11 +1,8 @@
 import path from 'path';
 
-import Evaluator from 'stylus/lib/visitor/evaluator';
-
 import { klona } from 'klona/full';
-import { Parser, utils } from 'stylus';
+import { Evaluator, Parser, utils } from 'stylus';
 import DepsResolver from 'stylus/lib/visitor/deps-resolver';
-import normalizePath from 'normalize-path';
 
 import { resolveFilename, readFile } from './utils';
 
@@ -256,19 +253,13 @@ export default async function createEvaluator(loaderContext, code, options) {
             const { resolved } = dependency;
 
             if (!Array.isArray(resolved)) {
-              node.string = normalizePath(resolved);
-
-              // eslint-disable-next-line no-console
-              console.log(node.string);
+              node.string = resolved;
             } else if (resolved.length > 0) {
               const blocks = resolved.map((item) => {
                 const clonedImported = imported.clone();
                 const clonedNode = this.visit(clonedImported.path).first;
 
-                clonedNode.string = normalizePath(item);
-
-                // eslint-disable-next-line no-console
-                console.log(clonedNode.string);
+                clonedNode.string = item;
 
                 let result;
 
@@ -294,13 +285,6 @@ export default async function createEvaluator(loaderContext, code, options) {
 
               return mergeBlocks(blocks);
             }
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `failed to locate @${
-                imported.once ? 'require' : 'import'
-              } file ${nodePath} in ${node.filename}`
-            );
           }
         }
       }
