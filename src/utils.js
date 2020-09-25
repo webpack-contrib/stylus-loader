@@ -1,8 +1,10 @@
 import { parse } from 'url';
 import path from 'path';
 
-import { klona } from 'klona/full';
 import { Compiler, nodes, utils } from 'stylus';
+import { urlToRequest } from 'loader-utils';
+import { klona } from 'klona/full';
+import fastGlob from 'fast-glob';
 
 function getStylusOptions(loaderContext, loaderOptions) {
   const stylusOptions = klona(
@@ -26,6 +28,79 @@ function getStylusOptions(loaderContext, loaderOptions) {
       : { nocheck: true };
 
   return stylusOptions;
+}
+
+async function resolveFilename(
+  loaderContext,
+  webpackFileResolver,
+  webpackGlobResolver,
+  context,
+  filename
+) {
+  const isGlob = fastGlob.isDynamicPattern(filename);
+  const resolve = isGlob ? webpackGlobResolver : webpackFileResolver;
+
+  let parsedGlob;
+
+  if (isGlob) {
+    [parsedGlob] = fastGlob.generateTasks(filename);
+
+    // eslint-disable-next-line no-param-reassign
+    filename = parsedGlob.base === '.' ? context : parsedGlob.base;
+  }
+
+  const request = urlToRequest(
+    filename,
+    // eslint-disable-next-line no-undefined
+    filename.charAt(0) === '/' ? loaderContext.rootContext : undefined
+  );
+  const possibleRequests = [...new Set([request, filename])];
+
+  return resolveRequests(context, possibleRequests, resolve)
+    .then(async (result) => {
+      if (isGlob && result) {
+        loaderContext.addContextDependency(result);
+
+        return (
+          await fastGlob(
+            // TODO more test and improve it
+            parsedGlob.patterns.map((item) =>
+              item.slice(parsedGlob.base.length + 1)
+            ),
+            { cwd: result, absolute: true }
+          )
+        ).filter((file) => /\.styl$/i.test(file));
+      }
+
+      return result;
+    })
+    .catch((error) => {
+      if (isGlob) {
+        return resolveRequests(context, possibleRequests, webpackFileResolver);
+      }
+
+      throw error;
+    });
+}
+
+function resolveRequests(context, possibleRequests, resolve) {
+  if (possibleRequests.length === 0) {
+    return Promise.reject();
+  }
+
+  return resolve(context, possibleRequests[0])
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      const [, ...tailPossibleRequests] = possibleRequests;
+
+      if (tailPossibleRequests.length === 0) {
+        throw error;
+      }
+
+      return resolveRequests(context, tailPossibleRequests, resolve);
+    });
 }
 
 function urlResolver(options = {}) {
@@ -160,22 +235,10 @@ function normalizeSourceMap(map, rootContext) {
   return newMap;
 }
 
-function isDirectory(inputFileSystem, filePath) {
-  let stats;
-
-  try {
-    stats = inputFileSystem.statSync(filePath);
-  } catch (ignoreError) {
-    return false;
-  }
-
-  return stats.isDirectory();
-}
-
 export {
   getStylusOptions,
   urlResolver,
+  resolveFilename,
   readFile,
   normalizeSourceMap,
-  isDirectory,
 };

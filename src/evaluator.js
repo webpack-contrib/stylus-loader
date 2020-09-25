@@ -2,78 +2,26 @@ import path from 'path';
 
 import Evaluator from 'stylus/lib/visitor/evaluator';
 
-import normalizePath from 'normalize-path';
-import fastGlob from 'fast-glob';
-import { urlToRequest } from 'loader-utils';
-import Parser from 'stylus/lib/parser';
+import { klona } from 'klona/full';
+import { Parser, utils } from 'stylus';
 import DepsResolver from 'stylus/lib/visitor/deps-resolver';
-import nodes from 'stylus/lib/nodes';
-import utils from 'stylus/lib/utils';
 
-import { readFile, isDirectory } from './utils';
+import { resolveFilename, readFile } from './utils';
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
 
-async function resolveFilename(
-  filename,
-  currentDirectory,
-  loaderContext,
-  webpackFileResolver,
-  webpackGlobResolver,
-  resolveGlob
-) {
-  const resolve =
-    typeof resolveGlob === 'undefined'
-      ? webpackFileResolver
-      : webpackGlobResolver;
-
-  const request = urlToRequest(
-    filename,
-    // eslint-disable-next-line no-undefined
-    filename.charAt(0) === '/' ? loaderContext.rootContext : undefined
-  );
-
-  return resolveRequests(
-    currentDirectory,
-    [...new Set([request, filename])],
-    resolve
-  );
-}
-
-function resolveRequests(context, possibleRequests, resolve) {
-  if (possibleRequests.length === 0) {
-    return Promise.reject();
-  }
-
-  return resolve(context, possibleRequests[0])
-    .then((result) => {
-      return result;
-    })
-    .catch((error) => {
-      const [, ...tailPossibleRequests] = possibleRequests;
-
-      if (tailPossibleRequests.length === 0) {
-        throw error;
-      }
-
-      return resolveRequests(context, tailPossibleRequests, resolve);
-    });
-}
-
 async function getDependencies(
-  code,
-  filepath,
+  resolvedDependencies,
   loaderContext,
-  webpackFileResolver,
-  webpackGlobResolver,
-  options,
-  seen = new Set()
+  fileResolver,
+  globResolver,
+  code,
+  filename,
+  options
 ) {
-  seen.add(filepath);
-
-  nodes.filename = filepath;
-
-  const parser = new Parser(code, options);
+  // TODO cache
+  const newOptions = klona({ ...options, filename, cache: false });
+  const parser = new Parser(code, newOptions);
 
   let ast;
 
@@ -81,187 +29,165 @@ async function getDependencies(
     ast = parser.parse();
   } catch (error) {
     loaderContext.emitError(error);
+
+    return;
   }
 
-  const deps = new Map();
+  const dependencies = [];
 
   class ImportVisitor extends DepsResolver {
     // eslint-disable-next-line class-methods-use-this
-    visitImport(imported) {
-      let node = imported.path.first;
+    visitImport(node) {
+      let firstNode = node.path.first;
 
-      if (node.name === 'url') {
+      if (firstNode.name === 'url') {
         return;
       }
 
-      if (!node.val) {
+      if (!firstNode.val) {
         const evaluator = new Evaluator(ast);
 
-        node = evaluator.visit.call(evaluator, node).first;
+        firstNode = evaluator.visit.call(evaluator, firstNode).first;
       }
 
-      const importedPath = (!node.val.isNull && node.val) || node.name;
+      const originalNodePath =
+        (!firstNode.val.isNull && firstNode.val) || firstNode.name;
+      let nodePath = originalNodePath;
 
-      let nodePath = importedPath;
-
-      if (!importedPath || deps.has(importedPath)) {
+      if (!nodePath) {
         return;
-      }
-
-      if (fastGlob.isDynamicPattern(importedPath)) {
-        if (
-          !isDirectory(
-            loaderContext.fs,
-            path.join(path.dirname(filepath), importedPath)
-          )
-        ) {
-          deps.set(
-            importedPath,
-            Promise.resolve().then(async () => {
-              const [parsedGlob] = fastGlob.generateTasks(importedPath);
-
-              parsedGlob.glob =
-                parsedGlob.base === '.'
-                  ? importedPath
-                  : importedPath.slice(parsedGlob.base.length + 1);
-
-              const globRoot = await resolveFilename(
-                parsedGlob.base,
-                path.dirname(filepath),
-                loaderContext,
-                webpackFileResolver,
-                webpackGlobResolver,
-                true
-              );
-
-              return {
-                isGlob: true,
-                path: path.posix.join(globRoot, parsedGlob.glob),
-              };
-            })
-          );
-
-          return;
-        }
       }
 
       let found;
-      let oldPath;
+      let oldNodePath;
 
       const literal = /\.css(?:"|$)/.test(nodePath);
 
       if (!literal && !/\.styl$/i.test(nodePath)) {
-        oldPath = nodePath;
+        oldNodePath = nodePath;
         nodePath += '.styl';
       }
 
       found = utils.find(nodePath, this.paths, this.filename);
 
-      if (!found && oldPath)
-        found = utils.lookupIndex(oldPath, this.paths, this.filename);
+      if (!found && oldNodePath) {
+        found = utils.lookupIndex(oldNodePath, this.paths, this.filename);
+      }
 
       if (found) {
-        deps.set(
-          importedPath,
-          path.resolve(
-            loaderContext.rootContext,
-            path.relative(loaderContext.rootContext, ...found)
-          )
-        );
+        dependencies.push({
+          originalLineno: firstNode.lineno,
+          originalColumn: firstNode.column,
+          originalNodePath,
+          resolved: found.map((item) =>
+            path.isAbsolute(item) ? item : path.join(process.cwd(), item)
+          ),
+        });
 
         return;
       }
 
-      deps.set(
-        importedPath,
-        resolveFilename(
-          importedPath,
-          loaderContext.rootContext,
+      dependencies.push({
+        originalLineno: firstNode.lineno,
+        originalColumn: firstNode.column,
+        originalNodePath,
+        resolved: resolveFilename(
           loaderContext,
-          webpackFileResolver,
-          webpackGlobResolver
-        )
-      );
+          fileResolver,
+          globResolver,
+          path.dirname(filename),
+          originalNodePath
+        ),
+      });
     }
   }
 
-  new ImportVisitor(ast, options).visit(ast);
-
-  // Recursively process depdendencies, and return a map with all resolved paths.
-  const resolvedPaths = new Map();
+  new ImportVisitor(ast, newOptions).visit(ast);
 
   await Promise.all(
-    Array.from(deps.entries()).map(async (result) => {
-      const [importedPath] = result;
-      let [, resolved] = result;
-      let pathIsGlob;
+    Array.from(dependencies).map(async (result) => {
+      let { resolved } = result;
 
       try {
         resolved = await resolved;
       } catch (ignoreError) {
-        /*
-         * The stylus can still resolve the paths obtained with `use` option
-         * example `nib`, `bootstrap`, or will generate an error
-         * */
+        // eslint-disable-next-line no-param-reassign
+        delete result.resolved;
+
+        // eslint-disable-next-line no-param-reassign
+        result.error = ignoreError;
 
         return;
       }
 
-      if (resolved.isGlob) {
-        pathIsGlob = true;
-        resolved = normalizePath(resolved.path);
-      }
+      // eslint-disable-next-line no-param-reassign
+      result.resolved = resolved;
 
-      resolvedPaths.set(importedPath, resolved);
+      resolved = Array.isArray(resolved) ? resolved : [resolved];
 
-      let found = Array.isArray(resolved) ? resolved : [resolved];
+      const dependenciesOfDependencies = [];
 
-      if (pathIsGlob) {
-        found = await fastGlob(resolved);
-        found = found.filter((file) => /\.styl$/i.test(file));
-      }
+      for (const dependency of resolved) {
+        // Avoid loop, the file is imported by itself
+        if (dependency === filename) {
+          return;
+        }
 
-      // Recursively process resolved files as well to get nested deps
-      const nestedDeps = [];
+        loaderContext.addDependency(path.normalize(dependency));
 
-      for (const detected of found) {
-        nestedDeps.push(
+        dependenciesOfDependencies.push(
           (async () => {
-            if (!seen.has(detected)) {
-              let source;
+            let dependencyCode;
 
-              try {
-                source = (
-                  await readFile(loaderContext.fs, detected)
-                ).toString();
-              } catch (error) {
-                loaderContext.emitError(error);
-              }
-
-              for (const [importPath, resolvedPath] of await getDependencies(
-                source,
-                detected,
-                loaderContext,
-                webpackFileResolver,
-                webpackGlobResolver,
-                options
-              )) {
-                resolvedPaths.set(importPath, resolvedPath);
-              }
+            try {
+              dependencyCode = (
+                await readFile(loaderContext.fs, dependency)
+              ).toString();
+            } catch (error) {
+              loaderContext.emitError(error);
             }
+
+            await getDependencies(
+              resolvedDependencies,
+              loaderContext,
+              fileResolver,
+              globResolver,
+              dependencyCode,
+              dependency,
+              options
+            );
           })()
         );
       }
 
-      await Promise.all(nestedDeps);
+      await Promise.all(dependenciesOfDependencies);
     })
   );
 
-  return resolvedPaths;
+  if (dependencies.length > 0) {
+    resolvedDependencies.set(filename, dependencies);
+  }
+}
+
+function mergeBlocks(blocks) {
+  let finalBlock;
+  const adding = (item) => {
+    finalBlock.push(item);
+  };
+
+  for (const block of blocks) {
+    if (finalBlock) {
+      block.nodes.forEach(adding);
+    } else {
+      finalBlock = block;
+    }
+  }
+
+  return finalBlock;
 }
 
 export default async function createEvaluator(loaderContext, code, options) {
-  const webpackFileResolver = loaderContext.getResolve({
+  const fileResolve = loaderContext.getResolve({
     conditionNames: ['styl', 'stylus', 'style'],
     mainFields: ['styl', 'style', 'stylus', 'main', '...'],
     mainFiles: ['index', '...'],
@@ -269,65 +195,116 @@ export default async function createEvaluator(loaderContext, code, options) {
     restrictions: [/\.(css|styl)$/i],
   });
 
-  const webpackGlobResolver = loaderContext.getResolve({
+  const globResolve = loaderContext.getResolve({
     conditionNames: ['styl', 'stylus', 'style'],
     mainFields: ['styl', 'style', 'stylus', 'main', '...'],
     mainFiles: ['index', '...'],
     resolveToContext: true,
   });
 
-  let optionsImports = '';
+  const resolvedDependencies = new Map();
 
-  if (options.import) {
-    optionsImports = options.import
-      .map((entry) => `@import "${entry}";`)
-      .join('\n');
-  }
-
-  const possibleImports = (
-    await Promise.all(
-      [code, optionsImports].map((content) =>
-        getDependencies(
-          content,
-          loaderContext.resourcePath,
-          loaderContext,
-          webpackFileResolver,
-          webpackGlobResolver,
-          options
-        )
-      )
-    )
-  ).reduce((acc, map) => {
-    acc.push(...map);
-    return acc;
-  }, []);
-
-  const resolvedDependencies = new Map(possibleImports);
+  await getDependencies(
+    resolvedDependencies,
+    loaderContext,
+    fileResolve,
+    globResolve,
+    code,
+    loaderContext.resourcePath,
+    options
+  );
 
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
-      try {
-        return super.visitImport(imported);
-      } catch (ignoreError) {
-        // Then use the webpack resolver
-      }
-
       this.return += 1;
 
       const node = this.visit(imported.path).first;
-      const nodePath = node.string;
+      const nodePath = (!node.val.isNull && node.val) || node.name;
 
       this.return -= 1;
 
-      if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
-        const resolved = resolvedDependencies.get(nodePath);
+      let webpackResolveError;
 
-        if (resolved) {
-          node.string = resolved;
+      if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
+        const dependencies = resolvedDependencies.get(node.filename);
+
+        if (dependencies) {
+          const dependency = dependencies.find((item) => {
+            if (
+              item.originalLineno === node.lineno &&
+              item.originalColumn === node.column &&
+              item.originalNodePath === nodePath
+            ) {
+              if (item.error) {
+                webpackResolveError = item.error;
+              } else {
+                return item.resolved;
+              }
+            }
+
+            return false;
+          });
+
+          if (dependency) {
+            const { resolved } = dependency;
+
+            if (!Array.isArray(resolved)) {
+              node.string = resolved;
+            } else if (resolved.length > 0) {
+              const blocks = resolved.map((item) => {
+                const clonedImported = imported.clone();
+                const clonedNode = this.visit(clonedImported.path).first;
+
+                clonedNode.string = item;
+
+                let result;
+
+                try {
+                  result = super.visitImport(clonedImported);
+                } catch (error) {
+                  loaderContext.emitError(
+                    new Error(
+                      `Stylus resolver error:\n${error.message}${
+                        webpackResolveError
+                          ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
+                            `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
+                          : ''
+                      }`
+                    )
+                  );
+
+                  return imported;
+                }
+
+                return result;
+              });
+
+              return mergeBlocks(blocks);
+            }
+          }
         }
       }
 
-      return super.visitImport(imported);
+      let result;
+
+      try {
+        result = super.visitImport(imported);
+      } catch (error) {
+        loaderContext.emitError(
+          new Error(
+            `Stylus resolver error:\n${error.message}${
+              webpackResolveError
+                ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
+                  `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
+                : ''
+            }`
+          )
+        );
+
+        return imported;
+      }
+
+      return result;
     }
   };
 }
