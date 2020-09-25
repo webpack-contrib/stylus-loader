@@ -766,7 +766,12 @@ describe('loader', () => {
     expect(
       getErrors(stats).map((item) =>
         // Due bug in `node-glob`
-        process.platform === 'win32' ? 'import loop has been found' : item
+        process.platform === 'win32'
+          ? item.replace(
+              'failed to locate @import file self.styl',
+              'import loop has been found'
+            )
+          : item
       )
     ).toMatchSnapshot('errors');
   });
