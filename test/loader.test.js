@@ -1251,6 +1251,25 @@ describe('loader', () => {
     ).toMatchSnapshot('errors');
   });
 
+  it('should emit error when import self', async () => {
+    const testId = './imports/self.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(
+      getErrors(stats).map((item) =>
+        // Due bug in `node-glob`
+        process.platform === 'win32'
+          ? item.replace(
+              'failed to locate @import file self.styl',
+              'import loop has been found'
+            )
+          : item
+      )
+    ).toMatchSnapshot('errors');
+  });
+
   it('should emit error when import loop', async () => {
     const testId = './import-recursive.styl';
     const compiler = getCompiler(testId);
