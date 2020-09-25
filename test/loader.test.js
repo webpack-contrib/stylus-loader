@@ -1117,7 +1117,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files listed in option as glob', async () => {
+  it('imports files listed in option as glob', async () => {
     const testId = './basic.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
