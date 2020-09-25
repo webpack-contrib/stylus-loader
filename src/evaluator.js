@@ -1,9 +1,7 @@
 import path from 'path';
 
-import Evaluator from 'stylus/lib/visitor/evaluator';
-
 import { klona } from 'klona/full';
-import { Parser, utils } from 'stylus';
+import { Evaluator, Parser, utils } from 'stylus';
 import DepsResolver from 'stylus/lib/visitor/deps-resolver';
 
 import { resolveFilename, readFile } from './utils';

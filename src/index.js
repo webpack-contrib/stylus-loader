@@ -61,48 +61,37 @@ export default async function stylusLoader(source) {
     );
   }
 
-  const shouldUseWebpackImporter =
-    typeof options.webpackImporter === 'boolean'
-      ? options.webpackImporter
-      : true;
-
-  if (shouldUseWebpackImporter) {
-    styl.set('Evaluator', await createEvaluator(this, source, stylusOptions));
-  }
-
   if (
     typeof stylusOptions.use !== 'undefined' &&
     stylusOptions.use.length > 0
   ) {
-    for (const [i, plugin] of Object.entries(stylusOptions.use)) {
-      if (typeof plugin === 'string') {
+    let { length } = stylusOptions.use;
+
+    // eslint-disable-next-line no-plusplus
+    while (length--) {
+      let [item] = stylusOptions.use.splice(length, 1);
+      if (typeof item === 'string') {
         try {
-          const resolved = require.resolve(plugin);
+          const resolved = require.resolve(item);
 
           // eslint-disable-next-line import/no-dynamic-require, global-require
-          stylusOptions.use[i] = require(resolved)(stylusOptions);
+          item = require(resolved)(stylusOptions);
         } catch (error) {
           callback(
-            `Failed to load "${plugin}" Stylus plugin. Are you sure it's installed?\n${error}`
+            `Failed to load "${item}" Stylus plugin. Are you sure it's installed?\n${error}`
           );
 
           return;
         }
       }
+
+      styl.use(item);
     }
   }
 
-  if (stylusOptions.resolveURL !== false) {
-    styl.define('url', urlResolver(stylusOptions.resolveURL));
-  }
-
-  if (typeof stylusOptions.define !== 'undefined') {
-    const definitions = Array.isArray(stylusOptions.define)
-      ? stylusOptions.define
-      : Object.entries(stylusOptions.define);
-
-    for (const defined of definitions) {
-      styl.define(...defined);
+  if (typeof stylusOptions.import !== 'undefined') {
+    for (const imported of stylusOptions.import) {
+      styl.import(imported);
     }
   }
 
@@ -112,9 +101,26 @@ export default async function stylusLoader(source) {
     }
   }
 
-  if (typeof stylusOptions.import !== 'undefined') {
-    for (const imported of stylusOptions.import) {
-      styl.import(imported);
+  if (stylusOptions.resolveURL !== false) {
+    styl.define('url', urlResolver(stylusOptions.resolveURL));
+  }
+
+  const shouldUseWebpackImporter =
+    typeof options.webpackImporter === 'boolean'
+      ? options.webpackImporter
+      : true;
+
+  if (shouldUseWebpackImporter) {
+    styl.set('Evaluator', await createEvaluator(this, source, stylusOptions));
+  }
+
+  if (typeof stylusOptions.define !== 'undefined') {
+    const definitions = Array.isArray(stylusOptions.define)
+      ? stylusOptions.define
+      : Object.entries(stylusOptions.define);
+
+    for (const defined of definitions) {
+      styl.define(...defined);
     }
   }
 
