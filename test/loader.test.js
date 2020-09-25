@@ -763,14 +763,9 @@ describe('loader', () => {
     const stats = await compile(compiler);
 
     expect(
-      // Due bug in `node-glob`
       getWarnings(stats).map((item) =>
-        process.platform === 'win32'
-          ? item.replace(
-              'failed to locate @import file self.styl',
-              'import loop has been found'
-            )
-          : item
+        // Due bug in `node-glob`
+        process.platform === 'win32' ? 'import loop has been found' : item
       )
     ).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
