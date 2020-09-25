@@ -287,6 +287,13 @@ export default async function createEvaluator(loaderContext, code, options) {
 
               return mergeBlocks(blocks);
             }
+          } else {
+            // eslint-disable-next-line no-console
+            console.log(
+              `failed to locate @${
+                imported.once ? 'require' : 'import'
+              } file ${nodePath} in ${node.filename}`
+            );
           }
         }
       }
