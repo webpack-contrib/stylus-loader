@@ -1,9 +1,10 @@
 import { parse } from 'url';
 import path from 'path';
 
-import { klona } from 'klona/full';
 import { Compiler, nodes, utils } from 'stylus';
 import { urlToRequest } from 'loader-utils';
+import { klona } from 'klona/full';
+import fastGlob from 'fast-glob';
 
 function getStylusOptions(loaderContext, loaderOptions) {
   const stylusOptions = klona(
@@ -36,25 +37,48 @@ async function resolveFilename(
   context,
   filename
 ) {
-  let stats;
+  const isGlob = fastGlob.isDynamicPattern(filename);
+  const resolve = isGlob ? webpackGlobResolver : webpackFileResolver;
 
-  try {
-    stats = await stat(loaderContext.fs, filename);
-  } catch (ignoreError) {
-    // Ignore
+  let parsedGlob;
+
+  if (isGlob) {
+    [parsedGlob] = fastGlob.generateTasks(filename);
+
+    // eslint-disable-next-line no-param-reassign
+    filename = parsedGlob.base === '.' ? context : parsedGlob.base;
   }
 
-  const resolve =
-    stats || typeof stats === 'undefined'
-      ? webpackFileResolver
-      : webpackGlobResolver;
   const request = urlToRequest(
     filename,
     // eslint-disable-next-line no-undefined
     filename.charAt(0) === '/' ? loaderContext.rootContext : undefined
   );
+  const possibleRequests = [...new Set([request, filename])];
 
-  return resolveRequests(context, [...new Set([request, filename])], resolve);
+  return resolveRequests(context, possibleRequests, resolve)
+    .then(async (result) => {
+      if (isGlob && result) {
+        return (
+          await fastGlob(
+            // TODO more test and improve it
+            parsedGlob.patterns.map((item) =>
+              item.slice(parsedGlob.base.length + 1)
+            ),
+            { cwd: result, absolute: true }
+          )
+        ).filter((file) => /\.styl$/i.test(file));
+      }
+
+      return result;
+    })
+    .catch((error) => {
+      if (isGlob) {
+        return resolveRequests(context, possibleRequests, webpackFileResolver);
+      }
+
+      throw error;
+    });
 }
 
 function resolveRequests(context, possibleRequests, resolve) {
@@ -150,18 +174,6 @@ function urlResolver(options = {}) {
   resolver.raw = true;
 
   return resolver;
-}
-
-function stat(inputFileSystem, pathLike) {
-  return new Promise((resolve, reject) => {
-    inputFileSystem.stat(pathLike, (error, stats) => {
-      if (error) {
-        reject(error);
-      }
-
-      resolve(stats);
-    });
-  });
 }
 
 function readFile(inputFileSystem, filepath) {

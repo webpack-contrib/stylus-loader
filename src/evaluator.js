@@ -227,7 +227,7 @@ export default async function createEvaluator(loaderContext, code, options) {
 
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
         const dependencies = resolvedDependencies.get(node.filename);
-
+        
         if (dependencies) {
           const dependency = dependencies.find(
             ({
@@ -258,7 +258,7 @@ export default async function createEvaluator(loaderContext, code, options) {
 
             if (!Array.isArray(resolved)) {
               node.string = resolved;
-            } else {
+            } else if (resolved.length > 0) {
               const blocks = resolved.map((item) => {
                 const clonedImported = imported.clone();
                 const clonedNode = this.visit(clonedImported.path).first;
