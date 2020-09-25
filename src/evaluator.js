@@ -270,7 +270,7 @@ export default async function createEvaluator(loaderContext, code, options) {
                 } catch (error) {
                   loaderContext.emitError(
                     new Error(
-                      `Stylus resolver error:\n${error.message}${
+                      `Stylus resolver error: ${error.message}${
                         webpackResolveError
                           ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
                             `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
@@ -298,7 +298,7 @@ export default async function createEvaluator(loaderContext, code, options) {
       } catch (error) {
         loaderContext.emitError(
           new Error(
-            `Stylus resolver error:\n${error.message}${
+            `Stylus resolver error: ${error.message}${
               webpackResolveError
                 ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
                   `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`

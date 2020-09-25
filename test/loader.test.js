@@ -763,7 +763,17 @@ describe('loader', () => {
     const stats = await compile(compiler);
 
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
+    expect(
+      getErrors(stats).map((item) =>
+        // Due bug in `node-glob`
+        process.platform === 'win32'
+          ? item.replace(
+              'failed to locate @import file self.styl',
+              'import loop has been found'
+            )
+          : item
+      )
+    ).toMatchSnapshot('errors');
   });
 
   it('should emit error when import loop', async () => {
