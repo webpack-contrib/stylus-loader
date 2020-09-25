@@ -940,7 +940,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files in dir like a glob', async () => {
+  it.skip('imports files in dir like a glob', async () => {
     const testId = './import-dir-like-a-glob.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -953,7 +953,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files in dir like a glob through webpack', async () => {
+  it.skip('imports files in dir like a glob through webpack', async () => {
     const testId = './import-webpack-dir-like-a-glob.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
