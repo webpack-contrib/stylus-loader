@@ -61,15 +61,15 @@ async function resolveFilename(
       if (isGlob && result) {
         loaderContext.addContextDependency(result);
 
-        return (
-          await fastGlob(
-            // TODO more test and improve it
-            parsedGlob.patterns.map((item) =>
-              item.slice(parsedGlob.base.length + 1)
-            ),
-            { cwd: result, absolute: true }
-          )
-        ).filter((file) => /\.styl$/i.test(file));
+        const paths = await fastGlob(
+          // TODO more test and improve it
+          parsedGlob.patterns.map((item) =>
+            item.slice(parsedGlob.base.length + 1)
+          ),
+          { cwd: result, absolute: true }
+        );
+
+        return paths.filter((file) => /\.styl$/i.test(file));
       }
 
       return result;

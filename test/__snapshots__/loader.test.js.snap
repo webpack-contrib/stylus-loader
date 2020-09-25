@@ -130,6 +130,41 @@ exports[`loader imports files listed in glob with deps: errors 1`] = `Array []`;
 
 exports[`loader imports files listed in glob with deps: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in glob with webpack import 2: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in glob with webpack import 2: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with webpack import 2: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in glob with webpack import with deps: css 1`] = `
 ".a-glob {
   color: #000;

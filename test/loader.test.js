@@ -948,7 +948,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files listed in glob with webpack import 2', async () => {
+  it('imports files listed in glob with webpack import 2', async () => {
     const testId = './import-glob-webpack-2.styl';
     const compiler = getCompiler(
       testId,
@@ -957,6 +957,7 @@ describe('loader', () => {
         resolve: {
           alias: {
             globAliasDot: path.resolve(__dirname, 'fixtures', 'glob-webpack-2'),
+            globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
           },
         },
       }
