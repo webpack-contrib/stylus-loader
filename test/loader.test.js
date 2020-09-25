@@ -3,6 +3,7 @@ import path from 'path';
 import {
   compile,
   getCodeFromBundle,
+  getCodeFromStylus,
   getCompiler,
   getErrors,
   getWarnings,
@@ -15,7 +16,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -26,7 +29,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -41,7 +46,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        includeCSS: true,
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -52,7 +63,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -63,7 +76,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -100,7 +115,29 @@ describe('loader', () => {
   });
 
   it('with option, should resolve urls relatively', async () => {
-    const testId = './shallow.styl';
+    const testId = './shallow-deep.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        resolveURL: true,
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        // In stylus-loader nocheck option enable to default
+        resolveURL: { nocheck: true },
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('with option, should resolve urls relatively with loader inline syntax', async () => {
+    const testId = './shallow-deep-webpack.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
         resolveURL: true,
@@ -115,7 +152,7 @@ describe('loader', () => {
   });
 
   it('with option, should not resolve urls relatively', async () => {
-    const testId = './shallow.styl';
+    const testId = './shallow-deep-webpack.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
         resolveURL: false,
@@ -123,24 +160,37 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line no-undefined
+        resolveURL: undefined,
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('with option resolveURL nocheck, should resolve missing urls relatively', async () => {
-    const testId = './shallow.styl';
+  it('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async () => {
+    const testId = './shallow-deep.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
         resolveURL: {
-          nocheck: true,
+          nocheck: false,
         },
       },
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        resolveURL: { nocheck: false },
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -155,7 +205,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -166,7 +222,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -185,7 +243,9 @@ describe('loader', () => {
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -200,7 +260,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -211,6 +277,8 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
     const { fileDependencies } = stats.compilation;
 
     validateDependencies(fileDependencies);
@@ -227,6 +295,7 @@ describe('loader', () => {
       expect(fileDependencies.has(fixture)).toBe(true);
     });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -237,6 +306,7 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
     const { fileDependencies } = stats.compilation;
 
     validateDependencies(fileDependencies);
@@ -252,6 +322,7 @@ describe('loader', () => {
       expect(fileDependencies.has(fixture)).toBe(true);
     });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -262,7 +333,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -281,7 +354,9 @@ describe('loader', () => {
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -292,18 +367,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
-  it('in a nested import resolve css with webpack but not import', async () => {
-    const testId = './import-webpack-css.styl';
-    const compiler = getCompiler(testId);
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -326,7 +392,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        use: [plugin()],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -341,7 +413,14 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line global-require
+        use: require('nib')(),
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -356,7 +435,14 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    // const codeFromStylus = await getCodeFromStylus(testId, {
+    //   stylusOptions: {
+    //     use: require('bootstrap-styl')(),
+    //   },
+    // });
 
+    // TODO different fonts path
+    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -383,7 +469,14 @@ describe('loader', () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const isBootstrapImported = /MIT License/gi.test(codeFromBundle.css);
+    // const codeFromStylus = await getCodeFromStylus(testId, {
+    //   stylusOptions: {
+    //     use: [plugin()],
+    //   },
+    // });
 
+    // TODO different fonts path
+    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(isBootstrapImported).toBe(true);
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -400,7 +493,15 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        define: {
+          add: (a, b) => a.operate('+', b),
+        },
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -419,7 +520,17 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        define: [
+          ['rawVar', { nestedVar: 42 }, true],
+          ['castedVar', { disc: 'outside' }, true],
+          ['rawDefine', ['rawVar'], true],
+        ],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -430,7 +541,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -441,7 +554,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -456,7 +571,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['urls.styl'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -472,7 +593,14 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['in-paths.styl'],
+        paths: [`${__dirname}/fixtures/paths`],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -495,7 +623,13 @@ describe('loader', () => {
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['fakenib'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -506,7 +640,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -521,7 +657,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['import-styl.styl'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -536,7 +678,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: [path.resolve(__dirname, 'fixtures', 'paths with space')],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -551,14 +699,20 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        include: [`${__dirname}/fixtures/paths`],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
   it('should work "nib"', async () => {
-    const testId = './basic-nib';
+    const testId = './basic-nib.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
         // eslint-disable-next-line global-require
@@ -568,7 +722,15 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line global-require
+        use: [require('nib')()],
+        import: ['nib'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -579,7 +741,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -601,7 +765,130 @@ describe('loader', () => {
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it.skip('imports files listed in glob with webpack import 2', async () => {
+    const testId = './import-glob-webpack-2.styl';
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          alias: {
+            globAliasDot: path.resolve(__dirname, 'fixtures', 'glob-webpack-2'),
+          },
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in nested glob import', async () => {
+    const testId = './import-glob-nested.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in nested glob with webpack import', async () => {
+    const testId = './import-glob-webpack-nested.styl';
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          alias: {
+            aliasNested: path.resolve(__dirname, 'fixtures', 'glob-nested'),
+          },
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('should emit error when imports files listed as glob in empty directory', async () => {
+    const testId = './import-glob-empty-dir.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+
+    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in glob import package', async () => {
+    const testId = './import-glob-package.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in glob import package through webpack', async () => {
+    const testId = './import-glob-webpack-package.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files in dir like a glob', async () => {
+    const testId = './import-dir-like-a-glob.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files in dir like a glob through webpack', async () => {
+    const testId = './import-webpack-dir-like-a-glob.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -616,7 +903,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['glob/*'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -652,7 +945,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: [`${__dirname}/fixtures/paths`],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -671,7 +970,9 @@ describe('loader', () => {
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -692,7 +993,9 @@ describe('loader', () => {
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -703,7 +1006,9 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -714,7 +1019,10 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    // const codeFromStylus = await getCodeFromStylus(testId);
 
+    // TODO escaped url
+    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -729,7 +1037,13 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/node_modules/vars'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
