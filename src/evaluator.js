@@ -5,6 +5,7 @@ import Evaluator from 'stylus/lib/visitor/evaluator';
 import { klona } from 'klona/full';
 import { Parser, utils } from 'stylus';
 import DepsResolver from 'stylus/lib/visitor/deps-resolver';
+import normalizePath from 'normalize-path';
 
 import { resolveFilename, readFile } from './utils';
 
@@ -255,13 +256,13 @@ export default async function createEvaluator(loaderContext, code, options) {
             const { resolved } = dependency;
 
             if (!Array.isArray(resolved)) {
-              node.string = resolved;
+              node.string = normalizePath(resolved);
             } else if (resolved.length > 0) {
               const blocks = resolved.map((item) => {
                 const clonedImported = imported.clone();
                 const clonedNode = this.visit(clonedImported.path).first;
 
-                clonedNode.string = item;
+                clonedNode.string = normalizePath(item);
 
                 let result;
 
