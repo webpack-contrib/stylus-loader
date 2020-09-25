@@ -214,6 +214,9 @@ export default async function createEvaluator(loaderContext, code, options) {
     options
   );
 
+  // eslint-disable-next-line no-console
+  console.log(resolvedDependencies);
+
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       this.return += 1;
@@ -227,7 +230,7 @@ export default async function createEvaluator(loaderContext, code, options) {
 
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
         const dependencies = resolvedDependencies.get(node.filename);
-        
+
         if (dependencies) {
           const dependency = dependencies.find(
             ({
