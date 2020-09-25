@@ -186,13 +186,22 @@ function mergeBlocks(blocks) {
   return finalBlock;
 }
 
-export default async function createEvaluator(
-  loaderContext,
-  fileResolve,
-  globResolve,
-  code,
-  options
-) {
+export default async function createEvaluator(loaderContext, code, options) {
+  const fileResolve = loaderContext.getResolve({
+    conditionNames: ['styl', 'stylus', 'style'],
+    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+    mainFiles: ['index', '...'],
+    extensions: ['.styl', '.css'],
+    restrictions: [/\.(css|styl)$/i],
+  });
+
+  const globResolve = loaderContext.getResolve({
+    conditionNames: ['styl', 'stylus', 'style'],
+    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+    mainFiles: ['index', '...'],
+    resolveToContext: true,
+  });
+
   const resolvedDependencies = new Map();
 
   await getDependencies(

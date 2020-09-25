@@ -66,35 +66,8 @@ export default async function stylusLoader(source) {
       ? options.webpackImporter
       : true;
 
-  let fileResolve;
-  let globResolve;
-
   if (shouldUseWebpackImporter) {
-    fileResolve = this.getResolve({
-      conditionNames: ['styl', 'stylus', 'style'],
-      mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-      mainFiles: ['index', '...'],
-      extensions: ['.styl', '.css'],
-      restrictions: [/\.(css|styl)$/i],
-    });
-
-    globResolve = this.getResolve({
-      conditionNames: ['styl', 'stylus', 'style'],
-      mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-      mainFiles: ['index', '...'],
-      resolveToContext: true,
-    });
-
-    styl.set(
-      'Evaluator',
-      await createEvaluator(
-        this,
-        fileResolve,
-        globResolve,
-        source,
-        stylusOptions
-      )
-    );
+    styl.set('Evaluator', await createEvaluator(this, source, stylusOptions));
   }
 
   if (
