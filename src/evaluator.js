@@ -220,8 +220,6 @@ export default async function createEvaluator(loaderContext, code, options) {
     options
   );
 
-  console.log(resolvedDependencies);
-
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       this.return += 1;
