@@ -15,10 +15,13 @@ async function getDependencies(
   loaderContext,
   fileResolver,
   globResolver,
+  seen,
   code,
   filename,
   options
 ) {
+  seen.add(filename);
+
   // TODO cache
   const newOptions = klona({ ...options, filename, cache: false });
   const parser = new Parser(code, newOptions);
@@ -129,7 +132,7 @@ async function getDependencies(
 
       for (const dependency of resolved) {
         // Avoid loop, the file is imported by itself
-        if (dependency === filename) {
+        if (seen.has(dependency)) {
           return;
         }
 
@@ -152,6 +155,7 @@ async function getDependencies(
               loaderContext,
               fileResolver,
               globResolver,
+              seen,
               dependencyCode,
               dependency,
               options
@@ -203,12 +207,14 @@ export default async function createEvaluator(loaderContext, code, options) {
   });
 
   const resolvedDependencies = new Map();
+  const seen = new Set();
 
   await getDependencies(
     resolvedDependencies,
     loaderContext,
     fileResolve,
     globResolve,
+    seen,
     code,
     loaderContext.resourcePath,
     options
