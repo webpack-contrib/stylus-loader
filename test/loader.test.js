@@ -762,6 +762,18 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
+    // eslint-disable-next-line no-console
+    console.log(process.platform === 'win32');
+    // eslint-disable-next-line no-console
+    console.log(getWarnings(stats));
+    // eslint-disable-next-line no-console
+    console.log(
+      getWarnings(stats).map((item) =>
+        // Due bug in `node-glob`
+        process.platform === 'win32' ? 'import loop has been found' : item
+      )
+    );
+
     expect(
       getWarnings(stats).map((item) =>
         // Due bug in `node-glob`
