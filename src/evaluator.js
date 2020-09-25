@@ -68,8 +68,6 @@ async function getDependencies(
         nodePath += '.styl';
       }
 
-      // TODO
-      //  let paths = (options.paths || []).concat(path.dirname(filepath || '.'));
       found = utils.find(nodePath, this.paths, this.filename);
 
       if (!found && oldNodePath) {
