@@ -59,6 +59,8 @@ async function resolveFilename(
   return resolveRequests(context, possibleRequests, resolve)
     .then(async (result) => {
       if (isGlob && result) {
+        loaderContext.addContextDependency(result);
+
         return (
           await fastGlob(
             // TODO more test and improve it

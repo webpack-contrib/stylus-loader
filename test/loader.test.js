@@ -232,7 +232,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.only('should work binop import', async () => {
+  it('should work binop import', async () => {
     const testId = './import-binop.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);

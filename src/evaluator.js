@@ -133,7 +133,7 @@ async function getDependencies(
           return;
         }
 
-        loaderContext.addDependency(dependency);
+        loaderContext.addDependency(path.normalize(dependency));
 
         dependenciesOfDependencies.push(
           (async () => {
@@ -213,9 +213,6 @@ export default async function createEvaluator(loaderContext, code, options) {
     loaderContext.resourcePath,
     options
   );
-
-  // eslint-disable-next-line no-console
-  console.log(resolvedDependencies);
 
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
