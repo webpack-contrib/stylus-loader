@@ -53,25 +53,28 @@ exports[`loader imports and webpack deps: errors 1`] = `Array []`;
 
 exports[`loader imports and webpack deps: warnings 1`] = `Array []`;
 
-exports[`loader imports files in dir like a glob: css 1`] = `
-".like-a-glob {
-  color: #ff7f50;
+exports[`loader imports files listed in glob **/* with deps: css 1`] = `
+".a-deep {
+  color: #f00;
 }
-.like-a-glob {
-  color: #ff7f50;
+.sub-deep {
+  color: #f00;
 }
-.like-a-glob {
-  color: #ff7f50;
+.a-all-glob {
+  color: #f00;
 }
-.entry {
-  box-sizing: border-box;
+.a-all {
+  color: #f00;
+}
+.b-all-glob {
+  color: #f00;
 }
 "
 `;
 
-exports[`loader imports files in dir like a glob: errors 1`] = `Array []`;
+exports[`loader imports files listed in glob **/* with deps: errors 1`] = `Array []`;
 
-exports[`loader imports files in dir like a glob: warnings 1`] = `Array []`;
+exports[`loader imports files listed in glob **/* with deps: warnings 1`] = `Array []`;
 
 exports[`loader imports files listed in glob import package through webpack: css 1`] = `
 ".glob-in-node {
