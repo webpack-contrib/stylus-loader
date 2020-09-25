@@ -53,6 +53,115 @@ exports[`loader imports and webpack deps: errors 1`] = `Array []`;
 
 exports[`loader imports and webpack deps: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in glob **/* with deps: css 1`] = `
+".a-deep {
+  color: #f00;
+}
+.sub-deep {
+  color: #f00;
+}
+.a-all-glob {
+  color: #f00;
+}
+.a-all {
+  color: #f00;
+}
+.b-all-glob {
+  color: #f00;
+}
+"
+`;
+
+exports[`loader imports files listed in glob **/* with deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob **/* with deps: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in glob import package through webpack: css 1`] = `
+".glob-in-node {
+  color: #fff;
+}
+.glob-in-node {
+  background: #ff7f50;
+}
+.index-glob {
+  font-size: 1rem;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in glob import package through webpack: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob import package through webpack: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in glob import package: css 1`] = `
+".glob-in-node {
+  color: #fff;
+}
+.glob-in-node {
+  background: #ff7f50;
+}
+.index-glob {
+  font-size: 1rem;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in glob import package: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob import package: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with deps: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+"
+`;
+
+exports[`loader imports files listed in glob with deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with deps: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with webpack import with deps: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.glob-in-node {
+  color: #fff;
+}
+.glob-in-node {
+  background: #ff7f50;
+}
+.index-glob {
+  font-size: 1rem;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in glob with webpack import with deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with webpack import with deps: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in glob with webpack import: css 1`] = `
 ".a-glob {
   color: #000;
@@ -98,6 +207,40 @@ exports[`loader imports files listed in glob: css 1`] = `
 exports[`loader imports files listed in glob: errors 1`] = `Array []`;
 
 exports[`loader imports files listed in glob: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in nested glob import: css 1`] = `
+".a-nested-glob {
+  color: #f00;
+}
+.b-nested-glob {
+  color: #f00;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in nested glob import: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in nested glob import: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in nested glob with webpack import: css 1`] = `
+".a-nested-glob {
+  color: #f00;
+}
+.b-nested-glob {
+  color: #f00;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in nested glob with webpack import: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in nested glob with webpack import: warnings 1`] = `Array []`;
 
 exports[`loader imports files listed in option "style" package.json: css 1`] = `
 ".imported-fake-stylus {
@@ -185,28 +328,6 @@ exports[`loader imports files listed in option as glob with webpack import: erro
 
 exports[`loader imports files listed in option as glob with webpack import: warnings 1`] = `Array []`;
 
-exports[`loader imports files listed in option as glob: css 1`] = `
-".a-glob {
-  color: #000;
-}
-.b-glob {
-  background: #808080;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-"
-`;
-
-exports[`loader imports files listed in option as glob: errors 1`] = `Array []`;
-
-exports[`loader imports files listed in option as glob: warnings 1`] = `Array []`;
-
 exports[`loader imports the right file based on context: css 1`] = `
 ".a-color {
   color: #aaa;
@@ -266,15 +387,6 @@ exports[`loader in a nested import load module from webpack: errors 1`] = `Array
 
 exports[`loader in a nested import load module from webpack: warnings 1`] = `Array []`;
 
-exports[`loader in a nested import resolve css with webpack but not import: css 1`] = `
-"@import \\"css.css\\";
-"
-`;
-
-exports[`loader in a nested import resolve css with webpack but not import: errors 1`] = `Array []`;
-
-exports[`loader in a nested import resolve css with webpack but not import: warnings 1`] = `Array []`;
-
 exports[`loader resolve with webpack if stylus can't find it: css 1`] = `
 ".imported-in-web-modules {
   font-size: 2em;
@@ -320,7 +432,25 @@ Stylus resolver error: import loop has been found",
 ]
 `;
 
+exports[`loader should emit error when import self: errors 2`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: import loop has been found",
+]
+`;
+
 exports[`loader should emit error when import self: warnings 1`] = `Array []`;
+
+exports[`loader should emit error when import self: warnings 2`] = `Array []`;
+
+exports[`loader should emit error when imports files listed as glob in empty directory: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file empty-dir/*.styl",
+]
+`;
+
+exports[`loader should emit error when imports files listed as glob in empty directory: warnings 1`] = `Array []`;
 
 exports[`loader should emit error when unresolved import: errors 1`] = `
 Array [
@@ -350,6 +480,17 @@ exports[`loader should import css: css 1`] = `
 exports[`loader should import css: errors 1`] = `Array []`;
 
 exports[`loader should import css: warnings 1`] = `Array []`;
+
+exports[`loader should import stylus from process.cwd: css 1`] = `
+".cwd {
+  color: #f00;
+}
+"
+`;
+
+exports[`loader should import stylus from process.cwd: errors 1`] = `Array []`;
+
+exports[`loader should import stylus from process.cwd: warnings 1`] = `Array []`;
 
 exports[`loader should import stylus: css 1`] = `
 ".imported-stylus {
@@ -7346,22 +7487,19 @@ exports[`loader stylus can find modules in node_modules: errors 1`] = `Array []`
 
 exports[`loader stylus can find modules in node_modules: warnings 1`] = `Array []`;
 
-exports[`loader with option resolveURL nocheck, should resolve missing urls relatively: css 1`] = `
+exports[`loader with option resolveURL nocheck is "false", should not resolve missing urls relatively: css 1`] = `
 ".img {
   content: url(\\"img.png\\");
-  content: url(\\"not-exist.png\\");
+  content: url(\\"../not-exist.png\\");
   background: url(\\"deep/deep-img.png\\");
   background: url(\\"http://example.com/img.png\\");
-  background: url(\\"!!deep/deep-img.png\\");
-  background: url(\\"file!deep/deep-img.png\\");
-  background: url(\\"file?foo!deep/deep-img.png\\");
 }
 "
 `;
 
-exports[`loader with option resolveURL nocheck, should resolve missing urls relatively: errors 1`] = `Array []`;
+exports[`loader with option resolveURL nocheck is "false", should not resolve missing urls relatively: errors 1`] = `Array []`;
 
-exports[`loader with option resolveURL nocheck, should resolve missing urls relatively: warnings 1`] = `Array []`;
+exports[`loader with option resolveURL nocheck is "false", should not resolve missing urls relatively: warnings 1`] = `Array []`;
 
 exports[`loader with option, should not resolve urls relatively: css 1`] = `
 ".img {
@@ -7380,7 +7518,7 @@ exports[`loader with option, should not resolve urls relatively: errors 1`] = `A
 
 exports[`loader with option, should not resolve urls relatively: warnings 1`] = `Array []`;
 
-exports[`loader with option, should resolve urls relatively: css 1`] = `
+exports[`loader with option, should resolve urls relatively with loader inline syntax: css 1`] = `
 ".img {
   content: url(\\"img.png\\");
   content: url(\\"not-exist.png\\");
@@ -7389,6 +7527,20 @@ exports[`loader with option, should resolve urls relatively: css 1`] = `
   background: url(\\"!!deep/deep-img.png\\");
   background: url(\\"file!deep/deep-img.png\\");
   background: url(\\"file?foo!deep/deep-img.png\\");
+}
+"
+`;
+
+exports[`loader with option, should resolve urls relatively with loader inline syntax: errors 1`] = `Array []`;
+
+exports[`loader with option, should resolve urls relatively with loader inline syntax: warnings 1`] = `Array []`;
+
+exports[`loader with option, should resolve urls relatively: css 1`] = `
+".img {
+  content: url(\\"img.png\\");
+  content: url(\\"not-exist.png\\");
+  background: url(\\"deep/deep-img.png\\");
+  background: url(\\"http://example.com/img.png\\");
 }
 "
 `;
