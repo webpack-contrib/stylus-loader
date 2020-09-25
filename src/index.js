@@ -129,7 +129,6 @@ export default async function stylusLoader(source) {
       return;
     }
 
-    // TODO check
     // eslint-disable-next-line no-underscore-dangle
     if (stylusOptions._imports.length > 0) {
       // eslint-disable-next-line no-underscore-dangle
