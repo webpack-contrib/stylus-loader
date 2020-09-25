@@ -54,7 +54,13 @@ exports[`loader imports and webpack deps: errors 1`] = `Array []`;
 exports[`loader imports and webpack deps: warnings 1`] = `Array []`;
 
 exports[`loader imports files listed in glob with webpack import: css 1`] = `
-".a-glob-webpack {
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
   color: #000;
 }
 .b-glob-webpack {
