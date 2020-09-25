@@ -257,12 +257,18 @@ export default async function createEvaluator(loaderContext, code, options) {
 
             if (!Array.isArray(resolved)) {
               node.string = normalizePath(resolved);
+
+              // eslint-disable-next-line no-console
+              console.log(node.string);
             } else if (resolved.length > 0) {
               const blocks = resolved.map((item) => {
                 const clonedImported = imported.clone();
                 const clonedNode = this.visit(clonedImported.path).first;
 
                 clonedNode.string = normalizePath(item);
+
+                // eslint-disable-next-line no-console
+                console.log(clonedNode.string);
 
                 let result;
 
