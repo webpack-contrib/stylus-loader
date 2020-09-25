@@ -229,29 +229,21 @@ export default async function createEvaluator(loaderContext, code, options) {
         const dependencies = resolvedDependencies.get(node.filename);
 
         if (dependencies) {
-          const dependency = dependencies.find(
-            ({
-              originalLineno,
-              originalColumn,
-              originalNodePath,
-              error,
-              resolved,
-            }) => {
-              if (
-                originalLineno === node.lineno &&
-                originalColumn === node.column &&
-                originalNodePath === nodePath
-              ) {
-                if (error) {
-                  webpackResolveError = error;
-                } else {
-                  return resolved;
-                }
+          const dependency = dependencies.find((item) => {
+            if (
+              item.originalLineno === node.lineno &&
+              item.originalColumn === node.column &&
+              item.originalNodePath === nodePath
+            ) {
+              if (item.error) {
+                webpackResolveError = item.error;
+              } else {
+                return item.resolved;
               }
-
-              return false;
             }
-          );
+
+            return false;
+          });
 
           if (dependency) {
             const { resolved } = dependency;
@@ -265,7 +257,26 @@ export default async function createEvaluator(loaderContext, code, options) {
 
                 clonedNode.string = item;
 
-                return super.visitImport(clonedImported);
+                let result;
+
+                try {
+                  result = super.visitImport(clonedImported);
+                } catch (error) {
+                  loaderContext.emitError(
+                    new Error(
+                      `Stylus resolver error:\n${error.message}${
+                        webpackResolveError
+                          ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
+                            `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
+                          : ''
+                      }`
+                    )
+                  );
+
+                  return imported;
+                }
+
+                return result;
               });
 
               return mergeBlocks(blocks);
@@ -278,12 +289,10 @@ export default async function createEvaluator(loaderContext, code, options) {
 
       try {
         result = super.visitImport(imported);
-
-        return result;
       } catch (error) {
         loaderContext.emitError(
           new Error(
-            `Stylus resolver error: ${error.message}${
+            `Stylus resolver error:\n${error.message}${
               webpackResolveError
                 ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
                   `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
@@ -294,6 +303,8 @@ export default async function createEvaluator(loaderContext, code, options) {
 
         return imported;
       }
+
+      return result;
     }
   };
 }
