@@ -54,39 +54,48 @@ exports[`loader imports and webpack deps: errors 1`] = `Array []`;
 exports[`loader imports and webpack deps: warnings 1`] = `Array []`;
 
 exports[`loader imports files listed in glob with webpack import: css 1`] = `
-".a-glob {
-  color: #000;
-}
-.b-glob {
-  background: #808080;
-}
+"@import '~globAlias2/*';
 .a-glob-webpack {
   color: #000;
 }
 .b-glob-webpack {
   background: #808080;
 }
-.glob-in-node {
-  color: #fff;
+@import '~globAlias2/*';
+.a-glob-webpack {
+  color: #000;
 }
-.glob-in-node {
-  background: #ff7f50;
+.b-glob-webpack {
+  background: #808080;
 }
-.index-glob {
-  font-size: 1rem;
-}
+@import '~glob_package/*';
 .glob-entry {
   box-sizing: border-box;
 }
 "
 `;
 
-exports[`loader imports files listed in glob with webpack import: errors 1`] = `Array []`;
+exports[`loader imports files listed in glob with webpack import: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file ~globAlias2/*.styl",
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file ~globAlias2/*.styl",
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file ~glob_package/*.styl",
+]
+`;
 
 exports[`loader imports files listed in glob with webpack import: warnings 1`] = `Array []`;
 
 exports[`loader imports files listed in glob: css 1`] = `
 ".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob {
   color: #000;
 }
 .b-glob {
@@ -102,9 +111,6 @@ exports[`loader imports files listed in glob: warnings 1`] = `Array []`;
 exports[`loader imports files listed in option "style" package.json: css 1`] = `
 ".imported-fake-stylus {
   color: #000;
-}
-.imported-stylus {
-  border: 5px;
 }
 "
 `;
@@ -173,6 +179,20 @@ exports[`loader imports files listed in option argument: css 1`] = `
 exports[`loader imports files listed in option argument: errors 1`] = `Array []`;
 
 exports[`loader imports files listed in option argument: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option as glob with webpack import: css 1`] = `
+"@import '~globAlias/*';
+"
+`;
+
+exports[`loader imports files listed in option as glob with webpack import: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file ~globAlias/*.styl",
+]
+`;
+
+exports[`loader imports files listed in option as glob with webpack import: warnings 1`] = `Array []`;
 
 exports[`loader imports files listed in option as glob: css 1`] = `
 ".a-glob {
@@ -295,8 +315,8 @@ exports[`loader should compile an @import URL through the CSS loader: warnings 1
 
 exports[`loader should emit error when import self: errors 1`] = `
 Array [
-  "ModuleBuildError: Module build failed (from \`replaced original path\`):
-Error: /test/fixtures/imports/self.styl:1:9",
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: import loop has been found",
 ]
 `;
 
@@ -304,8 +324,8 @@ exports[`loader should emit error when import self: warnings 1`] = `Array []`;
 
 exports[`loader should emit error when unresolved import: errors 1`] = `
 Array [
-  "ModuleBuildError: Module build failed (from \`replaced original path\`):
-Error: /test/fixtures/import-unresolve.styl:1:9",
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file unresolve.styl",
 ]
 `;
 

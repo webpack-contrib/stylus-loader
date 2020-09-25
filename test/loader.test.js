@@ -484,7 +484,7 @@ describe('loader', () => {
       testId,
       {
         stylusOptions: {
-          import: ['~fakenib'],
+          import: ['fakenib'],
         },
       },
       {
@@ -502,20 +502,8 @@ describe('loader', () => {
   });
 
   it('imports files listed in option "style" package.json', async () => {
-    const testId = './stylus.styl';
-    const compiler = getCompiler(
-      testId,
-      {
-        stylusOptions: {
-          import: ['~fakestylus'],
-        },
-      },
-      {
-        resolve: {
-          modules: ['node_modules'],
-        },
-      }
-    );
+    const testId = './import-fakestylus.styl';
+    const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
@@ -634,15 +622,11 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files listed in option as glob with webpack import', async () => {
-    const testId = './import-glob-webpack.styl';
+  it('imports files listed in option as glob with webpack import', async () => {
+    const testId = './import-glob-alias.styl';
     const compiler = getCompiler(
       testId,
-      {
-        stylusOptions: {
-          import: ['~globAlias/*'],
-        },
-      },
+      {},
       {
         resolve: {
           alias: {

@@ -66,8 +66,35 @@ export default async function stylusLoader(source) {
       ? options.webpackImporter
       : true;
 
+  let fileResolve;
+  let globResolve;
+
   if (shouldUseWebpackImporter) {
-    styl.set('Evaluator', await createEvaluator(this, source, stylusOptions));
+    fileResolve = this.getResolve({
+      conditionNames: ['styl', 'stylus', 'style'],
+      mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+      mainFiles: ['index', '...'],
+      extensions: ['.styl', '.css'],
+      restrictions: [/\.(css|styl)$/i],
+    });
+
+    globResolve = this.getResolve({
+      conditionNames: ['styl', 'stylus', 'style'],
+      mainFields: ['styl', 'style', 'stylus', 'main', '...'],
+      mainFiles: ['index', '...'],
+      resolveToContext: true,
+    });
+
+    styl.set(
+      'Evaluator',
+      await createEvaluator(
+        this,
+        fileResolve,
+        globResolve,
+        source,
+        stylusOptions
+      )
+    );
   }
 
   if (
@@ -129,6 +156,7 @@ export default async function stylusLoader(source) {
       return;
     }
 
+    // TODO check
     // eslint-disable-next-line no-underscore-dangle
     if (stylusOptions._imports.length > 0) {
       // eslint-disable-next-line no-underscore-dangle

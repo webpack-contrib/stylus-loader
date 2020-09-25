@@ -3,6 +3,7 @@ import path from 'path';
 
 import { klona } from 'klona/full';
 import { Compiler, nodes, utils } from 'stylus';
+import { urlToRequest } from 'loader-utils';
 
 function getStylusOptions(loaderContext, loaderOptions) {
   const stylusOptions = klona(
@@ -26,6 +27,54 @@ function getStylusOptions(loaderContext, loaderOptions) {
       : { nocheck: true };
 
   return stylusOptions;
+}
+
+async function resolveFilename(
+  loaderContext,
+  webpackFileResolver,
+  webpackGlobResolver,
+  context,
+  filename
+) {
+  let stats;
+
+  try {
+    stats = await stat(loaderContext.fs, filename);
+  } catch (ignoreError) {
+    // Ignore
+  }
+
+  const resolve =
+    stats || typeof stats === 'undefined'
+      ? webpackFileResolver
+      : webpackGlobResolver;
+  const request = urlToRequest(
+    filename,
+    // eslint-disable-next-line no-undefined
+    filename.charAt(0) === '/' ? loaderContext.rootContext : undefined
+  );
+
+  return resolveRequests(context, [...new Set([request, filename])], resolve);
+}
+
+function resolveRequests(context, possibleRequests, resolve) {
+  if (possibleRequests.length === 0) {
+    return Promise.reject();
+  }
+
+  return resolve(context, possibleRequests[0])
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      const [, ...tailPossibleRequests] = possibleRequests;
+
+      if (tailPossibleRequests.length === 0) {
+        throw error;
+      }
+
+      return resolveRequests(context, tailPossibleRequests, resolve);
+    });
 }
 
 function urlResolver(options = {}) {
@@ -103,6 +152,18 @@ function urlResolver(options = {}) {
   return resolver;
 }
 
+function stat(inputFileSystem, pathLike) {
+  return new Promise((resolve, reject) => {
+    inputFileSystem.stat(pathLike, (error, stats) => {
+      if (error) {
+        reject(error);
+      }
+
+      resolve(stats);
+    });
+  });
+}
+
 function readFile(inputFileSystem, filepath) {
   return new Promise((resolve, reject) => {
     inputFileSystem.readFile(filepath, (error, stats) => {
@@ -160,22 +221,10 @@ function normalizeSourceMap(map, rootContext) {
   return newMap;
 }
 
-function isDirectory(inputFileSystem, filePath) {
-  let stats;
-
-  try {
-    stats = inputFileSystem.statSync(filePath);
-  } catch (ignoreError) {
-    return false;
-  }
-
-  return stats.isDirectory();
-}
-
 export {
   getStylusOptions,
   urlResolver,
+  resolveFilename,
   readFile,
   normalizeSourceMap,
-  isDirectory,
 };
