@@ -757,7 +757,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('should emit error when import self', async () => {
+  it.only('should emit error when import self', async () => {
     const testId = './imports/self.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
