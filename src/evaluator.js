@@ -81,7 +81,9 @@ async function getDependencies(
           originalLineno: firstNode.lineno,
           originalColumn: firstNode.column,
           originalNodePath,
-          resolved: found,
+          resolved: found.map((item) =>
+            path.isAbsolute(item) ? item : path.join(process.cwd(), item)
+          ),
         });
 
         return;
@@ -259,10 +261,11 @@ export default async function createEvaluator(loaderContext, code, options) {
             if (!Array.isArray(resolved)) {
               node.string = resolved;
             } else {
-              const blocks = resolved.map((resolvedPath) => {
-                node.string = resolvedPath;
-
+              const blocks = resolved.map((item) => {
                 const clonedImported = imported.clone();
+                const clonedNode = this.visit(clonedImported.path).first;
+
+                clonedNode.string = item;
 
                 return super.visitImport(clonedImported);
               });

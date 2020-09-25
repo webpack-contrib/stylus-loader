@@ -61,13 +61,6 @@ exports[`loader imports files listed in glob with webpack import: css 1`] = `
 .b-glob-webpack {
   background: #808080;
 }
-@import '~globAlias2/*';
-.a-glob-webpack {
-  color: #000;
-}
-.b-glob-webpack {
-  background: #808080;
-}
 @import '~glob_package/*';
 .glob-entry {
   box-sizing: border-box;
@@ -80,8 +73,6 @@ Array [
   "ModuleError: Module Error (from \`replaced original path\`):
 Stylus resolver error: failed to locate @import file ~globAlias2/*.styl",
   "ModuleError: Module Error (from \`replaced original path\`):
-Stylus resolver error: failed to locate @import file ~globAlias2/*.styl",
-  "ModuleError: Module Error (from \`replaced original path\`):
 Stylus resolver error: failed to locate @import file ~glob_package/*.styl",
 ]
 `;
@@ -90,12 +81,6 @@ exports[`loader imports files listed in glob with webpack import: warnings 1`] =
 
 exports[`loader imports files listed in glob: css 1`] = `
 ".a-glob {
-  color: #000;
-}
-.b-glob {
-  background: #808080;
-}
-.a-glob {
   color: #000;
 }
 .b-glob {
