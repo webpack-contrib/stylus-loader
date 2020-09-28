@@ -46,33 +46,39 @@ async function runGlob(patterns, options) {
   return paths.sort().filter((file) => /\.styl$/i.test(file));
 }
 
-async function resolveFilename(
-  loaderContext,
-  webpackFileResolver,
-  webpackGlobResolver,
-  isGlob,
-  context,
-  filename
-) {
-  const resolve = isGlob ? webpackGlobResolver : webpackFileResolver;
-
-  let globTask;
-
-  if (isGlob) {
-    [globTask] = fastGlob.generateTasks(filename);
-
-    // eslint-disable-next-line no-param-reassign
-    filename = globTask.base === '.' ? context : globTask.base;
-  }
-
+function getPossibleRequests(loaderContext, filename) {
   const request = urlToRequest(
     filename,
     // eslint-disable-next-line no-undefined
     filename.charAt(0) === '/' ? loaderContext.rootContext : undefined
   );
-  const possibleRequests = [...new Set([request, filename])];
 
-  return resolveRequests(context, possibleRequests, resolve)
+  return [...new Set([request, filename])];
+}
+
+async function resolveFilename(
+  loaderContext,
+  fileResolver,
+  globResolver,
+  isGlob,
+  context,
+  filename
+) {
+  const resolve = isGlob ? globResolver : fileResolver;
+
+  let globTask;
+  let possibleFilename = filename;
+
+  if (isGlob) {
+    [globTask] = fastGlob.generateTasks(filename);
+    possibleFilename = globTask.base === '.' ? context : globTask.base;
+  }
+
+  return resolveRequests(
+    context,
+    getPossibleRequests(loaderContext, possibleFilename),
+    resolve
+  )
     .then(async (result) => {
       if (globTask && result) {
         loaderContext.addContextDependency(result);
@@ -89,7 +95,11 @@ async function resolveFilename(
     })
     .catch((error) => {
       if (globTask) {
-        return resolveRequests(context, possibleRequests, webpackFileResolver);
+        return resolveRequests(
+          context,
+          getPossibleRequests(loaderContext, filename),
+          fileResolver
+        );
       }
 
       throw error;
