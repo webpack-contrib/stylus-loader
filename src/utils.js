@@ -296,11 +296,6 @@ function mergeBlocks(blocks) {
   };
 
   for (const block of blocks) {
-    // eslint-disable-next-line no-console
-    console.log(block);
-    // eslint-disable-next-line no-console
-    console.log(block.nodes);
-
     if (finalBlock) {
       block.nodes.forEach(adding);
     } else {
@@ -381,6 +376,8 @@ async function createEvaluator(loaderContext, code, options) {
               // Avoid re globbing when resolved import contains glob characters
               node.string = fastGlob.escapePath(resolved);
             } else if (resolved.length > 0) {
+              let hasError = false;
+
               const blocks = resolved.map((item) => {
                 const clonedImported = imported.clone();
                 const clonedNode = this.visit(clonedImported.path).first;
@@ -393,6 +390,8 @@ async function createEvaluator(loaderContext, code, options) {
                 try {
                   result = super.visitImport(clonedImported);
                 } catch (error) {
+                  hasError = true;
+
                   loaderContext.emitError(
                     new Error(
                       `Stylus resolver error: ${error.message}${
@@ -410,7 +409,9 @@ async function createEvaluator(loaderContext, code, options) {
                 return result;
               });
 
-              return mergeBlocks(blocks);
+              if (!hasError) {
+                return mergeBlocks(blocks);
+              }
             }
           }
         }
