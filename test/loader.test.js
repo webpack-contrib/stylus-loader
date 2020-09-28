@@ -836,7 +836,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files with special characters listed in glob', async () => {
+  it.skip('imports files with special characters listed in glob', async () => {
     const testId = './import-glob-special.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
