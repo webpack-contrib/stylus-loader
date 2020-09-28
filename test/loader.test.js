@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import fs from 'fs';
 import path from 'path';
 
@@ -1014,7 +1018,7 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
@@ -1390,7 +1394,7 @@ describe('loader', () => {
       expect(fileDependencies.has(fixture)).toBe(true);
     });
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
@@ -1413,7 +1417,7 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(
       getErrors(stats).map((item) =>
@@ -1433,7 +1437,7 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
@@ -1443,7 +1447,7 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
@@ -1454,7 +1458,7 @@ describe('loader', () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -1465,7 +1469,7 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
