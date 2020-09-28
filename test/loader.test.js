@@ -1427,7 +1427,7 @@ describe('loader', () => {
     ).toMatchSnapshot('errors');
   });
 
-  it('should emit error when import loop', async () => {
+  it.only('should emit error when import loop', async () => {
     const testId = './import-recursive.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
