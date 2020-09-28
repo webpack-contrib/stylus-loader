@@ -236,9 +236,6 @@ async function getDependencies(
         return;
       }
 
-      // eslint-disable-next-line no-console
-      console.log(resolved);
-
       const isArray = Array.isArray(resolved);
 
       // `stylus` can return files with glob characters, we should escape them to avid re globbing
@@ -246,6 +243,9 @@ async function getDependencies(
       result.resolved = isArray
         ? resolved.map((item) => fastGlob.escapePath(path.normalize(item)))
         : fastGlob.escapePath(path.normalize(resolved));
+
+      // eslint-disable-next-line no-console
+      console.log(result.resolved);
 
       const dependenciesOfDependencies = [];
 
