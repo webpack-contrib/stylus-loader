@@ -173,7 +173,7 @@ async function getDependencies(
       if (isGlob) {
         [globTask] = fastGlob.generateTasks(nodePath);
 
-        // For webpack resolving we need to add the context dependency late
+        // For webpack resolving we need to add the context dependency later
         if (!nodePath.startsWith('~')) {
           const context =
             globTask.base === '.'
