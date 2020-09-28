@@ -363,6 +363,28 @@ exports[`loader imports files listed in option as glob with webpack import: erro
 
 exports[`loader imports files listed in option as glob with webpack import: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in option as glob: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option as glob: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option as glob: warnings 1`] = `Array []`;
+
 exports[`loader imports files with special characters listed in glob: css 1`] = `
 ".directoryfile {
   color: #f00;
