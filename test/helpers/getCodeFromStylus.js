@@ -10,7 +10,7 @@ const pathMap = {
   '~aliasNested/**/file.styl': 'glob-nested/**/file.styl',
   '~globAliasDot/*': 'glob-webpack-2/*',
   'glob_package/*': 'node_modules/glob_package/*',
-  'like-a-glob*': 'node_modules/like-a-glob*',
+  '~like-a-glob*': 'node_modules/like-a-glob*',
   'alias/1': path.resolve(fixturesDir, 'alias', '1.styl'),
   '~alias/2': path.resolve(fixturesDir, 'alias', '2.styl'),
   'globAlias/*': path.resolve(fixturesDir, 'glob-webpack/*'),
