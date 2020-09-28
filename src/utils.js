@@ -244,9 +244,6 @@ async function getDependencies(
         ? resolved.map((item) => fastGlob.escapePath(path.normalize(item)))
         : fastGlob.escapePath(path.normalize(resolved));
 
-      // eslint-disable-next-line no-console
-      console.log(result.resolved);
-
       const dependenciesOfDependencies = [];
 
       for (const dependency of isArray ? result.resolved : [result.resolved]) {
@@ -339,6 +336,8 @@ async function createEvaluator(loaderContext, code, options) {
     options
   );
 
+  console.log(resolvedDependencies);
+
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       this.return += 1;
@@ -351,7 +350,9 @@ async function createEvaluator(loaderContext, code, options) {
       let webpackResolveError;
 
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
-        const dependencies = resolvedDependencies.get(node.filename);
+        const dependencies = resolvedDependencies.get(
+          path.normalize(node.filename)
+        );
 
         if (dependencies) {
           const dependency = dependencies.find((item) => {
