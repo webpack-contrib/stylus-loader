@@ -222,8 +222,11 @@ async function getDependencies(
         return;
       }
 
+      // `stylus` can return files with glob characters, we should escape them to avid re globbing
       // eslint-disable-next-line no-param-reassign
-      result.resolved = resolved;
+      result.resolved = Array.isArray(resolved)
+        ? resolved.map((item) => fastGlob.escapePath(item))
+        : fastGlob.escapePath(resolved);
 
       resolved = Array.isArray(resolved) ? resolved : [resolved];
 

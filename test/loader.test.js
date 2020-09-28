@@ -1045,7 +1045,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files in dir like a glob', async () => {
+  it('imports files in dir like a glob', async () => {
     const isWin = process.platform === 'win32';
 
     if (isWin) {
@@ -1073,7 +1073,6 @@ describe('loader', () => {
       const codeFromBundle = getCodeFromBundle(stats, compiler);
       const codeFromStylus = await getCodeFromStylus(testId);
 
-      // Native stylus incorrectly identifies the directory id directory like a glob
       expect(codeFromBundle.css).toBe(codeFromStylus.css);
       expect(codeFromBundle.css).toMatchSnapshot('css');
       expect(getWarnings(stats)).toMatchSnapshot('warnings');
