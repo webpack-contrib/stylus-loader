@@ -30,6 +30,12 @@ function getStylusOptions(loaderContext, loaderOptions) {
   return stylusOptions;
 }
 
+async function runGlob(patterns, options) {
+  const paths = await fastGlob(patterns, { absolute: true, ...options });
+
+  return paths.sort().filter((file) => /\.styl$/i.test(file));
+}
+
 async function resolveFilename(
   loaderContext,
   webpackFileResolver,
@@ -61,15 +67,11 @@ async function resolveFilename(
       if (isGlob && result) {
         loaderContext.addContextDependency(result);
 
-        return (
-          await fastGlob(
-            // TODO more test and improve it
-            parsedGlob.patterns.map((item) =>
-              item.slice(parsedGlob.base.length + 1)
-            ),
-            { cwd: result, absolute: true }
-          )
-        ).filter((file) => /\.styl$/i.test(file));
+        const patterns = parsedGlob.patterns.map((item) =>
+          item.slice(parsedGlob.base.length + 1)
+        );
+
+        return runGlob(patterns, { cwd: result });
       }
 
       return result;

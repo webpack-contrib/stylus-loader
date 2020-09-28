@@ -11,6 +11,8 @@ import {
   validateDependencies,
 } from './helpers';
 
+jest.setTimeout(30000);
+
 describe('loader', () => {
   it('should work', async () => {
     const testId = './basic.styl';
@@ -948,7 +950,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files listed in glob with webpack import 2', async () => {
+  it('imports files listed in glob with webpack import 2', async () => {
     const testId = './import-glob-webpack-2.styl';
     const compiler = getCompiler(
       testId,
@@ -957,6 +959,7 @@ describe('loader', () => {
         resolve: {
           alias: {
             globAliasDot: path.resolve(__dirname, 'fixtures', 'glob-webpack-2'),
+            globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
           },
         },
       }
@@ -1048,35 +1051,35 @@ describe('loader', () => {
 
     if (isWin) {
       expect(true).toBe(true);
+    } else {
+      const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
+      const exampleDir = path.resolve(rootdir, 'like-a-glob-example');
+      const pathDir = path.resolve(rootdir, 'like-a-glob*');
+
+      if (!fs.existsSync(pathDir)) {
+        fs.mkdirSync(pathDir);
+        fs.copyFileSync(
+          path.resolve(exampleDir, 'package.json'),
+          path.resolve(pathDir, 'package.json')
+        );
+        fs.copyFileSync(
+          path.resolve(exampleDir, 'index.styl'),
+          path.resolve(pathDir, 'index.styl')
+        );
+      }
+
+      const testId = './import-dir-like-a-glob.styl';
+      const compiler = getCompiler(testId);
+      const stats = await compile(compiler);
+      const codeFromBundle = getCodeFromBundle(stats, compiler);
+      const codeFromStylus = await getCodeFromStylus(testId);
+
+      // Native stylus incorrectly identifies the directory id directory like a glob
+      expect(codeFromBundle.css).toBe(codeFromStylus.css);
+      expect(codeFromBundle.css).toMatchSnapshot('css');
+      expect(getWarnings(stats)).toMatchSnapshot('warnings');
+      expect(getErrors(stats)).toMatchSnapshot('errors');
     }
-
-    const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
-    const exampleDir = path.resolve(rootdir, 'like-a-glob-example');
-    const pathDir = path.resolve(rootdir, 'like-a-glob*');
-
-    if (!fs.existsSync(pathDir)) {
-      fs.mkdirSync(pathDir);
-      fs.copyFileSync(
-        path.resolve(exampleDir, 'package.json'),
-        path.resolve(pathDir, 'package.json')
-      );
-      fs.copyFileSync(
-        path.resolve(exampleDir, 'index.styl'),
-        path.resolve(pathDir, 'index.styl')
-      );
-    }
-
-    const testId = './import-dir-like-a-glob.styl';
-    const compiler = getCompiler(testId);
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId);
-
-    // Native stylus incorrectly identifies the directory id directory like a glob
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
   it.skip('imports files in dir like a glob through webpack', async () => {
@@ -1084,39 +1087,38 @@ describe('loader', () => {
 
     if (isWin) {
       expect(true).toBe(true);
-      return;
+    } else {
+      const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
+      const exampleDir = path.resolve(rootdir, 'like-a-glob-example');
+      const pathDir = path.resolve(rootdir, 'like-a-glob*');
+
+      if (!fs.existsSync(pathDir)) {
+        fs.mkdirSync(pathDir);
+        fs.copyFileSync(
+          path.resolve(exampleDir, 'package.json'),
+          path.resolve(pathDir, 'package.json')
+        );
+        fs.copyFileSync(
+          path.resolve(exampleDir, 'index.styl'),
+          path.resolve(pathDir, 'index.styl')
+        );
+      }
+
+      const testId = './import-webpack-dir-like-a-glob.styl';
+      const compiler = getCompiler(testId);
+      const stats = await compile(compiler);
+      const codeFromBundle = getCodeFromBundle(stats, compiler);
+      const codeFromStylus = await getCodeFromStylus(testId);
+
+      // Native stylus incorrectly identifies the directory id directory like a glob
+      expect(codeFromBundle.css).toBe(codeFromStylus.css);
+      expect(codeFromBundle.css).toMatchSnapshot('css');
+      expect(getWarnings(stats)).toMatchSnapshot('warnings');
+      expect(getErrors(stats)).toMatchSnapshot('errors');
     }
-
-    const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
-    const exampleDir = path.resolve(rootdir, 'like-a-glob-example');
-    const pathDir = path.resolve(rootdir, 'like-a-glob*');
-
-    if (!fs.existsSync(pathDir)) {
-      fs.mkdirSync(pathDir);
-      fs.copyFileSync(
-        path.resolve(exampleDir, 'package.json'),
-        path.resolve(pathDir, 'package.json')
-      );
-      fs.copyFileSync(
-        path.resolve(exampleDir, 'index.styl'),
-        path.resolve(pathDir, 'index.styl')
-      );
-    }
-
-    const testId = './import-webpack-dir-like-a-glob.styl';
-    const compiler = getCompiler(testId);
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId);
-
-    // Native stylus incorrectly identifies the directory id directory like a glob
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files listed in option as glob', async () => {
+  it('imports files listed in option as glob', async () => {
     const testId = './basic.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
