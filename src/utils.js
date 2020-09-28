@@ -120,6 +120,9 @@ async function getDependencies(
   filename,
   options
 ) {
+  // eslint-disable-next-line no-console
+  console.log(filename);
+
   seen.add(filename);
 
   // TODO cache
@@ -181,15 +184,6 @@ async function getDependencies(
           globTask.base === '.'
             ? path.dirname(filename)
             : path.join(path.dirname(filename), globTask.base);
-
-        // eslint-disable-next-line no-console
-        console.log(nodePath);
-        // eslint-disable-next-line no-console
-        console.log(globTask);
-        // eslint-disable-next-line no-console
-        console.log(context);
-        // eslint-disable-next-line no-console
-        console.log(filename);
 
         loaderContext.addContextDependency(context);
       }
