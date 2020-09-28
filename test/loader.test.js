@@ -1156,18 +1156,14 @@ describe('loader', () => {
       {
         resolve: {
           alias: {
-            globAlias: path.resolve(__dirname, 'fixtures', 'glob'),
+            globSimpleAlias: path.resolve(__dirname, 'fixtures', 'glob'),
           },
         },
       }
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    const codeFromStylus = await getCodeFromStylus(testId, {
-      stylusOptions: {
-        paths: [`${__dirname}/fixtures/paths`],
-      },
-    });
+    const codeFromStylus = await getCodeFromStylus(testId);
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');

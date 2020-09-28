@@ -14,6 +14,7 @@ const pathMap = {
   'alias/1': path.resolve(fixturesDir, 'alias', '1.styl'),
   '~alias/2': path.resolve(fixturesDir, 'alias', '2.styl'),
   'globAlias/*': path.resolve(fixturesDir, 'glob-webpack/*'),
+  '~globSimpleAlias/*': path.resolve(fixturesDir, 'glob/*'),
   fakenib: path.resolve(fixturesDir, 'node_modules', 'fakenib', 'index.styl'),
   '~fakenib': path.resolve(
     fixturesDir,
