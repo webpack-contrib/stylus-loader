@@ -7,6 +7,10 @@ import { urlToRequest } from 'loader-utils';
 import { klona } from 'klona/full';
 import fastGlob from 'fast-glob';
 
+function isProductionLikeMode(loaderContext) {
+  return loaderContext.mode === 'production' || !loaderContext.mode;
+}
+
 function getStylusOptions(loaderContext, loaderOptions) {
   const stylusOptions = klona(
     typeof loaderOptions.stylusOptions === 'function'
@@ -28,6 +32,10 @@ function getStylusOptions(loaderContext, loaderOptions) {
       : typeof stylusOptions.resolveURL === 'object'
       ? stylusOptions.resolveURL
       : { nocheck: true };
+
+  if (!stylusOptions.compress && isProductionLikeMode(loaderContext)) {
+    stylusOptions.compress = true;
+  }
 
   return stylusOptions;
 }

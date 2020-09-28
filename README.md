@@ -164,6 +164,17 @@ module.exports = {
                  * @default false
                  */
                 hoistAtrules: true,
+
+                /**
+                 * Compress CSS output.
+                 * In the "production" mode is `true` by default
+                 *
+                 * @see https://stylus-lang.com/docs/executable.html
+                 *
+                 * @type {boolean}
+                 * @default false
+                 */
+                compress: true,
               },
             },
           },
