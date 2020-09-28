@@ -238,11 +238,11 @@ async function getDependencies(
 
       const isArray = Array.isArray(resolved);
 
-      // `stylus` can return files with glob characters, we should escape them to avid re globbing
+      // `stylus` returns forward slashes on windows
       // eslint-disable-next-line no-param-reassign
       result.resolved = isArray
-        ? resolved.map((item) => fastGlob.escapePath(path.normalize(item)))
-        : fastGlob.escapePath(path.normalize(resolved));
+        ? resolved.map((item) => path.normalize(item))
+        : path.normalize(resolved);
 
       const dependenciesOfDependencies = [];
 
@@ -373,37 +373,32 @@ async function createEvaluator(loaderContext, code, options) {
             const { resolved } = dependency;
 
             if (!Array.isArray(resolved)) {
-              node.string = resolved;
+              // Avoid re globbing when resolved import contains glob characters
+              node.string = fastGlob.escapePath(resolved);
             } else if (resolved.length > 0) {
+              let hasError = false;
+
               const blocks = resolved.map((item) => {
                 const clonedImported = imported.clone();
                 const clonedNode = this.visit(clonedImported.path).first;
 
-                clonedNode.string = item;
+                // Avoid re globbing when resolved import contains glob characters
+                clonedNode.string = fastGlob.escapePath(item);
 
                 let result;
 
                 try {
                   result = super.visitImport(clonedImported);
                 } catch (error) {
-                  loaderContext.emitError(
-                    new Error(
-                      `Stylus resolver error: ${error.message}${
-                        webpackResolveError
-                          ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
-                            `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
-                          : ''
-                      }`
-                    )
-                  );
-
-                  return imported;
+                  hasError = true;
                 }
 
                 return result;
               });
 
-              return mergeBlocks(blocks);
+              if (!hasError) {
+                return mergeBlocks(blocks);
+              }
             }
           }
         }
