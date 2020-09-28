@@ -42,13 +42,17 @@ async function resolveFilename(
   loaderContext,
   webpackFileResolver,
   webpackGlobResolver,
-  globTask,
+  isGlob,
   context,
   filename
 ) {
-  const resolve = globTask ? webpackGlobResolver : webpackFileResolver;
+  const resolve = isGlob ? webpackGlobResolver : webpackFileResolver;
 
-  if (globTask) {
+  let globTask;
+
+  if (isGlob) {
+    [globTask] = fastGlob.generateTasks(filename);
+
     // eslint-disable-next-line no-param-reassign
     filename = globTask.base === '.' ? context : globTask.base;
   }
@@ -168,23 +172,18 @@ async function getDependencies(
       }
 
       const isGlob = fastGlob.isDynamicPattern(nodePath);
-      let globTask;
-
-      if (isGlob) {
-        [globTask] = fastGlob.generateTasks(nodePath);
-
-        // For webpack resolving we need to add the context dependency later
-        if (!nodePath.startsWith('~')) {
-          const context =
-            globTask.base === '.'
-              ? path.dirname(filename)
-              : path.join(path.dirname(filename), globTask.base);
-
-          loaderContext.addContextDependency(context);
-        }
-      }
 
       found = utils.find(nodePath, this.paths, this.filename);
+
+      if (found && isGlob) {
+        const [globTask] = fastGlob.generateTasks(nodePath);
+        const context =
+          globTask.base === '.'
+            ? path.dirname(filename)
+            : path.join(path.dirname(filename), globTask.base);
+
+        loaderContext.addContextDependency(context);
+      }
 
       if (!found && oldNodePath) {
         found = utils.lookupIndex(oldNodePath, this.paths, this.filename);
@@ -211,7 +210,7 @@ async function getDependencies(
           loaderContext,
           fileResolver,
           globResolver,
-          globTask,
+          isGlob,
           path.dirname(filename),
           originalNodePath
         ),
