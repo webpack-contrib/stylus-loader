@@ -15,6 +15,7 @@ function getStylusOptions(loaderContext, loaderOptions) {
   );
 
   stylusOptions.filename = loaderContext.resourcePath;
+  stylusOptions.dest = path.dirname(loaderContext.resourcePath);
 
   // Keep track of imported files (used by Stylus CLI watch mode)
   // eslint-disable-next-line no-underscore-dangle

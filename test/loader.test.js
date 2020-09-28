@@ -504,14 +504,15 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId, {
-    //   stylusOptions: {
-    //     use: require('bootstrap-styl')(),
-    //   },
-    // });
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line global-require
+        use: require('bootstrap-styl')(),
+        resolveURL: { nocheck: true },
+      },
+    });
 
-    // TODO different fonts path
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -537,16 +538,15 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    const isBootstrapImported = /MIT License/gi.test(codeFromBundle.css);
-    // const codeFromStylus = await getCodeFromStylus(testId, {
-    //   stylusOptions: {
-    //     use: [plugin()],
-    //   },
-    // });
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        use: [plugin()],
+        resolveURL: { nocheck: true },
+      },
+    });
 
-    // TODO different fonts path
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(isBootstrapImported).toBe(true);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
