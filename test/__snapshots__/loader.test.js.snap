@@ -196,6 +196,18 @@ exports[`loader imports files listed in glob with webpack import with deps: css 
 .index-glob {
   font-size: 1rem;
 }
+.a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
 .glob-entry {
   box-sizing: border-box;
 }
