@@ -4,6 +4,7 @@ import fs from 'fs';
 import {
   compile,
   getCodeFromBundle,
+  getCodeFromStylus,
   getCompiler,
   getErrors,
   getWarnings,
@@ -33,6 +34,13 @@ describe('"sourceMap" options', () => {
         .replace(/\\/g, '/');
     });
 
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(css).toMatchSnapshot('css');
     expect(map).toMatchSnapshot('source map');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
@@ -67,6 +75,13 @@ describe('"sourceMap" options', () => {
         .replace(/\\/g, '/');
     });
 
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(css).toMatchSnapshot('css');
     expect(map).toMatchSnapshot('source map');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
@@ -101,7 +116,13 @@ describe('"sourceMap" options', () => {
         .relative(path.resolve(__dirname, '..'), source)
         .replace(/\\/g, '/');
     });
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(css).toMatchSnapshot('css');
     expect(map).toMatchSnapshot('source map');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
@@ -119,7 +140,13 @@ describe('"sourceMap" options', () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const { css, map } = codeFromBundle;
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(css).toMatchSnapshot('css');
     expect(map).toBeUndefined();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
@@ -142,7 +169,13 @@ describe('"sourceMap" options', () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const { css, map } = codeFromBundle;
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(css).toMatchSnapshot('css');
     expect(map).toBeUndefined();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
@@ -166,7 +199,13 @@ describe('"sourceMap" options', () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const { css, map } = codeFromBundle;
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
 
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(css).toMatchSnapshot('css');
     expect(map).toBeUndefined();
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
