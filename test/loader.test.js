@@ -805,19 +805,6 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in glob', async () => {
-    const testId = './import-glob.styl';
-    const compiler = getCompiler(testId);
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-    const codeFromStylus = await getCodeFromStylus(testId);
-
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
   it('imports files listed in glob with deps', async () => {
     const testId = './import-glob.styl';
     const compiler = getCompiler(testId);
@@ -834,6 +821,9 @@ describe('loader', () => {
       path.resolve(fixturesDir, 'import-glob.styl'),
       path.resolve(fixturesDir, 'glob', 'a.styl'),
       path.resolve(fixturesDir, 'glob', 'b.styl'),
+      path.resolve(fixturesDir, 'glob-files', 'index.styl'),
+      path.resolve(fixturesDir, 'glob-files', 'dir', 'a.styl'),
+      path.resolve(fixturesDir, 'glob-files', 'dir', 'b.styl'),
     ];
 
     fixtures.forEach((fixture) => {
