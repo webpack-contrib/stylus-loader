@@ -409,6 +409,14 @@ async function createEvaluator(loaderContext, code, options) {
               }
             }
           }
+        } else {
+          // eslint-disable-next-line no-console
+          console.log(
+            `ENTRYPOINT ${loaderContext.resourcePath}`,
+            `failed to locate @${
+              imported.once ? 'require' : 'import'
+            } file ${nodePath} in filename ${node.filename}`
+          );
         }
       }
 
