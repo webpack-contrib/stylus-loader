@@ -348,8 +348,6 @@ async function createEvaluator(loaderContext, code, options) {
     options
   );
 
-  // console.log(resolvedDependencies);
-
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       this.return += 1;
@@ -361,21 +359,16 @@ async function createEvaluator(loaderContext, code, options) {
 
       let webpackResolveError;
 
-      if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
+      if (
+        node.name !== 'url' &&
+        nodePath &&
+        !URL_RE.test(nodePath) &&
+        // `imports` is not resolved, let's avoid extra actions
+        !this.options.imports.includes(nodePath)
+      ) {
         const dependencies = resolvedDependencies.get(
           path.normalize(node.filename)
         );
-
-        // eslint-disable-next-line no-console
-        console.log(nodePath);
-        // eslint-disable-next-line no-console
-        console.log(!URL_RE.test(nodePath));
-        // eslint-disable-next-line no-console
-        console.log(node.filename);
-        // eslint-disable-next-line no-console
-        console.log(resolvedDependencies.get(path.normalize(node.filename)));
-        // eslint-disable-next-line no-console
-        console.log(URL_RE.test(nodePath));
 
         if (dependencies) {
           const dependency = dependencies.find((item) => {
