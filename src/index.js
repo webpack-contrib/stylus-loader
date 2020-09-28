@@ -45,6 +45,10 @@ export default async function stylusLoader(source) {
     styl.set('hoist atrules', true);
   }
 
+  if (stylusOptions.lineNumbers) {
+    styl.set('linenos', true);
+  }
+
   if (stylusOptions.disableCache) {
     styl.set('cache', false);
   }

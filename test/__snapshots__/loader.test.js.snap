@@ -693,6 +693,10 @@ exports[`loader should work "include" option: errors 1`] = `Array []`;
 
 exports[`loader should work "include" option: warnings 1`] = `Array []`;
 
+exports[`loader should work "lineNumbers" option: errors 1`] = `Array []`;
+
+exports[`loader should work "lineNumbers" option: warnings 1`] = `Array []`;
+
 exports[`loader should work "nib": css 1`] = `
 "body {
   background: -webkit-linear-gradient(top, #fff, #000);
@@ -712,6 +716,23 @@ exports[`loader should work "nib": css 1`] = `
 exports[`loader should work "nib": errors 1`] = `Array []`;
 
 exports[`loader should work "nib": warnings 1`] = `Array []`;
+
+exports[`loader should work "prefix" option: css 1`] = `
+".prefix-foo {
+  border: 5px;
+}
+.prefix-baz {
+  border: 15px;
+}
+.prefix-bar {
+  border: 25px;
+}
+"
+`;
+
+exports[`loader should work "prefix" option: errors 1`] = `Array []`;
+
+exports[`loader should work "prefix" option: warnings 1`] = `Array []`;
 
 exports[`loader should work "use" option as Array<string>: css 1`] = `
 "body {
