@@ -385,6 +385,9 @@ async function createEvaluator(loaderContext, code, options) {
                 // Avoid re globbing when resolved import contains glob characters
                 clonedNode.string = fastGlob.escapePath(item);
 
+                // eslint-disable-next-line no-console
+                console.log(clonedNode.string);
+
                 let result;
 
                 try {
