@@ -42,19 +42,19 @@ async function resolveFilename(
   loaderContext,
   webpackFileResolver,
   webpackGlobResolver,
+  isGlob,
   context,
   filename
 ) {
-  const isGlob = fastGlob.isDynamicPattern(filename);
   const resolve = isGlob ? webpackGlobResolver : webpackFileResolver;
 
-  let parsedGlob;
+  let globTask;
 
   if (isGlob) {
-    [parsedGlob] = fastGlob.generateTasks(filename);
+    [globTask] = fastGlob.generateTasks(filename);
 
     // eslint-disable-next-line no-param-reassign
-    filename = parsedGlob.base === '.' ? context : parsedGlob.base;
+    filename = globTask.base === '.' ? context : globTask.base;
   }
 
   const request = urlToRequest(
@@ -66,12 +66,12 @@ async function resolveFilename(
 
   return resolveRequests(context, possibleRequests, resolve)
     .then(async (result) => {
-      if (isGlob && result) {
+      if (globTask && result) {
         loaderContext.addContextDependency(result);
 
         // TODO improve
-        const patterns = parsedGlob.patterns.map((item) =>
-          item.slice(parsedGlob.base.length + 1)
+        const patterns = globTask.patterns.map((item) =>
+          item.slice(globTask.base.length + 1)
         );
 
         return runGlob(patterns, { cwd: result });
@@ -80,7 +80,7 @@ async function resolveFilename(
       return result;
     })
     .catch((error) => {
-      if (isGlob) {
+      if (globTask) {
         return resolveRequests(context, possibleRequests, webpackFileResolver);
       }
 
@@ -171,7 +171,19 @@ async function getDependencies(
         nodePath += '.styl';
       }
 
+      const isGlob = fastGlob.isDynamicPattern(nodePath);
+
       found = utils.find(nodePath, this.paths, this.filename);
+
+      if (found && isGlob) {
+        const [globTask] = fastGlob.generateTasks(nodePath);
+        const context =
+          globTask.base === '.'
+            ? path.dirname(filename)
+            : path.join(path.dirname(filename), globTask.base);
+
+        loaderContext.addContextDependency(context);
+      }
 
       if (!found && oldNodePath) {
         found = utils.lookupIndex(oldNodePath, this.paths, this.filename);
@@ -198,6 +210,7 @@ async function getDependencies(
           loaderContext,
           fileResolver,
           globResolver,
+          isGlob,
           path.dirname(filename),
           originalNodePath
         ),
@@ -223,23 +236,23 @@ async function getDependencies(
         return;
       }
 
+      const isArray = Array.isArray(resolved);
+
       // `stylus` can return files with glob characters, we should escape them to avid re globbing
       // eslint-disable-next-line no-param-reassign
-      result.resolved = Array.isArray(resolved)
-        ? resolved.map((item) => fastGlob.escapePath(item))
-        : fastGlob.escapePath(resolved);
-
-      resolved = Array.isArray(resolved) ? resolved : [resolved];
+      result.resolved = isArray
+        ? resolved.map((item) => fastGlob.escapePath(path.normalize(item)))
+        : fastGlob.escapePath(path.normalize(resolved));
 
       const dependenciesOfDependencies = [];
 
-      for (const dependency of resolved) {
+      for (const dependency of isArray ? result.resolved : [result.resolved]) {
         // Avoid loop, the file is imported by itself
         if (seen.has(dependency)) {
           return;
         }
 
-        loaderContext.addDependency(path.normalize(dependency));
+        loaderContext.addDependency(dependency);
 
         dependenciesOfDependencies.push(
           (async () => {

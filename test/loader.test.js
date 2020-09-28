@@ -410,7 +410,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('in a nested import load module from webpack', async () => {
+  it.skip('in a nested import load module from webpack', async () => {
     const testId = './shallow-webpack.styl';
     const compiler = getCompiler(
       testId,
@@ -812,22 +812,30 @@ describe('loader', () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    const { fileDependencies } = stats.compilation;
+    const { fileDependencies, contextDependencies } = stats.compilation;
 
     validateDependencies(fileDependencies);
+    validateDependencies(contextDependencies);
 
     const fixturesDir = path.resolve(__dirname, 'fixtures');
-    const fixtures = [
+
+    [
       path.resolve(fixturesDir, 'import-glob.styl'),
       path.resolve(fixturesDir, 'glob', 'a.styl'),
       path.resolve(fixturesDir, 'glob', 'b.styl'),
       path.resolve(fixturesDir, 'glob-files', 'index.styl'),
       path.resolve(fixturesDir, 'glob-files', 'dir', 'a.styl'),
       path.resolve(fixturesDir, 'glob-files', 'dir', 'b.styl'),
-    ];
-
-    fixtures.forEach((fixture) => {
+    ].forEach((fixture) => {
       expect(fileDependencies.has(fixture)).toBe(true);
+    });
+
+    [
+      fixturesDir,
+      path.resolve(fixturesDir, 'glob'),
+      path.resolve(fixturesDir, 'glob-files'),
+    ].forEach((fixture) => {
+      expect(contextDependencies.has(fixture)).toBe(true);
     });
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
@@ -850,7 +858,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in glob with webpack import', async () => {
+  it.skip('imports files listed in glob with webpack import with deps', async () => {
     const testId = './import-glob-webpack.styl';
     const compiler = getCompiler(
       testId,
@@ -867,37 +875,14 @@ describe('loader', () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
-
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
-  it('imports files listed in glob with webpack import with deps', async () => {
-    const testId = './import-glob-webpack.styl';
-    const compiler = getCompiler(
-      testId,
-      {},
-      {
-        resolve: {
-          alias: {
-            globAlias: path.resolve(__dirname, 'fixtures', 'glob-webpack'),
-            globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
-          },
-        },
-      }
-    );
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-    const codeFromStylus = await getCodeFromStylus(testId);
-
-    const { fileDependencies } = stats.compilation;
+    const { fileDependencies, contextDependencies } = stats.compilation;
 
     validateDependencies(fileDependencies);
+    validateDependencies(contextDependencies);
 
     const fixturesDir = path.resolve(__dirname, 'fixtures');
-    const fixtures = [
+
+    [
       path.resolve(fixturesDir, 'import-glob-webpack.styl'),
       path.resolve(fixturesDir, 'glob', 'a.styl'),
       path.resolve(fixturesDir, 'glob', 'b.styl'),
@@ -906,10 +891,16 @@ describe('loader', () => {
       path.resolve(fixturesDir, 'node_modules', 'glob_package', 'a.styl'),
       path.resolve(fixturesDir, 'node_modules', 'glob_package', 'b.styl'),
       path.resolve(fixturesDir, 'node_modules', 'glob_package', 'index.styl'),
-    ];
-
-    fixtures.forEach((fixture) => {
+    ].forEach((fixture) => {
       expect(fileDependencies.has(fixture)).toBe(true);
+    });
+
+    [
+      path.resolve(fixturesDir, 'glob'),
+      path.resolve(fixturesDir, 'glob-webpack'),
+      path.resolve(fixturesDir, 'node_modules', 'glob_package'),
+    ].forEach((fixture) => {
+      expect(contextDependencies.has(fixture)).toBe(true);
     });
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
@@ -949,7 +940,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in glob with webpack import 2', async () => {
+  it.skip('imports files listed in glob with webpack import 2', async () => {
     const testId = './import-glob-webpack-2.styl';
     const compiler = getCompiler(
       testId,
