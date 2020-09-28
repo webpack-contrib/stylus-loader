@@ -149,6 +149,10 @@ async function getDependencies(
   class ImportVisitor extends DepsResolver {
     // eslint-disable-next-line class-methods-use-this
     visitImport(node) {
+      if (this.filename !== filename) {
+        throw new Error('test');
+      }
+
       let firstNode = node.path.first;
 
       if (firstNode.name === 'url') {
@@ -187,8 +191,8 @@ async function getDependencies(
         const [globTask] = fastGlob.generateTasks(nodePath);
         const context =
           globTask.base === '.'
-            ? path.dirname(filename)
-            : path.join(path.dirname(filename), globTask.base);
+            ? path.dirname(this.filename)
+            : path.join(path.dirname(this.filename), globTask.base);
 
         loaderContext.addContextDependency(context);
       }
@@ -219,7 +223,7 @@ async function getDependencies(
           fileResolver,
           globResolver,
           isGlob,
-          path.dirname(filename),
+          path.dirname(this.filename),
           originalNodePath
         ),
       });
@@ -415,7 +419,8 @@ async function createEvaluator(loaderContext, code, options) {
             `ENTRYPOINT ${loaderContext.resourcePath}`,
             `failed to locate @${
               imported.once ? 'require' : 'import'
-            } file ${nodePath} in filename ${node.filename}`
+            } file ${nodePath} in filename ${node.filename}`,
+            resolvedDependencies
           );
         }
       }

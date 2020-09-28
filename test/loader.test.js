@@ -290,7 +290,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('stylus can find modules in node_modules', async () => {
+  it('stylus can find modules in node_modules', async () => {
     const testId = './import-fakenib.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);

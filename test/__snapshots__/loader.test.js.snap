@@ -14218,6 +14218,17 @@ exports[`loader shouldn't process urls: errors 1`] = `Array []`;
 
 exports[`loader shouldn't process urls: warnings 1`] = `Array []`;
 
+exports[`loader stylus can find modules in node_modules: css 1`] = `
+".not-real-nib {
+  color: #000;
+}
+"
+`;
+
+exports[`loader stylus can find modules in node_modules: errors 1`] = `Array []`;
+
+exports[`loader stylus can find modules in node_modules: warnings 1`] = `Array []`;
+
 exports[`loader with option resolveURL nocheck is "false", should not resolve missing urls relatively: css 1`] = `
 ".img {
   content: url(\\"img.png\\");
