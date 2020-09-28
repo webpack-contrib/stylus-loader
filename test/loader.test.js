@@ -1243,10 +1243,11 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: { resolveURL: { nocheck: true } },
+    });
 
-    // TODO escaped url
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
