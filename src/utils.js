@@ -296,6 +296,11 @@ function mergeBlocks(blocks) {
   };
 
   for (const block of blocks) {
+    // eslint-disable-next-line no-console
+    console.log(block);
+    // eslint-disable-next-line no-console
+    console.log(block.nodes);
+
     if (finalBlock) {
       block.nodes.forEach(adding);
     } else {
@@ -404,9 +409,6 @@ async function createEvaluator(loaderContext, code, options) {
 
                 return result;
               });
-
-              // eslint-disable-next-line no-console
-              console.log(blocks);
 
               return mergeBlocks(blocks);
             }
