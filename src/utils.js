@@ -359,9 +359,6 @@ async function createEvaluator(loaderContext, code, options) {
 
       let webpackResolveError;
 
-      // eslint-disable-next-line no-console
-      console.log(nodePath);
-
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
         const dependencies = resolvedDependencies.get(
           path.normalize(node.filename)

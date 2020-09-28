@@ -622,7 +622,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.only('should compile an @import URL through the CSS loader', async () => {
+  it('should compile an @import URL through the CSS loader', async () => {
     const testId = './import-google-font.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
