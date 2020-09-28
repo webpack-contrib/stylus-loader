@@ -369,17 +369,11 @@ async function createEvaluator(loaderContext, code, options) {
             return false;
           });
 
-          // eslint-disable-next-line no-console
-          console.log(dependencies);
-          // eslint-disable-next-line no-console
-          console.log(node.filename);
-          // eslint-disable-next-line no-console
-          console.log(path.normalize(node.filename));
-          // eslint-disable-next-line no-console
-          console.log(resolvedDependencies);
-
           if (dependency) {
             const { resolved } = dependency;
+
+            // eslint-disable-next-line no-console
+            console.log(resolved);
 
             if (!Array.isArray(resolved)) {
               // Avoid re globbing when resolved import contains glob characters
@@ -391,6 +385,9 @@ async function createEvaluator(loaderContext, code, options) {
 
                 // Avoid re globbing when resolved import contains glob characters
                 clonedNode.string = fastGlob.escapePath(item);
+
+                // eslint-disable-next-line no-console
+                console.log(clonedNode.string);
 
                 let result;
 
