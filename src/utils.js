@@ -372,9 +372,6 @@ async function createEvaluator(loaderContext, code, options) {
           if (dependency) {
             const { resolved } = dependency;
 
-            // eslint-disable-next-line no-console
-            console.log(resolved);
-
             if (!Array.isArray(resolved)) {
               // Avoid re globbing when resolved import contains glob characters
               node.string = fastGlob.escapePath(resolved);
@@ -385,9 +382,6 @@ async function createEvaluator(loaderContext, code, options) {
 
                 // Avoid re globbing when resolved import contains glob characters
                 clonedNode.string = fastGlob.escapePath(item);
-
-                // eslint-disable-next-line no-console
-                console.log(clonedNode.string);
 
                 let result;
 
@@ -410,6 +404,9 @@ async function createEvaluator(loaderContext, code, options) {
 
                 return result;
               });
+
+              // eslint-disable-next-line no-console
+              console.log(blocks);
 
               return mergeBlocks(blocks);
             }
