@@ -45,7 +45,6 @@
     "fast-glob": "^3.2.4",
     "klona": "^2.0.4",
     "loader-utils": "^2.0.0",
-    "normalize-path": "^3.0.0",
     "schema-utils": "^2.7.1"
   },
   "devDependencies": {
@@ -62,11 +61,11 @@
     "bootstrap-styl": "^5.0.9",
     "cross-env": "^7.0.2",
     "css-loader": "^4.3.0",
-    "del": "^5.1.0",
+    "del": "^6.0.0",
     "del-cli": "^3.0.1",
-    "eslint": "^7.9.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint": "^7.10.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.22.1",
     "husky": "^4.3.0",
     "jest": "^26.4.2",
     "lint-staged": "^10.4.0",
