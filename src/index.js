@@ -6,9 +6,9 @@ import { getOptions } from 'loader-utils';
 import validateOptions from 'schema-utils';
 
 import schema from './options.json';
-import createEvaluator from './evaluator';
 import {
   getStylusOptions,
+  createEvaluator,
   urlResolver,
   readFile,
   normalizeSourceMap,
