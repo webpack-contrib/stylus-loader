@@ -263,6 +263,67 @@ exports[`loader imports files listed in option "style" package.json: errors 1`] 
 
 exports[`loader imports files listed in option "style" package.json: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in option argument and deps: css 1`] = `
+".imported-stylus {
+  border: 5px;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument and deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument and deps: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument stylus paths style: css 1`] = `
+".other {
+  font-family: serif;
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument stylus paths style: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument stylus paths style: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument webpack style: css 1`] = `
+".not-real-nib {
+  color: #000;
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument webpack style: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument webpack style: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument: css 1`] = `
+"body {
+  background: url(\\"img.png\\");
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in option as glob with webpack import: css 1`] = `
 ".a-glob {
   color: #000;
@@ -276,6 +337,28 @@ exports[`loader imports files listed in option as glob with webpack import: css 
 exports[`loader imports files listed in option as glob with webpack import: errors 1`] = `Array []`;
 
 exports[`loader imports files listed in option as glob with webpack import: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in option as glob: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option as glob: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option as glob: warnings 1`] = `Array []`;
 
 exports[`loader imports files with special characters listed in glob: css 1`] = `
 ".directoryfile {
@@ -617,6 +700,26 @@ exports[`loader should work "lineNumbers" option: errors 1`] = `Array []`;
 
 exports[`loader should work "lineNumbers" option: warnings 1`] = `Array []`;
 
+exports[`loader should work "nib": css 1`] = `
+"body {
+  background: -webkit-linear-gradient(top, #fff, #000);
+  background: -moz-linear-gradient(top, #fff, #000);
+  background: -o-linear-gradient(top, #fff, #000);
+  background: -ms-linear-gradient(top, #fff, #000);
+  background: linear-gradient(to bottom, #fff, #000);
+}
+#back-to-top {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+"
+`;
+
+exports[`loader should work "nib": errors 1`] = `Array []`;
+
+exports[`loader should work "nib": warnings 1`] = `Array []`;
+
 exports[`loader should work "prefix" option: css 1`] = `
 ".prefix-foo {
   border: 5px;
@@ -660,6 +763,17 @@ exports[`loader should work "use" option: css 1`] = `
 exports[`loader should work "use" option: errors 1`] = `Array []`;
 
 exports[`loader should work "use" option: warnings 1`] = `Array []`;
+
+exports[`loader should work binop import: css 1`] = `
+".not-real-nib {
+  color: #000;
+}
+"
+`;
+
+exports[`loader should work binop import: errors 1`] = `Array []`;
+
+exports[`loader should work binop import: warnings 1`] = `Array []`;
 
 exports[`loader should work compress in "production" mode: css 1`] = `"body{font:12px Helvetica,Arial,sans-serif}a.button{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px}"`;
 
