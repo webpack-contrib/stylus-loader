@@ -246,7 +246,7 @@ async function getDependencies(
 
       const dependenciesOfDependencies = [];
 
-      for (const dependency of isArray ? resolved : [resolved]) {
+      for (const dependency of isArray ? result.resolved : [result.resolved]) {
         // Avoid loop, the file is imported by itself
         if (seen.has(dependency)) {
           return;
