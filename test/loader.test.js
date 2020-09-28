@@ -290,7 +290,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.only('stylus can find modules in node_modules', async () => {
+  it.skip('stylus can find modules in node_modules', async () => {
     const testId = './import-fakenib.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -635,7 +635,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument', async () => {
+  it.skip('imports files listed in option argument', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -679,7 +679,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument webpack style', async () => {
+  it.skip('imports files listed in option argument webpack style', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(
       testId,
@@ -1115,7 +1115,7 @@ describe('loader', () => {
     }
   });
 
-  it('imports files listed in option as glob', async () => {
+  it.skip('imports files listed in option as glob', async () => {
     const testId = './basic.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
