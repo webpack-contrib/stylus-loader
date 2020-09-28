@@ -149,10 +149,6 @@ async function getDependencies(
   class ImportVisitor extends DepsResolver {
     // eslint-disable-next-line class-methods-use-this
     visitImport(node) {
-      if (this.filename !== filename) {
-        throw new Error('test');
-      }
-
       let firstNode = node.path.first;
 
       if (firstNode.name === 'url') {
