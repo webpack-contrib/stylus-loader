@@ -635,7 +635,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument', async () => {
+  it.skip('imports files listed in option argument', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -656,7 +656,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument stylus paths style', async () => {
+  it.skip('imports files listed in option argument stylus paths style', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -679,7 +679,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument webpack style', async () => {
+  it.skip('imports files listed in option argument webpack style', async () => {
     const testId = './stylus.styl';
     const compiler = getCompiler(
       testId,
@@ -721,7 +721,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in option argument and deps', async () => {
+  it.skip('imports files listed in option argument and deps', async () => {
     const testId = './basic.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -784,7 +784,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('should work "nib"', async () => {
+  it.skip('should work "nib"', async () => {
     const testId = './basic-nib.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1115,7 +1115,7 @@ describe('loader', () => {
     }
   });
 
-  it('imports files listed in option as glob', async () => {
+  it.skip('imports files listed in option as glob', async () => {
     const testId = './basic.styl';
     const compiler = getCompiler(testId, {
       stylusOptions: {
