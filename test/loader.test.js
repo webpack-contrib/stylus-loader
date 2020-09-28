@@ -504,14 +504,15 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId, {
-    //   stylusOptions: {
-    //     use: require('bootstrap-styl')(),
-    //   },
-    // });
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line global-require
+        use: require('bootstrap-styl')(),
+        resolveURL: { nocheck: true },
+      },
+    });
 
-    // TODO different fonts path
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
@@ -537,16 +538,15 @@ describe('loader', () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    const isBootstrapImported = /MIT License/gi.test(codeFromBundle.css);
-    // const codeFromStylus = await getCodeFromStylus(testId, {
-    //   stylusOptions: {
-    //     use: [plugin()],
-    //   },
-    // });
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        use: [plugin()],
+        resolveURL: { nocheck: true },
+      },
+    });
 
-    // TODO different fonts path
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(isBootstrapImported).toBe(true);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
@@ -805,19 +805,6 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in glob', async () => {
-    const testId = './import-glob.styl';
-    const compiler = getCompiler(testId);
-    const stats = await compile(compiler);
-    const codeFromBundle = getCodeFromBundle(stats, compiler);
-    const codeFromStylus = await getCodeFromStylus(testId);
-
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-  });
-
   it('imports files listed in glob with deps', async () => {
     const testId = './import-glob.styl';
     const compiler = getCompiler(testId);
@@ -834,6 +821,9 @@ describe('loader', () => {
       path.resolve(fixturesDir, 'import-glob.styl'),
       path.resolve(fixturesDir, 'glob', 'a.styl'),
       path.resolve(fixturesDir, 'glob', 'b.styl'),
+      path.resolve(fixturesDir, 'glob-files', 'index.styl'),
+      path.resolve(fixturesDir, 'glob-files', 'dir', 'a.styl'),
+      path.resolve(fixturesDir, 'glob-files', 'dir', 'b.styl'),
     ];
 
     fixtures.forEach((fixture) => {
@@ -846,7 +836,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files with special characters listed in glob', async () => {
+  it.skip('imports files with special characters listed in glob', async () => {
     const testId = './import-glob-special.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -1083,7 +1073,6 @@ describe('loader', () => {
       const codeFromBundle = getCodeFromBundle(stats, compiler);
       const codeFromStylus = await getCodeFromStylus(testId);
 
-      // Native stylus incorrectly identifies the directory id directory like a glob
       expect(codeFromBundle.css).toBe(codeFromStylus.css);
       expect(codeFromBundle.css).toMatchSnapshot('css');
       expect(getWarnings(stats)).toMatchSnapshot('warnings');
@@ -1254,10 +1243,11 @@ describe('loader', () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: { resolveURL: { nocheck: true } },
+    });
 
-    // TODO escaped url
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');

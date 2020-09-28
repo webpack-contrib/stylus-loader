@@ -120,9 +120,10 @@ async function getCodeFromStylus(testId, options = {}) {
     ...stylusOptions,
   };
 
-  const styl = stylus(data.toString(), mergedOptions);
+  mergedOptions.filename = pathToFile;
+  mergedOptions.dest = path.dirname(pathToFile);
 
-  styl.set('filename', pathToFile);
+  const styl = stylus(data.toString(), mergedOptions);
 
   if (mergedOptions.shouldUseWebpackImporter) {
     styl.set('Evaluator', evaluator());

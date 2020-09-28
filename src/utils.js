@@ -15,6 +15,7 @@ function getStylusOptions(loaderContext, loaderOptions) {
   );
 
   stylusOptions.filename = loaderContext.resourcePath;
+  stylusOptions.dest = path.dirname(loaderContext.resourcePath);
 
   // Keep track of imported files (used by Stylus CLI watch mode)
   // eslint-disable-next-line no-underscore-dangle
@@ -68,6 +69,7 @@ async function resolveFilename(
       if (isGlob && result) {
         loaderContext.addContextDependency(result);
 
+        // TODO improve
         const patterns = parsedGlob.patterns.map((item) =>
           item.slice(parsedGlob.base.length + 1)
         );
@@ -221,8 +223,11 @@ async function getDependencies(
         return;
       }
 
+      // `stylus` can return files with glob characters, we should escape them to avid re globbing
       // eslint-disable-next-line no-param-reassign
-      result.resolved = resolved;
+      result.resolved = Array.isArray(resolved)
+        ? resolved.map((item) => fastGlob.escapePath(item))
+        : fastGlob.escapePath(resolved);
 
       resolved = Array.isArray(resolved) ? resolved : [resolved];
 
@@ -420,22 +425,20 @@ function urlResolver(options = {}) {
 
     compiler.isURL = true;
 
-    // eslint-disable-next-line no-param-reassign
     const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join('');
     const splitted = visitedUrl.split('!');
 
-    // eslint-disable-next-line no-param-reassign
-    url = parse(splitted.pop());
+    const parsedUrl = parse(splitted.pop());
 
     // Parse literal
-    const literal = new nodes.Literal(`url("${url.href}")`);
-    let { pathname } = url;
+    const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
+    let { pathname } = parsedUrl;
     let { dest } = this.options;
     let tail = '';
     let res;
 
     // Absolute or hash
-    if (url.protocol || !pathname || pathname[0] === '/') {
+    if (parsedUrl.protocol || !pathname || pathname[0] === '/') {
       return literal;
     }
 
@@ -452,15 +455,15 @@ function urlResolver(options = {}) {
     }
 
     if (this.includeCSS && path.extname(pathname) === '.css') {
-      return new nodes.Literal(url.href);
+      return new nodes.Literal(parsedUrl.href);
     }
 
-    if (url.search) {
-      tail += url.search;
+    if (parsedUrl.search) {
+      tail += parsedUrl.search;
     }
 
-    if (url.hash) {
-      tail += url.hash;
+    if (parsedUrl.hash) {
+      tail += parsedUrl.hash;
     }
 
     if (dest && path.extname(dest) === '.css') {
