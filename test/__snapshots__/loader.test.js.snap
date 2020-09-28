@@ -430,6 +430,23 @@ exports[`loader should compile an @import URL through the CSS loader: errors 1`]
 
 exports[`loader should compile an @import URL through the CSS loader: warnings 1`] = `Array []`;
 
+exports[`loader should emit error when empty import: css 1`] = `
+"@import '';
+.empty-import {
+  color: #f00;
+}
+"
+`;
+
+exports[`loader should emit error when empty import: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: @import string expected",
+]
+`;
+
+exports[`loader should emit error when empty import: warnings 1`] = `Array []`;
+
 exports[`loader should emit error when import loop: errors 1`] = `
 Array [
   "ModuleError: Module Error (from \`replaced original path\`):
@@ -446,16 +463,7 @@ Stylus resolver error: import loop has been found",
 ]
 `;
 
-exports[`loader should emit error when import self: errors 2`] = `
-Array [
-  "ModuleError: Module Error (from \`replaced original path\`):
-Stylus resolver error: import loop has been found",
-]
-`;
-
 exports[`loader should emit error when import self: warnings 1`] = `Array []`;
-
-exports[`loader should emit error when import self: warnings 2`] = `Array []`;
 
 exports[`loader should emit error when imports files listed as glob in empty directory: errors 1`] = `
 Array [
@@ -465,6 +473,26 @@ Stylus resolver error: failed to locate @import file empty-dir/*.styl",
 `;
 
 exports[`loader should emit error when imports files listed as glob in empty directory: warnings 1`] = `Array []`;
+
+exports[`loader should emit error when parse error: errors 1`] = `
+Array [
+  "ModuleBuildError: Module build failed (from \`replaced original path\`):
+ParseError: /test/fixtures/parse-error.styl:3:1",
+  "ModuleError: Module Error (from \`replaced original path\`):
+expected \\"indent\\", got \\"eos\\"",
+]
+`;
+
+exports[`loader should emit error when parse error: warnings 1`] = `Array []`;
+
+exports[`loader should emit error when unresolved import glob: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file unresolve/*.styl",
+]
+`;
+
+exports[`loader should emit error when unresolved import glob: warnings 1`] = `Array []`;
 
 exports[`loader should emit error when unresolved import: errors 1`] = `
 Array [
@@ -7531,6 +7559,17 @@ exports[`loader with option, should not resolve urls relatively: css 1`] = `
 exports[`loader with option, should not resolve urls relatively: errors 1`] = `Array []`;
 
 exports[`loader with option, should not resolve urls relatively: warnings 1`] = `Array []`;
+
+exports[`loader with option, should resolve urls relatively when literal: css 1`] = `
+".img {
+  content: deep.css;
+}
+"
+`;
+
+exports[`loader with option, should resolve urls relatively when literal: errors 1`] = `Array []`;
+
+exports[`loader with option, should resolve urls relatively when literal: warnings 1`] = `Array []`;
 
 exports[`loader with option, should resolve urls relatively with loader inline syntax: css 1`] = `
 ".img {
