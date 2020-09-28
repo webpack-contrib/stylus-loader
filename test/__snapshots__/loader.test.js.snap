@@ -715,26 +715,6 @@ exports[`loader should work "include" option: errors 1`] = `Array []`;
 
 exports[`loader should work "include" option: warnings 1`] = `Array []`;
 
-exports[`loader should work "lineNumbers" option: css 1`] = `
-"
-/* line 10 : /media/veracrypt1/OS/stylus-loader/test/fixtures/basic.styl */
-
-/* line 1 : /media/veracrypt1/OS/stylus-loader/node_modules/stylus/lib/functions/index.styl */
-
-/* line 6 : /media/veracrypt1/OS/stylus-loader/test/fixtures/basic.styl */
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-
-/* line 9 : /media/veracrypt1/OS/stylus-loader/test/fixtures/basic.styl */
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-"
-`;
-
 exports[`loader should work "lineNumbers" option: errors 1`] = `Array []`;
 
 exports[`loader should work "lineNumbers" option: warnings 1`] = `Array []`;
