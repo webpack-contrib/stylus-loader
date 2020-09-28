@@ -348,7 +348,9 @@ async function createEvaluator(loaderContext, code, options) {
       let webpackResolveError;
 
       if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
-        const dependencies = resolvedDependencies.get(node.filename);
+        const dependencies = resolvedDependencies.get(
+          path.normalize(node.filename)
+        );
 
         if (dependencies) {
           const dependency = dependencies.find((item) => {

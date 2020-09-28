@@ -139,6 +139,73 @@ exports[`loader imports files listed in glob with deps: errors 1`] = `Array []`;
 
 exports[`loader imports files listed in glob with deps: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in glob with webpack import 2: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in glob with webpack import 2: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with webpack import 2: warnings 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with webpack import with deps: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.glob-in-node {
+  color: #fff;
+}
+.glob-in-node {
+  background: #ff7f50;
+}
+.index-glob {
+  font-size: 1rem;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files listed in glob with webpack import with deps: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in glob with webpack import with deps: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in nested glob import: css 1`] = `
 ".a-nested-glob {
   color: #f00;
@@ -328,6 +395,17 @@ exports[`loader in a nested import load module from paths: css 1`] = `
 exports[`loader in a nested import load module from paths: errors 1`] = `Array []`;
 
 exports[`loader in a nested import load module from paths: warnings 1`] = `Array []`;
+
+exports[`loader in a nested import load module from webpack: css 1`] = `
+".imported-in-web-modules {
+  font-size: 2em;
+}
+"
+`;
+
+exports[`loader in a nested import load module from webpack: errors 1`] = `Array []`;
+
+exports[`loader in a nested import load module from webpack: warnings 1`] = `Array []`;
 
 exports[`loader resolve with webpack if stylus can't find it: css 1`] = `
 ".imported-in-web-modules {
