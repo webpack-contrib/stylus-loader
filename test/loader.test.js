@@ -805,7 +805,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in glob with deps', async () => {
+  it.only('imports files listed in glob with deps', async () => {
     const testId = './import-glob.styl';
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -813,6 +813,9 @@ describe('loader', () => {
     const codeFromStylus = await getCodeFromStylus(testId);
 
     const { fileDependencies, contextDependencies } = stats.compilation;
+
+    // eslint-disable-next-line no-console
+    console.log(contextDependencies);
 
     validateDependencies(fileDependencies);
     validateDependencies(contextDependencies);

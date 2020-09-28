@@ -182,6 +182,13 @@ async function getDependencies(
             ? path.dirname(filename)
             : path.join(path.dirname(filename), globTask.base);
 
+        // eslint-disable-next-line no-console
+        console.log(nodePath);
+        // eslint-disable-next-line no-console
+        console.log(globTask);
+        // eslint-disable-next-line no-console
+        console.log(context);
+
         loaderContext.addContextDependency(context);
       }
 
