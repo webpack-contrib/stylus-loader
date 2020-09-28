@@ -28,6 +28,10 @@ function getStylusOptions(loaderContext, loaderOptions) {
       ? stylusOptions.resolveURL
       : { nocheck: true };
 
+  if (typeof stylusOptions.hoistAtrules === 'boolean') {
+    stylusOptions['hoist atrules'] = stylusOptions.hoistAtrules;
+  }
+
   return stylusOptions;
 }
 

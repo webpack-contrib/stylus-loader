@@ -144,6 +144,16 @@ module.exports = {
                  */
                 resolveURL: true,
                 // resolveURL: { nocheck: true },
+
+                /**
+                 * Move @import and @charset to the top.
+                 *
+                 * @see https://stylus-lang.com/docs/executable.html
+                 *
+                 * @type {boolean}
+                 * @default false
+                 */
+                hoistAtrules: true,
               },
             },
           },
