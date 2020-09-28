@@ -382,22 +382,8 @@ async function createEvaluator(loaderContext, code, options) {
                 const clonedImported = imported.clone();
                 const clonedNode = this.visit(clonedImported.path).first;
 
-                // eslint-disable-next-line no-console
-                console.log(clonedNode.string);
-
                 // Avoid re globbing when resolved import contains glob characters
-                clonedNode.string = fastGlob.escapePath(
-                  item.replace(/\\/g, '/')
-                );
-
-                // eslint-disable-next-line no-console
-                console.log(item);
-                // eslint-disable-next-line no-console
-                console.log(item.replace(/\\/g, '/'));
-                // eslint-disable-next-line no-console
-                console.log(fastGlob.escapePath(item.replace(/\\/g, '/')));
-                // eslint-disable-next-line no-console
-                console.log(clonedNode.string);
+                clonedNode.string = fastGlob.escapePath(item);
 
                 let result;
 
@@ -405,19 +391,6 @@ async function createEvaluator(loaderContext, code, options) {
                   result = super.visitImport(clonedImported);
                 } catch (error) {
                   hasError = true;
-
-                  loaderContext.emitError(
-                    new Error(
-                      `Stylus resolver error: ${error.message}${
-                        webpackResolveError
-                          ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
-                            `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
-                          : ''
-                      }`
-                    )
-                  );
-
-                  return imported;
                 }
 
                 return result;
