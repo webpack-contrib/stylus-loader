@@ -410,7 +410,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('in a nested import load module from webpack', async () => {
+  it.only('in a nested import load module from webpack', async () => {
     const testId = './shallow-webpack.styl';
     const compiler = getCompiler(
       testId,
