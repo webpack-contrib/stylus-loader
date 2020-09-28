@@ -336,6 +336,9 @@ async function createEvaluator(loaderContext, code, options) {
     options
   );
 
+  // eslint-disable-next-line no-console
+  console.log(resolvedDependencies);
+
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       this.return += 1;
@@ -369,6 +372,9 @@ async function createEvaluator(loaderContext, code, options) {
             return false;
           });
 
+          // eslint-disable-next-line no-console
+          console.log(dependency);
+
           if (dependency) {
             const { resolved } = dependency;
 
@@ -382,6 +388,9 @@ async function createEvaluator(loaderContext, code, options) {
 
                 // Avoid re globbing when resolved import contains glob characters
                 clonedNode.string = fastGlob.escapePath(item);
+
+                // eslint-disable-next-line no-console
+                console.log(clonedNode.string);
 
                 let result;
 
