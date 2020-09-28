@@ -41,6 +41,10 @@ export default async function stylusLoader(source) {
     styl.set('include css', true);
   }
 
+  if (stylusOptions.hoistAtrules) {
+    styl.set('hoist atrules', true);
+  }
+
   if (stylusOptions.disableCache) {
     styl.set('cache', false);
   }
