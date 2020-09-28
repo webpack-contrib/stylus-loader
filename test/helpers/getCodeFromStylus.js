@@ -6,6 +6,7 @@ import Evaluator from 'stylus/lib/visitor/evaluator';
 
 const fixturesDir = path.resolve(__dirname, '..', 'fixtures');
 const pathMap = {
+  '~globAlias': path.resolve(fixturesDir, 'glob-webpack-2'),
   '~globAlias2/*': path.resolve(fixturesDir, 'glob/*'),
   '~aliasNested/**/file.styl': 'glob-nested/**/file.styl',
   '~globAliasDot/*': 'glob-webpack-2/*',

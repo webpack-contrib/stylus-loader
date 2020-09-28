@@ -862,7 +862,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files listed in glob with webpack import with deps', async () => {
+  it.only('imports files listed in glob with webpack import with deps', async () => {
     const testId = './import-glob-webpack.styl';
     const compiler = getCompiler(
       testId,
@@ -870,7 +870,7 @@ describe('loader', () => {
       {
         resolve: {
           alias: {
-            globAlias: path.resolve(__dirname, 'fixtures', 'glob-webpack'),
+            globAlias: path.resolve(__dirname, 'fixtures', 'glob-webpack-2'),
             globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
           },
         },
@@ -887,11 +887,14 @@ describe('loader', () => {
     const fixturesDir = path.resolve(__dirname, 'fixtures');
 
     [
-      path.resolve(fixturesDir, 'import-glob-webpack.styl'),
-      path.resolve(fixturesDir, 'glob', 'a.styl'),
-      path.resolve(fixturesDir, 'glob', 'b.styl'),
+      path.resolve(fixturesDir, 'glob-webpack-2', 'a.styl'),
+      path.resolve(fixturesDir, 'glob-webpack-2', 'b.styl'),
+      path.resolve(fixturesDir, 'glob-webpack-2', 'index.styl'),
       path.resolve(fixturesDir, 'glob-webpack', 'a.styl'),
       path.resolve(fixturesDir, 'glob-webpack', 'b.styl'),
+      path.resolve(fixturesDir, 'glob', 'a.styl'),
+      path.resolve(fixturesDir, 'glob', 'b.styl'),
+      path.resolve(fixturesDir, 'import-glob-webpack.styl'),
       path.resolve(fixturesDir, 'node_modules', 'glob_package', 'a.styl'),
       path.resolve(fixturesDir, 'node_modules', 'glob_package', 'b.styl'),
       path.resolve(fixturesDir, 'node_modules', 'glob_package', 'index.styl'),
@@ -902,6 +905,7 @@ describe('loader', () => {
     [
       path.resolve(fixturesDir, 'glob'),
       path.resolve(fixturesDir, 'glob-webpack'),
+      path.resolve(fixturesDir, 'glob-webpack-2'),
       path.resolve(fixturesDir, 'node_modules', 'glob_package'),
     ].forEach((fixture) => {
       expect(contextDependencies.has(fixture)).toBe(true);
