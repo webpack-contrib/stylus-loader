@@ -236,6 +236,9 @@ async function getDependencies(
         return;
       }
 
+      // eslint-disable-next-line no-console
+      console.log(resolved);
+
       const isArray = Array.isArray(resolved);
 
       // `stylus` can return files with glob characters, we should escape them to avid re globbing

@@ -425,11 +425,6 @@ describe('loader', () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    // eslint-disable-next-line no-console
-    console.log(codeFromBundle.css);
-    // eslint-disable-next-line no-console
-    console.log(codeFromStylus.css);
-
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
