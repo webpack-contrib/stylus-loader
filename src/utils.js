@@ -68,6 +68,7 @@ async function resolveFilename(
       if (isGlob && result) {
         loaderContext.addContextDependency(result);
 
+        // TODO improve
         const patterns = parsedGlob.patterns.map((item) =>
           item.slice(parsedGlob.base.length + 1)
         );
