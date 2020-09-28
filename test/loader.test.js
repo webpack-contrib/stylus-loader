@@ -11,6 +11,8 @@ import {
   validateDependencies,
 } from './helpers';
 
+jest.setTimeout(30000);
+
 describe('loader', () => {
   it('should work', async () => {
     const testId = './basic.styl';
