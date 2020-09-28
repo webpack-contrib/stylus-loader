@@ -120,9 +120,6 @@ async function getDependencies(
   filename,
   options
 ) {
-  // eslint-disable-next-line no-console
-  console.log(filename);
-
   seen.add(filename);
 
   // TODO cache
@@ -239,23 +236,23 @@ async function getDependencies(
         return;
       }
 
+      const isArray = Array.isArray(resolved);
+
       // `stylus` can return files with glob characters, we should escape them to avid re globbing
       // eslint-disable-next-line no-param-reassign
-      result.resolved = Array.isArray(resolved)
-        ? resolved.map((item) => fastGlob.escapePath(item))
-        : fastGlob.escapePath(resolved);
-
-      resolved = Array.isArray(resolved) ? resolved : [resolved];
+      result.resolved = isArray
+        ? resolved.map((item) => fastGlob.escapePath(path.normalize(item)))
+        : fastGlob.escapePath(path.normalize(resolved));
 
       const dependenciesOfDependencies = [];
 
-      for (const dependency of resolved) {
+      for (const dependency of isArray ? resolved : [resolved]) {
         // Avoid loop, the file is imported by itself
         if (seen.has(dependency)) {
           return;
         }
 
-        loaderContext.addDependency(path.normalize(dependency));
+        loaderContext.addDependency(dependency);
 
         dependenciesOfDependencies.push(
           (async () => {
