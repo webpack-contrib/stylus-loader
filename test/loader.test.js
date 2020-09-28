@@ -862,7 +862,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.only('imports files listed in glob with webpack import with deps', async () => {
+  it('imports files listed in glob with webpack import with deps', async () => {
     const testId = './import-glob-webpack.styl';
     const compiler = getCompiler(
       testId,
