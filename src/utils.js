@@ -188,6 +188,8 @@ async function getDependencies(
         console.log(globTask);
         // eslint-disable-next-line no-console
         console.log(context);
+        // eslint-disable-next-line no-console
+        console.log(filename);
 
         loaderContext.addContextDependency(context);
       }
