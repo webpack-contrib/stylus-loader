@@ -111,6 +111,10 @@ async function getCodeFromStylus(testId, options = {}) {
         : `${options.additionalData}\n${data}`;
   }
 
+  if (typeof stylusOptions.hoistAtrules === 'boolean') {
+    stylusOptions['hoist atrules'] = stylusOptions.hoistAtrules;
+  }
+
   const mergedOptions = {
     ...defaultOptions,
     ...stylusOptions,

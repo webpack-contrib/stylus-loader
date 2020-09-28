@@ -1263,6 +1263,27 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('should work "hoistAtrules" option', async () => {
+    const testId = './hoist-atrules.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        hoistAtrules: true,
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        hoistAtrules: true,
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('should use .json file', async () => {
     const testId = './json/index.styl';
     const compiler = getCompiler(testId, {
