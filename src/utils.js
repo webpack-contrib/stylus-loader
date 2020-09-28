@@ -336,9 +336,6 @@ async function createEvaluator(loaderContext, code, options) {
     options
   );
 
-  // eslint-disable-next-line no-console
-  console.log(resolvedDependencies);
-
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       this.return += 1;

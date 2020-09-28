@@ -410,7 +410,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.only('in a nested import load module from webpack', async () => {
+  it('in a nested import load module from webpack', async () => {
     const testId = './shallow-webpack.styl';
     const compiler = getCompiler(
       testId,
@@ -858,7 +858,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files listed in glob with webpack import with deps', async () => {
+  it('imports files listed in glob with webpack import with deps', async () => {
     const testId = './import-glob-webpack.styl';
     const compiler = getCompiler(
       testId,
@@ -940,7 +940,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files listed in glob with webpack import 2', async () => {
+  it('imports files listed in glob with webpack import 2', async () => {
     const testId = './import-glob-webpack-2.styl';
     const compiler = getCompiler(
       testId,
