@@ -111,10 +111,6 @@ async function getCodeFromStylus(testId, options = {}) {
         : `${options.additionalData}\n${data}`;
   }
 
-  if (typeof stylusOptions.hoistAtrules === 'boolean') {
-    stylusOptions['hoist atrules'] = stylusOptions.hoistAtrules;
-  }
-
   const mergedOptions = {
     ...defaultOptions,
     ...stylusOptions,
@@ -123,6 +119,14 @@ async function getCodeFromStylus(testId, options = {}) {
   const styl = stylus(data.toString(), mergedOptions);
 
   styl.set('filename', pathToFile);
+
+  if (stylusOptions.hoistAtrules) {
+    styl.set('hoist atrules', true);
+  }
+
+  if (stylusOptions.lineNumbers) {
+    styl.set('linenos', true);
+  }
 
   if (mergedOptions.shouldUseWebpackImporter) {
     styl.set('Evaluator', evaluator());

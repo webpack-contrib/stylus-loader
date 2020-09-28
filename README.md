@@ -146,6 +146,16 @@ module.exports = {
                 // resolveURL: { nocheck: true },
 
                 /**
+                 * Emits comments in the generated CSS indicating the corresponding Stylus line.
+                 *
+                 * @see https://stylus-lang.com/docs/executable.html
+                 *
+                 * @type {boolean}
+                 * @default false
+                 */
+                lineNumbers: true,
+
+                /**
                  * Move @import and @charset to the top.
                  *
                  * @see https://stylus-lang.com/docs/executable.html
