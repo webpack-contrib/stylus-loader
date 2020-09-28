@@ -232,6 +232,28 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('with option, should resolve urls relatively when is set "dest"', async () => {
+    const testId = './shallow-deep-literal.styl';
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        dest: 'deep/deep-literal.css',
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        resolveURL: { nocheck: true },
+        dest: 'deep/deep-literal.css',
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('with paths, find deps and load like normal stylus', async () => {
     const testId = './import-paths.styl';
     const compiler = getCompiler(testId, {

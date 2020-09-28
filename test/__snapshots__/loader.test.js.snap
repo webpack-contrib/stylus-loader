@@ -7560,6 +7560,17 @@ exports[`loader with option, should not resolve urls relatively: errors 1`] = `A
 
 exports[`loader with option, should not resolve urls relatively: warnings 1`] = `Array []`;
 
+exports[`loader with option, should resolve urls relatively when is set "dest": css 1`] = `
+".img {
+  content: url(\\"../test/fixtures/deep/deep.css\\");
+}
+"
+`;
+
+exports[`loader with option, should resolve urls relatively when is set "dest": errors 1`] = `Array []`;
+
+exports[`loader with option, should resolve urls relatively when is set "dest": warnings 1`] = `Array []`;
+
 exports[`loader with option, should resolve urls relatively when literal: css 1`] = `
 ".img {
   content: deep.css;
