@@ -33,7 +33,7 @@ function getStylusOptions(loaderContext, loaderOptions) {
 async function runGlob(patterns, options) {
   const paths = await fastGlob(patterns, { absolute: true, ...options });
 
-  return paths.filter((file) => /\.styl$/i.test(file));
+  return paths.sort().filter((file) => /\.styl$/i.test(file));
 }
 
 async function resolveFilename(
