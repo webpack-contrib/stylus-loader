@@ -1045,7 +1045,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files in dir like a glob', async () => {
+  it.skip('imports files in dir like a glob', async () => {
     const isWin = process.platform === 'win32';
 
     if (isWin) {
