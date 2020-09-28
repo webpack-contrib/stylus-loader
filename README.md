@@ -167,7 +167,7 @@ module.exports = {
 
                 /**
                  * Compress CSS output.
-                 * In "production" mode enables by default
+                 * In the "production" mode is `true` by default
                  *
                  * @see https://stylus-lang.com/docs/executable.html
                  *
