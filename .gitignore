@@ -9,6 +9,7 @@ npm-debug.log*
 /reports
 /node_modules
 /test/fixtures/node_modules/like-a-glob*/
+/test/fixtures/node_modules/like-a-glob-package-name*/
 
 .DS_Store
 Thumbs.db

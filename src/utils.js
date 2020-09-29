@@ -40,12 +40,6 @@ function getStylusOptions(loaderContext, loaderOptions) {
   return stylusOptions;
 }
 
-async function runGlob(patterns, options) {
-  const paths = await fastGlob(patterns, { absolute: true, ...options });
-
-  return paths.sort().filter((file) => /\.styl$/i.test(file));
-}
-
 function getPossibleRequests(loaderContext, filename) {
   const request = urlToRequest(
     filename,
@@ -64,46 +58,58 @@ async function resolveFilename(
   context,
   filename
 ) {
-  const resolve = isGlob ? globResolver : fileResolver;
+  const possibleRequests = getPossibleRequests(loaderContext, filename);
 
-  let globTask;
-  let possibleFilename = filename;
+  let result;
 
-  if (isGlob) {
-    [globTask] = fastGlob.generateTasks(filename);
-    possibleFilename = globTask.base === '.' ? context : globTask.base;
+  try {
+    result = await resolveRequests(context, possibleRequests, fileResolver);
+  } catch (error) {
+    if (isGlob) {
+      const [globTask] = fastGlob.generateTasks(filename);
+
+      if (globTask.base === '.') {
+        throw new Error(
+          'Glob resolving without a glob base ("~**/*") is not supported, please specify a glob base ("~package/**/*")'
+        );
+      }
+
+      const possibleGlobRequests = getPossibleRequests(
+        loaderContext,
+        globTask.base
+      );
+
+      let globResult;
+
+      try {
+        globResult = await resolveRequests(
+          context,
+          possibleGlobRequests,
+          globResolver
+        );
+      } catch (globError) {
+        throw globError;
+      }
+
+      loaderContext.addContextDependency(globResult);
+
+      const patterns = filename.replace(
+        new RegExp(`^${globTask.base}`),
+        globResult
+      );
+
+      const paths = await fastGlob(patterns, {
+        absolute: true,
+        cwd: globResult,
+      });
+
+      return paths.sort().filter((file) => /\.styl$/i.test(file));
+    }
+
+    throw error;
   }
 
-  return resolveRequests(
-    context,
-    getPossibleRequests(loaderContext, possibleFilename),
-    resolve
-  )
-    .then(async (result) => {
-      if (globTask && result) {
-        loaderContext.addContextDependency(result);
-
-        // TODO improve
-        const patterns = globTask.patterns.map((item) =>
-          item.slice(globTask.base.length + 1)
-        );
-
-        return runGlob(patterns, { cwd: result });
-      }
-
-      return result;
-    })
-    .catch((error) => {
-      if (globTask) {
-        return resolveRequests(
-          context,
-          getPossibleRequests(loaderContext, filename),
-          fileResolver
-        );
-      }
-
-      throw error;
-    });
+  return result;
 }
 
 function resolveRequests(context, possibleRequests, resolve) {
