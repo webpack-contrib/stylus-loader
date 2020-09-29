@@ -147,7 +147,7 @@ async function getDependencies(
 ) {
   seen.add(filename);
 
-  // TODO cache
+  // See https://github.com/stylus/stylus/issues/2108
   const newOptions = klona({ ...options, filename, cache: false });
   const parser = new Parser(code, newOptions);
 
