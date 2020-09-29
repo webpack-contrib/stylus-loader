@@ -1056,7 +1056,10 @@ describe('loader', () => {
   it('imports files in dir like a glob', async () => {
     const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
     const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
-    const pathDir = path.resolve(rootdir, 'like-a-glob*');
+    const pathDir =
+      process.platform === 'win32'
+        ? path.resolve(rootdir, 'like-a-glob')
+        : path.resolve(rootdir, 'like-a-glob*');
 
     if (!fs.existsSync(pathDir)) {
       fs.mkdirSync(pathDir);
@@ -1085,7 +1088,10 @@ describe('loader', () => {
   it('imports files in dir like a glob through webpack', async () => {
     const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
     const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
-    const pathDir = path.resolve(rootdir, 'webpack-like-a-glob-package-name*');
+    const pathDir =
+      process.platform === 'win32'
+        ? path.resolve(rootdir, 'webpack-like-a-glob-package-name')
+        : path.resolve(rootdir, 'webpack-like-a-glob-package-name*');
 
     if (!fs.existsSync(pathDir)) {
       fs.mkdirSync(pathDir);
