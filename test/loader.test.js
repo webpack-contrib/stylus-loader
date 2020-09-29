@@ -1060,7 +1060,7 @@ describe('loader', () => {
       expect(true).toBe(true);
     } else {
       const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
-      const exampleDir = path.resolve(rootdir, 'like-a-glob-example');
+      const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
       const pathDir = path.resolve(rootdir, 'like-a-glob*');
 
       if (!fs.existsSync(pathDir)) {
@@ -1095,7 +1095,7 @@ describe('loader', () => {
       expect(true).toBe(true);
     } else {
       const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
-      const exampleDir = path.resolve(rootdir, 'like-a-glob-example');
+      const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
       const pathDir = path.resolve(rootdir, 'like-a-glob-package-name*');
 
       if (!fs.existsSync(pathDir)) {
@@ -1130,7 +1130,7 @@ describe('loader', () => {
       expect(true).toBe(true);
     } else {
       const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
-      const exampleDir = path.resolve(rootdir, 'like-a-glob-example');
+      const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
       const pathDir = path.resolve(rootdir, 'like-a-glob*');
 
       if (!fs.existsSync(pathDir)) {
