@@ -6,6 +6,7 @@ import DepsResolver from 'stylus/lib/visitor/deps-resolver';
 import { urlToRequest } from 'loader-utils';
 import { klona } from 'klona/full';
 import fastGlob from 'fast-glob';
+import normalizePath from 'normalize-path';
 
 function isProductionLikeMode(loaderContext) {
   return loaderContext.mode === 'production' || !loaderContext.mode;
@@ -40,60 +41,76 @@ function getStylusOptions(loaderContext, loaderOptions) {
   return stylusOptions;
 }
 
-async function runGlob(patterns, options) {
-  const paths = await fastGlob(patterns, { absolute: true, ...options });
-
-  return paths.sort().filter((file) => /\.styl$/i.test(file));
-}
-
-async function resolveFilename(
-  loaderContext,
-  webpackFileResolver,
-  webpackGlobResolver,
-  isGlob,
-  context,
-  filename
-) {
-  const resolve = isGlob ? webpackGlobResolver : webpackFileResolver;
-
-  let globTask;
-
-  if (isGlob) {
-    [globTask] = fastGlob.generateTasks(filename);
-
-    // eslint-disable-next-line no-param-reassign
-    filename = globTask.base === '.' ? context : globTask.base;
-  }
-
+function getPossibleRequests(loaderContext, filename) {
   const request = urlToRequest(
     filename,
     // eslint-disable-next-line no-undefined
     filename.charAt(0) === '/' ? loaderContext.rootContext : undefined
   );
-  const possibleRequests = [...new Set([request, filename])];
 
-  return resolveRequests(context, possibleRequests, resolve)
-    .then(async (result) => {
-      if (globTask && result) {
-        loaderContext.addContextDependency(result);
+  return [...new Set([request, filename])];
+}
 
-        // TODO improve
-        const patterns = globTask.patterns.map((item) =>
-          item.slice(globTask.base.length + 1)
+async function resolveFilename(
+  loaderContext,
+  fileResolver,
+  globResolver,
+  isGlob,
+  context,
+  filename
+) {
+  const possibleRequests = getPossibleRequests(loaderContext, filename);
+
+  let result;
+
+  try {
+    result = await resolveRequests(context, possibleRequests, fileResolver);
+  } catch (error) {
+    if (isGlob) {
+      const [globTask] = fastGlob.generateTasks(filename);
+
+      if (globTask.base === '.') {
+        throw new Error(
+          'Glob resolving without a glob base ("~**/*") is not supported, please specify a glob base ("~package/**/*")'
         );
-
-        return runGlob(patterns, { cwd: result });
       }
 
-      return result;
-    })
-    .catch((error) => {
-      if (globTask) {
-        return resolveRequests(context, possibleRequests, webpackFileResolver);
+      const possibleGlobRequests = getPossibleRequests(
+        loaderContext,
+        globTask.base
+      );
+
+      let globResult;
+
+      try {
+        globResult = await resolveRequests(
+          context,
+          possibleGlobRequests,
+          globResolver
+        );
+      } catch (globError) {
+        throw globError;
       }
 
-      throw error;
-    });
+      loaderContext.addContextDependency(globResult);
+
+      const patterns = filename.replace(
+        new RegExp(`^${globTask.base}`),
+        normalizePath(globResult)
+      );
+
+      const paths = await fastGlob(patterns, {
+        absolute: true,
+        cwd: globResult,
+      });
+
+      return paths.sort().filter((file) => /\.styl$/i.test(file));
+    }
+
+    throw error;
+  }
+
+  return result;
 }
 
 function resolveRequests(context, possibleRequests, resolve) {
@@ -187,8 +204,8 @@ async function getDependencies(
         const [globTask] = fastGlob.generateTasks(nodePath);
         const context =
           globTask.base === '.'
-            ? path.dirname(filename)
-            : path.join(path.dirname(filename), globTask.base);
+            ? path.dirname(this.filename)
+            : path.join(path.dirname(this.filename), globTask.base);
 
         loaderContext.addContextDependency(context);
       }
@@ -219,7 +236,7 @@ async function getDependencies(
           fileResolver,
           globResolver,
           isGlob,
-          path.dirname(filename),
+          path.dirname(this.filename),
           originalNodePath
         ),
       });
@@ -355,7 +372,13 @@ async function createEvaluator(loaderContext, code, options) {
 
       let webpackResolveError;
 
-      if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
+      if (
+        node.name !== 'url' &&
+        nodePath &&
+        !URL_RE.test(nodePath) &&
+        // `imports` is not resolved, let's avoid extra actions
+        !this.options.imports.includes(nodePath)
+      ) {
         const dependencies = resolvedDependencies.get(
           path.normalize(node.filename)
         );
@@ -421,8 +444,17 @@ async function createEvaluator(loaderContext, code, options) {
           new Error(
             `Stylus resolver error: ${error.message}${
               webpackResolveError
-                ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
-                  `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
+                ? `\n\nWebpack resolver error: ${webpackResolveError.message}${
+                    webpackResolveError.details
+                      ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}`
+                      : ''
+                  }${
+                    webpackResolveError.missing
+                      ? `\n\nWebpack resolver error missing:\n${webpackResolveError.missing.join(
+                          '\n'
+                        )}`
+                      : ''
+                  }`
                 : ''
             }`
           )

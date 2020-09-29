@@ -11,7 +11,6 @@ const pathMap = {
   '~aliasNested/**/file.styl': 'glob-nested/**/file.styl',
   '~globAliasDot/*': 'glob-webpack-2/*',
   'glob_package/*': 'node_modules/glob_package/*',
-  '~like-a-glob*': 'node_modules/like-a-glob*',
   'alias/1': path.resolve(fixturesDir, 'alias', '1.styl'),
   '~alias/2': path.resolve(fixturesDir, 'alias', '2.styl'),
   'globAlias/*': path.resolve(fixturesDir, 'glob-webpack/*'),
@@ -50,6 +49,14 @@ const pathMap = {
     fixturesDir,
     'web_modules',
     'in-web-modules',
+    'index.styl'
+  ),
+  '~webpack-like-a-glob-package-name*': path.resolve(
+    fixturesDir,
+    'node_modules',
+    process.platform === 'win32'
+      ? 'webpack-like-a-glob-package-name'
+      : 'webpack-like-a-glob-package-name*',
     'index.styl'
   ),
 };

@@ -53,6 +53,20 @@ exports[`loader imports and webpack deps: errors 1`] = `Array []`;
 
 exports[`loader imports and webpack deps: warnings 1`] = `Array []`;
 
+exports[`loader imports files in dir like a glob: css 1`] = `
+".like-a-glob {
+  color: #ff7f50;
+}
+.entry {
+  box-sizing: border-box;
+}
+"
+`;
+
+exports[`loader imports files in dir like a glob: errors 1`] = `Array []`;
+
+exports[`loader imports files in dir like a glob: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in glob **/* with deps: css 1`] = `
 ".a-deep {
   color: #f00;
@@ -399,6 +413,15 @@ exports[`loader imports the right file based on context: css 1`] = `
 exports[`loader imports the right file based on context: errors 1`] = `Array []`;
 
 exports[`loader imports the right file based on context: warnings 1`] = `Array []`;
+
+exports[`loader imports unsupported webpack: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file ~**/*.styl",
+]
+`;
+
+exports[`loader imports unsupported webpack: warnings 1`] = `Array []`;
 
 exports[`loader in a nested import load module from node_modules: css 1`] = `
 ".not-real-nib {
