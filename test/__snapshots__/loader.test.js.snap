@@ -338,6 +338,20 @@ exports[`loader imports files listed in option argument webpack style: errors 1`
 
 exports[`loader imports files listed in option argument webpack style: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in option argument with tilde: css 1`] = `
+".not-real-nib {
+  color: #000;
+}
+.imported-stylus {
+  border: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in option argument with tilde: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in option argument with tilde: warnings 1`] = `Array []`;
+
 exports[`loader imports files listed in option argument: css 1`] = `
 "body {
   background: url(\\"img.png\\");
@@ -401,6 +415,28 @@ exports[`loader imports files with special characters listed in glob: css 1`] = 
 exports[`loader imports files with special characters listed in glob: errors 1`] = `Array []`;
 
 exports[`loader imports files with special characters listed in glob: warnings 1`] = `Array []`;
+
+exports[`loader imports in option "import" and webpack alias: css 1`] = `
+".webpack-alias-1 {
+  color: #f00;
+}
+.webpack-alias-2 {
+  color: #ff7f50;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports in option "import" and webpack alias: errors 1`] = `Array []`;
+
+exports[`loader imports in option "import" and webpack alias: warnings 1`] = `Array []`;
 
 exports[`loader imports the right file based on context: css 1`] = `
 ".a-color {

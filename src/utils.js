@@ -347,6 +347,7 @@ async function createEvaluator(loaderContext, code, options) {
     resolveToContext: true,
   });
 
+  const resolvedImportDependencies = new Map();
   const resolvedDependencies = new Map();
   const seen = new Set();
 
@@ -361,6 +362,43 @@ async function createEvaluator(loaderContext, code, options) {
     options
   );
 
+  const optionsImports = [];
+
+  for (const importPath of options.imports) {
+    optionsImports.push({
+      importPath,
+      resolved: resolveFilename(
+        loaderContext,
+        fileResolve,
+        globResolve,
+        false,
+        path.dirname(loaderContext.resourcePath),
+        importPath
+      ),
+    });
+  }
+
+  await Promise.all(
+    optionsImports.map(async (result) => {
+      const { importPath } = result;
+      let { resolved } = result;
+
+      try {
+        resolved = await resolved;
+      } catch (ignoreError) {
+        // eslint-disable-next-line no-param-reassign
+        delete result.resolved;
+
+        return;
+      }
+
+      // eslint-disable-next-line no-param-reassign
+      result.resolved = resolved;
+
+      resolvedImportDependencies.set(importPath, result);
+    })
+  );
+
   return class CustomEvaluator extends Evaluator {
     visitImport(imported) {
       this.return += 1;
@@ -372,64 +410,68 @@ async function createEvaluator(loaderContext, code, options) {
 
       let webpackResolveError;
 
-      if (
-        node.name !== 'url' &&
-        nodePath &&
-        !URL_RE.test(nodePath) &&
-        // `imports` is not resolved, let's avoid extra actions
-        !this.options.imports.includes(nodePath)
-      ) {
-        const dependencies = resolvedDependencies.get(
-          path.normalize(node.filename)
-        );
+      if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
+        let dependency;
 
-        if (dependencies) {
-          const dependency = dependencies.find((item) => {
-            if (
-              item.originalLineno === node.lineno &&
-              item.originalColumn === node.column &&
-              item.originalNodePath === nodePath
-            ) {
-              if (item.error) {
-                webpackResolveError = item.error;
-              } else {
-                return item.resolved;
-              }
-            }
+        const isEntrypoint = loaderContext.resourcePath === node.filename;
 
-            return false;
-          });
+        if (isEntrypoint) {
+          dependency = resolvedImportDependencies.get(nodePath);
+        }
 
-          if (dependency) {
-            const { resolved } = dependency;
+        if (!dependency) {
+          const dependencies = resolvedDependencies.get(
+            path.normalize(node.filename)
+          );
 
-            if (!Array.isArray(resolved)) {
-              // Avoid re globbing when resolved import contains glob characters
-              node.string = fastGlob.escapePath(resolved);
-            } else if (resolved.length > 0) {
-              let hasError = false;
-
-              const blocks = resolved.map((item) => {
-                const clonedImported = imported.clone();
-                const clonedNode = this.visit(clonedImported.path).first;
-
-                // Avoid re globbing when resolved import contains glob characters
-                clonedNode.string = fastGlob.escapePath(item);
-
-                let result;
-
-                try {
-                  result = super.visitImport(clonedImported);
-                } catch (error) {
-                  hasError = true;
+          if (dependencies) {
+            dependency = dependencies.find((item) => {
+              if (
+                item.originalLineno === node.lineno &&
+                item.originalColumn === node.column &&
+                item.originalNodePath === nodePath
+              ) {
+                if (item.error) {
+                  webpackResolveError = item.error;
+                } else {
+                  return item.resolved;
                 }
-
-                return result;
-              });
-
-              if (!hasError) {
-                return mergeBlocks(blocks);
               }
+
+              return false;
+            });
+          }
+        }
+
+        if (dependency) {
+          const { resolved } = dependency;
+
+          if (!Array.isArray(resolved)) {
+            // Avoid re globbing when resolved import contains glob characters
+            node.string = fastGlob.escapePath(resolved);
+          } else if (resolved.length > 0) {
+            let hasError = false;
+
+            const blocks = resolved.map((item) => {
+              const clonedImported = imported.clone();
+              const clonedNode = this.visit(clonedImported.path).first;
+
+              // Avoid re globbing when resolved import contains glob characters
+              clonedNode.string = fastGlob.escapePath(item);
+
+              let result;
+
+              try {
+                result = super.visitImport(clonedImported);
+              } catch (error) {
+                hasError = true;
+              }
+
+              return result;
+            });
+
+            if (!hasError) {
+              return mergeBlocks(blocks);
             }
           }
         }

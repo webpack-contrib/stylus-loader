@@ -708,6 +708,35 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('imports files listed in option argument with tilde', async () => {
+    const testId = './stylus.styl';
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['~fakenib'],
+        },
+      },
+      {
+        resolve: {
+          modules: ['node_modules'],
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['~fakenib'],
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('imports files listed in option "style" package.json', async () => {
     const testId = './import-fakestylus.styl';
     const compiler = getCompiler(testId);
@@ -1241,6 +1270,34 @@ describe('loader', () => {
     const codeFromStylus = await getCodeFromStylus(testId);
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports in option "import" and webpack alias', async () => {
+    const testId = './basic.styl';
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['alias/1', '~alias/2'],
+        },
+      },
+      {
+        resolve: {
+          alias: {
+            alias: path.resolve(__dirname, 'fixtures', 'alias'),
+          },
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    // const codeFromStylus = await getCodeFromStylus(testId);
+
+    // Native stylus can`t resolve this imports
+    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
