@@ -443,8 +443,17 @@ async function createEvaluator(loaderContext, code, options) {
           new Error(
             `Stylus resolver error: ${error.message}${
               webpackResolveError
-                ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}\n\n` +
-                  `Webpack resolver error missing:\n${webpackResolveError.missing}\n\n`
+                ? `\n\nWebpack resolver error: ${webpackResolveError.message}${
+                    webpackResolveError.details
+                      ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}`
+                      : ''
+                  }${
+                    webpackResolveError.missing
+                      ? `\n\nWebpack resolver error missing:\n${webpackResolveError.missing.join(
+                          '\n'
+                        )}`
+                      : ''
+                  }`
                 : ''
             }`
           )

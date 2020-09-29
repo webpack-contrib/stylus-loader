@@ -448,6 +448,15 @@ exports[`loader imports the right file based on context: errors 1`] = `Array []`
 
 exports[`loader imports the right file based on context: warnings 1`] = `Array []`;
 
+exports[`loader imports unsupported webpack: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: failed to locate @import file ~**/*.styl",
+]
+`;
+
+exports[`loader imports unsupported webpack: warnings 1`] = `Array []`;
+
 exports[`loader in a nested import load module from node_modules: css 1`] = `
 ".not-real-nib {
   color: #000;

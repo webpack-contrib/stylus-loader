@@ -972,6 +972,15 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('imports unsupported webpack', async () => {
+    const testId = './import-webpack-unsupported.styl';
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('imports files listed in nested glob import', async () => {
     const testId = './import-glob-nested.styl';
     const compiler = getCompiler(testId);
