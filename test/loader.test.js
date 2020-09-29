@@ -1085,7 +1085,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it('imports files in dir like a glob through webpack', async () => {
+  it.only('imports files in dir like a glob through webpack', async () => {
     const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
     const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
     const pathDir =
@@ -1110,6 +1110,11 @@ describe('loader', () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
+
+    // eslint-disable-next-line no-console
+    console.log(codeFromBundle.css);
+    // eslint-disable-next-line no-console
+    console.log(codeFromStylus.css);
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
