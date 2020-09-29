@@ -88,9 +88,6 @@ exports[`loader imports files in dir like a glob: css 1`] = `
 .like-a-glob {
   color: #ff7f50;
 }
-.like-a-glob {
-  color: #ff7f50;
-}
 .entry {
   box-sizing: border-box;
 }
