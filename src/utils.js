@@ -6,6 +6,7 @@ import DepsResolver from 'stylus/lib/visitor/deps-resolver';
 import { urlToRequest } from 'loader-utils';
 import { klona } from 'klona/full';
 import fastGlob from 'fast-glob';
+import normalizePath from 'normalize-path';
 
 function isProductionLikeMode(loaderContext) {
   return loaderContext.mode === 'production' || !loaderContext.mode;
@@ -95,7 +96,7 @@ async function resolveFilename(
 
       const patterns = filename.replace(
         new RegExp(`^${globTask.base}`),
-        globResult
+        normalizePath(globResult)
       );
 
       const paths = await fastGlob(patterns, {
