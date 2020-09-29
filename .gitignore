@@ -8,8 +8,8 @@ npm-debug.log*
 /local
 /reports
 /node_modules
-/test/fixtures/node_modules/like-a-glob*/
-/test/fixtures/node_modules/like-a-glob-package-name*/
+/test/fixtures/node_modules/like-a-glob*
+/test/fixtures/node_modules/webpack-like-a-glob-package-name*
 
 .DS_Store
 Thumbs.db

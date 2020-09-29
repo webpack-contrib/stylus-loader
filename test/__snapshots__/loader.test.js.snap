@@ -63,29 +63,12 @@ exports[`loader imports files in dir like a glob through webpack: css 1`] = `
 "
 `;
 
-exports[`loader imports files in dir like a glob through webpack: css 2`] = `
-".like-a-glob {
-  color: #ff7f50;
-}
-.entry {
-  box-sizing: border-box;
-}
-"
-`;
-
 exports[`loader imports files in dir like a glob through webpack: errors 1`] = `Array []`;
-
-exports[`loader imports files in dir like a glob through webpack: errors 2`] = `Array []`;
 
 exports[`loader imports files in dir like a glob through webpack: warnings 1`] = `Array []`;
 
-exports[`loader imports files in dir like a glob through webpack: warnings 2`] = `Array []`;
-
 exports[`loader imports files in dir like a glob: css 1`] = `
 ".like-a-glob {
-  color: #ff7f50;
-}
-.like-a-glob {
   color: #ff7f50;
 }
 .entry {

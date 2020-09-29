@@ -1096,42 +1096,10 @@ describe('loader', () => {
     } else {
       const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
       const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
-      const pathDir = path.resolve(rootdir, 'like-a-glob-package-name*');
-
-      if (!fs.existsSync(pathDir)) {
-        fs.mkdirSync(pathDir);
-        fs.copyFileSync(
-          path.resolve(exampleDir, 'package.json'),
-          path.resolve(pathDir, 'package.json')
-        );
-        fs.copyFileSync(
-          path.resolve(exampleDir, 'index.styl'),
-          path.resolve(pathDir, 'index.styl')
-        );
-      }
-
-      const testId = './import-webpack-dir-like-a-glob-package-name.styl';
-      const compiler = getCompiler(testId);
-      const stats = await compile(compiler);
-      const codeFromBundle = getCodeFromBundle(stats, compiler);
-      const codeFromStylus = await getCodeFromStylus(testId);
-
-      expect(codeFromBundle.css).toBe(codeFromStylus.css);
-      expect(codeFromBundle.css).toMatchSnapshot('css');
-      expect(getWarnings(stats)).toMatchSnapshot('warnings');
-      expect(getErrors(stats)).toMatchSnapshot('errors');
-    }
-  });
-
-  it('imports files in dir like a glob through webpack', async () => {
-    const isWin = process.platform === 'win32';
-
-    if (isWin) {
-      expect(true).toBe(true);
-    } else {
-      const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
-      const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
-      const pathDir = path.resolve(rootdir, 'like-a-glob*');
+      const pathDir = path.resolve(
+        rootdir,
+        'webpack-like-a-glob-package-name*'
+      );
 
       if (!fs.existsSync(pathDir)) {
         fs.mkdirSync(pathDir);

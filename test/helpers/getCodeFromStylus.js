@@ -52,10 +52,10 @@ const pathMap = {
     'in-web-modules',
     'index.styl'
   ),
-  '~like-a-glob-package-name*': path.resolve(
+  '~webpack-like-a-glob-package-name*': path.resolve(
     fixturesDir,
     'node_modules',
-    'like-a-glob-package-name*',
+    'webpack-like-a-glob-package-name*',
     'index.styl'
   ),
 };
