@@ -386,9 +386,6 @@ async function createEvaluator(loaderContext, code, options) {
       try {
         resolved = await resolved;
       } catch (ignoreError) {
-        // eslint-disable-next-line no-param-reassign
-        delete result.resolved;
-
         return;
       }
 
