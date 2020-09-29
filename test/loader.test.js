@@ -1085,7 +1085,7 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
-  it.skip('imports files in dir like a glob through webpack', async () => {
+  it('imports files in dir like a glob through webpack', async () => {
     const rootdir = path.resolve(__dirname, 'fixtures', 'node_modules');
     const exampleDir = path.resolve(rootdir, 'example-like-a-glob');
     const pathDir =
@@ -1105,7 +1105,27 @@ describe('loader', () => {
       );
     }
 
-    const testId = './import-webpack-dir-like-a-glob.styl';
+    let testId = './import-webpack-dir-like-a-glob.styl';
+
+    if (process.platform === 'win32') {
+      let fileContent = fs.readFileSync(
+        path.resolve(__dirname, 'fixtures', testId)
+      );
+
+      fileContent = fileContent.toString().replace(/\*/i, '');
+
+      fs.writeFileSync(
+        path.resolve(
+          __dirname,
+          'fixtures',
+          'import-webpack-dir-like-a-glob-win32.styl'
+        ),
+        fileContent
+      );
+
+      testId = './import-webpack-dir-like-a-glob-win32.styl';
+    }
+
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);

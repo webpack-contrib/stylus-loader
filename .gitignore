@@ -10,6 +10,7 @@ npm-debug.log*
 /node_modules
 /test/fixtures/node_modules/like-a-glob*
 /test/fixtures/node_modules/webpack-like-a-glob-package-name*
+/test/fixtures/import-webpack-dir-like-a-glob-win32.styl
 
 .DS_Store
 Thumbs.db
