@@ -54,9 +54,13 @@ const pathMap = {
   '~webpack-like-a-glob-package-name*': path.resolve(
     fixturesDir,
     'node_modules',
-    process.platform === 'win32'
-      ? 'webpack-like-a-glob-package-name'
-      : 'webpack-like-a-glob-package-name*',
+    'webpack-like-a-glob-package-name*',
+    'index.styl'
+  ),
+  '~webpack-like-a-glob-package-name': path.resolve(
+    fixturesDir,
+    'node_modules',
+    'webpack-like-a-glob-package-name',
     'index.styl'
   ),
 };
