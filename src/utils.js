@@ -365,13 +365,15 @@ async function createEvaluator(loaderContext, code, options) {
   const optionsImports = [];
 
   for (const importPath of options.imports) {
+    const isGlob = fastGlob.isDynamicPattern(importPath);
+
     optionsImports.push({
       importPath,
       resolved: resolveFilename(
         loaderContext,
         fileResolve,
         globResolve,
-        false,
+        isGlob,
         path.dirname(loaderContext.resourcePath),
         importPath
       ),
@@ -389,8 +391,13 @@ async function createEvaluator(loaderContext, code, options) {
         return;
       }
 
+      const isArray = Array.isArray(resolved);
+
+      // `stylus` returns forward slashes on windows
       // eslint-disable-next-line no-param-reassign
-      result.resolved = resolved;
+      result.resolved = isArray
+        ? resolved.map((item) => path.normalize(item))
+        : path.normalize(resolved);
 
       resolvedImportDependencies.set(importPath, result);
     })
