@@ -62,7 +62,7 @@ export default async function stylusLoader(source) {
       useSourceMap
         ? {
             comment: false,
-            sourceRoot: this.rootContext,
+            sourceRoot: styl.options.dest,
             basePath: this.rootContext,
           }
         : stylusOptions.sourcemap
@@ -154,7 +154,7 @@ export default async function stylusLoader(source) {
     let map = styl.sourcemap;
 
     if (map && useSourceMap) {
-      map = normalizeSourceMap(map, this.rootContext);
+      map = normalizeSourceMap(map, map.sourceRoot);
 
       try {
         map.sourcesContent = await Promise.all(
