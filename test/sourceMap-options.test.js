@@ -211,4 +211,40 @@ describe('"sourceMap" options', () => {
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
+
+  it('should generate nested source maps when value is "true"', async () => {
+    const testId = './source-map/index.styl';
+    const compiler = getCompiler(testId, {
+      sourceMap: true,
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const { css, map } = codeFromBundle;
+
+    map.sourceRoot = '';
+    map.sources = map.sources.map((source) => {
+      expect(path.isAbsolute(source)).toBe(true);
+      expect(source).toBe(path.normalize(source));
+      expect(fs.existsSync(path.resolve(map.sourceRoot, source))).toBe(true);
+
+      return path
+        .relative(path.resolve(__dirname, '..'), source)
+        .replace(/\\/g, '/');
+    });
+
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        paths: ['test/fixtures/paths'],
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(css).toMatchSnapshot('css');
+    expect(map).toMatchSnapshot('source map');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
 });
