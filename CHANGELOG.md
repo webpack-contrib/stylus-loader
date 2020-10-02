@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v4.0.0...v4.1.0) (2020-10-02)
+
+
+### Features
+
+* webpack resolver supports the `import` option ([8bca526](https://github.com/webpack-contrib/stylus-loader/commit/8bca5262b5b3223108d14f8e10617ae6ca8dd85f))
+
+
+### Bug Fixes
+
+* source maps ([#290](https://github.com/webpack-contrib/stylus-loader/issues/290)) ([1be8169](https://github.com/webpack-contrib/stylus-loader/commit/1be8169c888d1a8e3531e79ebe1e1ef53d7821e7))
+
 ## [4.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v3.0.2...v4.0.0) (2020-09-29)
 
 
