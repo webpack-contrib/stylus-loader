@@ -1294,10 +1294,13 @@ describe('loader', () => {
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['alias/1', '~alias/2'],
+      },
+    });
 
-    // Native stylus can`t resolve this imports
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot('css');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
     expect(getErrors(stats)).toMatchSnapshot('errors');
