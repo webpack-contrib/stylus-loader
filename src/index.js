@@ -3,7 +3,7 @@ import path from 'path';
 import stylus from 'stylus';
 
 import { getOptions } from 'loader-utils';
-import validateOptions from 'schema-utils';
+import { validate } from 'schema-utils';
 
 import schema from './options.json';
 import {
@@ -17,7 +17,7 @@ import {
 export default async function stylusLoader(source) {
   const options = getOptions(this);
 
-  validateOptions(schema, options, {
+  validate(schema, options, {
     name: 'Stylus Loader',
     baseDataPath: 'options',
   });
