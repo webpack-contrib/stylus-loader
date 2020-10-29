@@ -435,6 +435,67 @@ describe('loader', () => {
     expect(getErrors(stats)).toMatchSnapshot('errors');
   });
 
+  it('in a nested import specified in options', async () => {
+    const testId = './basic.styl';
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['shallow-webpack.styl'],
+        },
+      },
+      {
+        resolve: {
+          modules: [path.join(__dirname, 'fixtures', 'web_modules')],
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['shallow-webpack.styl'],
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
+  it('imports files listed in options with nested glob import', async () => {
+    const testId = './basic.styl';
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          import: ['import-glob-webpack.styl'],
+        },
+      },
+      {
+        resolve: {
+          alias: {
+            globAlias: path.resolve(__dirname, 'fixtures', 'glob-webpack-2'),
+            globAlias2: path.resolve(__dirname, 'fixtures', 'glob'),
+          },
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        import: ['import-glob-webpack.styl'],
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot('css');
+    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getErrors(stats)).toMatchSnapshot('errors');
+  });
+
   it('resolves css with webpack but does not import it', async () => {
     const testId = './import-webpack-css.styl';
     const compiler = getCompiler(testId);

@@ -402,6 +402,58 @@ exports[`loader imports files listed in option as glob: errors 1`] = `Array []`;
 
 exports[`loader imports files listed in option as glob: warnings 1`] = `Array []`;
 
+exports[`loader imports files listed in options with nested glob import: css 1`] = `
+".a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.glob-in-node {
+  color: #fff;
+}
+.glob-in-node {
+  background: #ff7f50;
+}
+.index-glob {
+  font-size: 1rem;
+}
+.a-glob {
+  color: #000;
+}
+.b-glob {
+  background: #808080;
+}
+.a-glob-webpack {
+  color: #000;
+}
+.b-glob-webpack {
+  background: #808080;
+}
+.glob-entry {
+  box-sizing: border-box;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader imports files listed in options with nested glob import: errors 1`] = `Array []`;
+
+exports[`loader imports files listed in options with nested glob import: warnings 1`] = `Array []`;
+
 exports[`loader imports files with special characters listed in glob: css 1`] = `
 ".directoryfile {
   color: #f00;
@@ -505,6 +557,25 @@ exports[`loader in a nested import load module from webpack: css 1`] = `
 exports[`loader in a nested import load module from webpack: errors 1`] = `Array []`;
 
 exports[`loader in a nested import load module from webpack: warnings 1`] = `Array []`;
+
+exports[`loader in a nested import specified in options: css 1`] = `
+".imported-in-web-modules {
+  font-size: 2em;
+}
+body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader in a nested import specified in options: errors 1`] = `Array []`;
+
+exports[`loader in a nested import specified in options: warnings 1`] = `Array []`;
 
 exports[`loader resolve with webpack if stylus can't find it: css 1`] = `
 ".imported-in-web-modules {
