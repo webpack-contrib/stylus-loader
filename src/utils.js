@@ -400,6 +400,37 @@ async function createEvaluator(loaderContext, code, options) {
         : path.normalize(resolved);
 
       resolvedImportDependencies.set(importPath, result);
+
+      const dependenciesOfImportDependencies = [];
+
+      for (const dependency of isArray ? result.resolved : [result.resolved]) {
+        dependenciesOfImportDependencies.push(
+          (async () => {
+            let dependencyCode;
+
+            try {
+              dependencyCode = (
+                await readFile(loaderContext.fs, dependency)
+              ).toString();
+            } catch (error) {
+              loaderContext.emitError(error);
+            }
+
+            await getDependencies(
+              resolvedDependencies,
+              loaderContext,
+              fileResolve,
+              globResolve,
+              seen,
+              dependencyCode,
+              dependency,
+              options
+            );
+          })()
+        );
+      }
+
+      await Promise.all(dependenciesOfImportDependencies);
     })
   );
 
