@@ -10,6 +10,8 @@ import {
   getWarnings,
 } from "./helpers";
 
+jest.setTimeout(10000);
+
 describe('"sourceMap" options', () => {
   it('should generate source maps when value is "true"', async () => {
     const testId = "./source-map.styl";
