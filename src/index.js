@@ -22,16 +22,16 @@ export default async function stylusLoader(source) {
     baseDataPath: "options",
   });
 
+  const callback = this.async();
+
   let data = source;
 
   if (typeof options.additionalData !== "undefined") {
     data =
       typeof options.additionalData === "function"
-        ? `${options.additionalData(data, this)}`
+        ? await options.additionalData(data, this)
         : `${options.additionalData}\n${data}`;
   }
-
-  const callback = this.async();
 
   const stylusOptions = getStylusOptions(this, options);
   const styl = stylus(data, stylusOptions);
