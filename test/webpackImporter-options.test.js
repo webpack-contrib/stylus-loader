@@ -9,6 +9,8 @@ import {
   getWarnings,
 } from "./helpers";
 
+jest.setTimeout(10000);
+
 describe("webpackImporter option", () => {
   it("should work when value is not specify", async () => {
     const testId = "./import-webpack.styl";
