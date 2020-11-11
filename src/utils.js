@@ -1,20 +1,20 @@
-import { parse } from 'url';
-import path from 'path';
+import { parse } from "url";
+import path from "path";
 
-import { Parser, Compiler, Evaluator, nodes, utils } from 'stylus';
-import DepsResolver from 'stylus/lib/visitor/deps-resolver';
-import { urlToRequest } from 'loader-utils';
-import { klona } from 'klona/full';
-import fastGlob from 'fast-glob';
-import normalizePath from 'normalize-path';
+import { Parser, Compiler, Evaluator, nodes, utils } from "stylus";
+import DepsResolver from "stylus/lib/visitor/deps-resolver";
+import { urlToRequest } from "loader-utils";
+import { klona } from "klona/full";
+import fastGlob from "fast-glob";
+import normalizePath from "normalize-path";
 
 function isProductionLikeMode(loaderContext) {
-  return loaderContext.mode === 'production' || !loaderContext.mode;
+  return loaderContext.mode === "production" || !loaderContext.mode;
 }
 
 function getStylusOptions(loaderContext, loaderOptions) {
   const stylusOptions = klona(
-    typeof loaderOptions.stylusOptions === 'function'
+    typeof loaderOptions.stylusOptions === "function"
       ? loaderOptions.stylusOptions(loaderContext) || {}
       : loaderOptions.stylusOptions || {}
   );
@@ -28,9 +28,9 @@ function getStylusOptions(loaderContext, loaderOptions) {
 
   // https://github.com/stylus/stylus/issues/2119
   stylusOptions.resolveURL =
-    typeof stylusOptions.resolveURL === 'boolean' && !stylusOptions.resolveURL
+    typeof stylusOptions.resolveURL === "boolean" && !stylusOptions.resolveURL
       ? false
-      : typeof stylusOptions.resolveURL === 'object'
+      : typeof stylusOptions.resolveURL === "object"
       ? stylusOptions.resolveURL
       : { nocheck: true };
 
@@ -45,7 +45,7 @@ function getPossibleRequests(loaderContext, filename) {
   const request = urlToRequest(
     filename,
     // eslint-disable-next-line no-undefined
-    filename.charAt(0) === '/' ? loaderContext.rootContext : undefined
+    filename.charAt(0) === "/" ? loaderContext.rootContext : undefined
   );
 
   return [...new Set([request, filename])];
@@ -69,7 +69,7 @@ async function resolveFilename(
     if (isGlob) {
       const [globTask] = fastGlob.generateTasks(filename);
 
-      if (globTask.base === '.') {
+      if (globTask.base === ".") {
         throw new Error(
           'Glob resolving without a glob base ("~**/*") is not supported, please specify a glob base ("~package/**/*")'
         );
@@ -168,7 +168,7 @@ async function getDependencies(
     visitImport(node) {
       let firstNode = node.path.first;
 
-      if (firstNode.name === 'url') {
+      if (firstNode.name === "url") {
         return;
       }
 
@@ -193,7 +193,7 @@ async function getDependencies(
 
       if (!literal && !/\.styl$/i.test(nodePath)) {
         oldNodePath = nodePath;
-        nodePath += '.styl';
+        nodePath += ".styl";
       }
 
       const isGlob = fastGlob.isDynamicPattern(nodePath);
@@ -203,7 +203,7 @@ async function getDependencies(
       if (found && isGlob) {
         const [globTask] = fastGlob.generateTasks(nodePath);
         const context =
-          globTask.base === '.'
+          globTask.base === "."
             ? path.dirname(this.filename)
             : path.join(path.dirname(this.filename), globTask.base);
 
@@ -333,17 +333,17 @@ function mergeBlocks(blocks) {
 
 async function createEvaluator(loaderContext, code, options) {
   const fileResolve = loaderContext.getResolve({
-    conditionNames: ['styl', 'stylus', 'style'],
-    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-    mainFiles: ['index', '...'],
-    extensions: ['.styl', '.css'],
+    conditionNames: ["styl", "stylus", "style"],
+    mainFields: ["styl", "style", "stylus", "main", "..."],
+    mainFiles: ["index", "..."],
+    extensions: [".styl", ".css"],
     restrictions: [/\.(css|styl)$/i],
   });
 
   const globResolve = loaderContext.getResolve({
-    conditionNames: ['styl', 'stylus', 'style'],
-    mainFields: ['styl', 'style', 'stylus', 'main', '...'],
-    mainFiles: ['index', '...'],
+    conditionNames: ["styl", "stylus", "style"],
+    mainFields: ["styl", "style", "stylus", "main", "..."],
+    mainFiles: ["index", "..."],
     resolveToContext: true,
   });
 
@@ -445,7 +445,7 @@ async function createEvaluator(loaderContext, code, options) {
 
       let webpackResolveError;
 
-      if (node.name !== 'url' && nodePath && !URL_RE.test(nodePath)) {
+      if (node.name !== "url" && nodePath && !URL_RE.test(nodePath)) {
         let dependency;
 
         const isEntrypoint = loaderContext.resourcePath === node.filename;
@@ -524,15 +524,15 @@ async function createEvaluator(loaderContext, code, options) {
                 ? `\n\nWebpack resolver error: ${webpackResolveError.message}${
                     webpackResolveError.details
                       ? `\n\nWebpack resolver error details:\n${webpackResolveError.details}`
-                      : ''
+                      : ""
                   }${
                     webpackResolveError.missing
                       ? `\n\nWebpack resolver error missing:\n${webpackResolveError.missing.join(
-                          '\n'
+                          "\n"
                         )}`
-                      : ''
+                      : ""
                   }`
-                : ''
+                : ""
             }`
           )
         );
@@ -552,8 +552,8 @@ function urlResolver(options = {}) {
 
     compiler.isURL = true;
 
-    const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join('');
-    const splitted = visitedUrl.split('!');
+    const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join("");
+    const splitted = visitedUrl.split("!");
 
     const parsedUrl = parse(splitted.pop());
 
@@ -561,11 +561,11 @@ function urlResolver(options = {}) {
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
     let { pathname } = parsedUrl;
     let { dest } = this.options;
-    let tail = '';
+    let tail = "";
     let res;
 
     // Absolute or hash
-    if (parsedUrl.protocol || !pathname || pathname[0] === '/') {
+    if (parsedUrl.protocol || !pathname || pathname[0] === "/") {
       return literal;
     }
 
@@ -581,7 +581,7 @@ function urlResolver(options = {}) {
       }
     }
 
-    if (this.includeCSS && path.extname(pathname) === '.css') {
+    if (this.includeCSS && path.extname(pathname) === ".css") {
       return new nodes.Literal(parsedUrl.href);
     }
 
@@ -593,7 +593,7 @@ function urlResolver(options = {}) {
       tail += parsedUrl.hash;
     }
 
-    if (dest && path.extname(dest) === '.css') {
+    if (dest && path.extname(dest) === ".css") {
       dest = path.dirname(dest);
     }
 
@@ -603,13 +603,13 @@ function urlResolver(options = {}) {
         options.nocheck ? path.join(path.dirname(filename), pathname) : pathname
       ) + tail;
 
-    if (path.sep === '\\') {
-      res = res.replace(/\\/g, '/');
+    if (path.sep === "\\") {
+      res = res.replace(/\\/g, "/");
     }
 
     splitted.push(res);
 
-    return new nodes.Literal(`url("${splitted.join('!')}")`);
+    return new nodes.Literal(`url("${splitted.join("!")}")`);
   }
 
   resolver.options = options;
@@ -634,19 +634,19 @@ const IS_NATIVE_WIN32_PATH = /^[a-z]:[/\\]|^\\\\/i;
 const ABSOLUTE_SCHEME = /^[A-Za-z0-9+\-.]+:/;
 
 function getURLType(source) {
-  if (source[0] === '/') {
-    if (source[1] === '/') {
-      return 'scheme-relative';
+  if (source[0] === "/") {
+    if (source[1] === "/") {
+      return "scheme-relative";
     }
 
-    return 'path-absolute';
+    return "path-absolute";
   }
 
   if (IS_NATIVE_WIN32_PATH.test(source)) {
-    return 'path-absolute';
+    return "path-absolute";
   }
 
-  return ABSOLUTE_SCHEME.test(source) ? 'absolute' : 'path-relative';
+  return ABSOLUTE_SCHEME.test(source) ? "absolute" : "path-relative";
 }
 
 function normalizeSourceMap(map, rootContext) {
@@ -658,14 +658,14 @@ function normalizeSourceMap(map, rootContext) {
   delete newMap.file;
 
   // eslint-disable-next-line no-param-reassign
-  newMap.sourceRoot = '';
+  newMap.sourceRoot = "";
 
   // eslint-disable-next-line no-param-reassign
   newMap.sources = newMap.sources.map((source) => {
     const sourceType = getURLType(source);
 
     // Do no touch `scheme-relative`, `path-absolute` and `absolute` types
-    if (sourceType === 'path-relative') {
+    if (sourceType === "path-relative") {
       return path.resolve(rootContext, path.normalize(source));
     }
 

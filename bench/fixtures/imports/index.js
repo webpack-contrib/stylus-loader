@@ -1,1 +1,1 @@
-import './index.styl';
+import "./index.styl";
