@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/webpack-contrib/stylus-loader/compare/v4.2.0...v4.3.0) (2020-11-11)
+
+
+### Features
+
+* allow the `additionalData` to be async ([0ce3dd8](https://github.com/webpack-contrib/stylus-loader/commit/0ce3dd83cf0b3135272cc6bdb045663c09288fec))
+
 ## [4.2.0](https://github.com/webpack-contrib/stylus-loader/compare/v4.1.1...v4.2.0) (2020-10-29)
 
 
