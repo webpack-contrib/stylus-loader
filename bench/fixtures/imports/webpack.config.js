@@ -1,9 +1,9 @@
 module.exports = {
   context: __dirname,
-  entry: './index.js',
+  entry: "./index.js",
   output: {
     path: `${__dirname}/tmp`,
-    filename: 'bundle.js',
+    filename: "bundle.js",
   },
   module: {
     rules: [
@@ -11,10 +11,10 @@ module.exports = {
         test: /\.styl$/,
         use: [
           {
-            loader: require('path').join(__dirname, './testLoader.js'),
+            loader: require("path").join(__dirname, "./testLoader.js"),
           },
           {
-            loader: require('path').join(__dirname, '../../../dist/cjs.js'),
+            loader: require("path").join(__dirname, "../../../dist/cjs.js"),
             options: {},
           },
         ],

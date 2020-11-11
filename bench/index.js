@@ -1,14 +1,14 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-const Benchmark = require('benchmark');
+const Benchmark = require("benchmark");
 // eslint-disable-next-line import/no-extraneous-dependencies
-const MemoryFileSystem = require('memory-fs');
-const stylus = require('stylus');
-const webpack = require('webpack');
+const MemoryFileSystem = require("memory-fs");
+const stylus = require("stylus");
+const webpack = require("webpack");
 
-const importWebpackConfig = require('./fixtures/imports/webpack.config');
+const importWebpackConfig = require("./fixtures/imports/webpack.config");
 
 function resolveOnComplete(fn) {
   return () => {
@@ -17,14 +17,14 @@ function resolveOnComplete(fn) {
 
     return new Promise((resolve) => {
       const result = fn.apply(_this, args);
-      result.on('complete', () => {
+      result.on("complete", () => {
         resolve();
       });
     });
   };
 }
 
-const sourceFile = path.resolve(__dirname, 'fixtures', 'imports', 'index.styl');
+const sourceFile = path.resolve(__dirname, "fixtures", "imports", "index.styl");
 const source = fs.readFileSync(sourceFile).toString();
 
 const styl = stylus(source);
@@ -37,11 +37,11 @@ Promise.resolve()
     resolveOnComplete(() => {
       const suite = new Benchmark.Suite();
       suite
-        .add('Native stylus', {
+        .add("Native stylus", {
           defer: true,
           fn(deferred) {
             styl
-              .set('filename', sourceFile)
+              .set("filename", sourceFile)
               // eslint-disable-next-line no-unused-vars
               .render((error, css) => {
                 if (error) {
@@ -52,7 +52,7 @@ Promise.resolve()
               });
           },
         })
-        .on('cycle', (event) => {
+        .on("cycle", (event) => {
           // eslint-disable-next-line no-console
           console.log(String(event.target));
         })
@@ -65,7 +65,7 @@ Promise.resolve()
     resolveOnComplete(() => {
       const suite = new Benchmark.Suite();
       suite
-        .add('Stylus loader', {
+        .add("Stylus loader", {
           defer: true,
           fn(deferred) {
             compiler.run((error, stats) => {
@@ -77,7 +77,7 @@ Promise.resolve()
             });
           },
         })
-        .on('cycle', (event) => {
+        .on("cycle", (event) => {
           // eslint-disable-next-line no-console
           console.log(String(event.target));
         })

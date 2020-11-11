@@ -1,6 +1,6 @@
-import { getCompiler, compile } from './helpers/index';
+import { getCompiler, compile } from "./helpers/index";
 
-describe('validate options', () => {
+describe("validate options", () => {
   const tests = {
     stylusOptions: {
       success: [
@@ -9,13 +9,13 @@ describe('validate options', () => {
         { includeCSS: false },
         {
           define: [
-            ['$development', process.env.NODE_ENV === 'development'],
-            ['rawVar', 42, true],
+            ["$development", process.env.NODE_ENV === "development"],
+            ["rawVar", 42, true],
           ],
         },
         {
           define: {
-            $development: process.env.NODE_ENV === 'development',
+            $development: process.env.NODE_ENV === "development",
             rawVar: 42,
           },
         },
@@ -24,30 +24,30 @@ describe('validate options', () => {
           return { resolveCss: true };
         },
       ],
-      failure: [1, true, false, 'test', []],
+      failure: [1, true, false, "test", []],
     },
     sourceMap: {
       success: [true, false],
-      failure: ['string'],
+      failure: ["string"],
     },
     webpackImporter: {
       success: [true, false],
-      failure: ['string'],
+      failure: ["string"],
     },
     additionalData: {
-      success: ['color = coral', () => 'bg = coral'],
+      success: ["color = coral", () => "bg = coral"],
       failure: [1, true, false, /test/, [], {}],
     },
     unknown: {
       success: [],
-      failure: [1, true, false, 'test', /test/, [], {}, { foo: 'bar' }],
+      failure: [1, true, false, "test", /test/, [], {}, { foo: "bar" }],
     },
   };
 
   function stringifyValue(value) {
     if (
       Array.isArray(value) ||
-      (value && typeof value === 'object' && value.constructor === Object)
+      (value && typeof value === "object" && value.constructor === Object)
     ) {
       return JSON.stringify(value);
     }
@@ -57,9 +57,9 @@ describe('validate options', () => {
 
   async function createTestCase(key, value, type) {
     it(`should ${
-      type === 'success' ? 'successfully validate' : 'throw an error on'
+      type === "success" ? "successfully validate" : "throw an error on"
     } the "${key}" option with "${stringifyValue(value)}" value`, async () => {
-      const compiler = getCompiler('./basic.styl', {
+      const compiler = getCompiler("./basic.styl", {
         [key]: value,
       });
       let stats;
@@ -67,9 +67,9 @@ describe('validate options', () => {
       try {
         stats = await compile(compiler);
       } finally {
-        if (type === 'success') {
+        if (type === "success") {
           expect(stats.hasErrors()).toBe(false);
-        } else if (type === 'failure') {
+        } else if (type === "failure") {
           const {
             compilation: { errors },
           } = stats;

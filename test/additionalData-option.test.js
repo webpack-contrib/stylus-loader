@@ -4,27 +4,27 @@ import {
   getCompiler,
   getErrors,
   getWarnings,
-} from './helpers';
+} from "./helpers";
 
 describe('"additionalData" option', () => {
-  it('should work additionalData data as string', async () => {
-    const testId = './additional-data.styl';
-    const additionalData = 'color = coral';
+  it("should work additionalData data as string", async () => {
+    const testId = "./additional-data.styl";
+    const additionalData = "color = coral";
     const compiler = getCompiler(testId, { additionalData });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  it('should work additionalData data as function', async () => {
-    const testId = './additional-data.styl';
+  it("should work additionalData data as function", async () => {
+    const testId = "./additional-data.styl";
     const additionalData = (content, loaderContext) => {
       const { resourcePath, rootContext } = loaderContext;
       // eslint-disable-next-line global-require
-      const relativePath = require('path').relative(rootContext, resourcePath);
+      const relativePath = require("path").relative(rootContext, resourcePath);
 
       return `
 /* RelativePath: ${relativePath}; */
@@ -42,8 +42,8 @@ ${content}
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
-    expect(codeFromBundle.css).toMatchSnapshot('css');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 });
