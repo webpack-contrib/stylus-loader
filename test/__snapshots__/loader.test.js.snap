@@ -588,6 +588,15 @@ exports[`loader resolve with webpack if stylus can't find it: errors 1`] = `Arra
 
 exports[`loader resolve with webpack if stylus can't find it: warnings 1`] = `Array []`;
 
+exports[`loader resolves broken css with webpack but does not import it: css 1`] = `
+"@import \\"css-keyframe.css\\";
+"
+`;
+
+exports[`loader resolves broken css with webpack but does not import it: errors 1`] = `Array []`;
+
+exports[`loader resolves broken css with webpack but does not import it: warnings 1`] = `Array []`;
+
 exports[`loader resolves css with webpack but does not import it: css 1`] = `
 "@import \\"css.css\\";
 "
