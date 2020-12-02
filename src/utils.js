@@ -277,6 +277,11 @@ async function getDependencies(
           return;
         }
 
+        // Avoid search nested imports in .css
+        if (path.extname(dependency) === ".css") {
+          return;
+        }
+
         loaderContext.addDependency(dependency);
 
         dependenciesOfDependencies.push(
