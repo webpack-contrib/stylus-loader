@@ -6,6 +6,7 @@ import Evaluator from "stylus/lib/visitor/evaluator";
 
 const fixturesDir = path.resolve(__dirname, "..", "fixtures");
 const pathMap = {
+  globAlias: path.resolve(fixturesDir, "glob-webpack-2"),
   "~globAlias": path.resolve(fixturesDir, "glob-webpack-2"),
   "~globAlias2/*": path.resolve(fixturesDir, "glob/*"),
   "~aliasNested/**/file.styl": "glob-nested/**/file.styl",
@@ -39,6 +40,12 @@ const pathMap = {
     "node_modules",
     "glob_package/*"
   ),
+  "in-web-modules": path.resolve(
+    fixturesDir,
+    "web_modules",
+    "in-web-modules",
+    "index.styl"
+  ),
   "~in-web-modules": path.resolve(
     fixturesDir,
     "web_modules",
@@ -62,6 +69,11 @@ const pathMap = {
     "node_modules",
     "webpack-like-a-glob-package-name",
     "index.styl"
+  ),
+  preferRelativeAlias: path.resolve(
+    fixturesDir,
+    "prefer-relative",
+    "style.styl"
   ),
 };
 

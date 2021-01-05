@@ -24,6 +24,9 @@ exports[`webpackImporter option should work when value is "true": css 1`] = `
 ".imported-in-web-modules {
   font-size: 2em;
 }
+.imported-in-web-modules {
+  font-size: 2em;
+}
 "
 `;
 
@@ -33,6 +36,9 @@ exports[`webpackImporter option should work when value is "true": warnings 1`] =
 
 exports[`webpackImporter option should work when value is not specify: css 1`] = `
 ".imported-in-web-modules {
+  font-size: 2em;
+}
+.imported-in-web-modules {
   font-size: 2em;
 }
 "

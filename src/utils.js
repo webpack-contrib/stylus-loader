@@ -3,10 +3,11 @@ import path from "path";
 
 import { Parser, Compiler, Evaluator, nodes, utils } from "stylus";
 import DepsResolver from "stylus/lib/visitor/deps-resolver";
-import { urlToRequest } from "loader-utils";
 import { klona } from "klona/full";
 import fastGlob from "fast-glob";
 import normalizePath from "normalize-path";
+
+const MODULE_REQUEST_REGEX = /^[^?]*~/;
 
 function isProductionLikeMode(loaderContext) {
   return loaderContext.mode === "production" || !loaderContext.mode;
@@ -45,11 +46,12 @@ function getStylusOptions(loaderContext, loaderOptions) {
 }
 
 function getPossibleRequests(loaderContext, filename) {
-  const request = urlToRequest(
-    filename,
-    // eslint-disable-next-line no-undefined
-    filename.charAt(0) === "/" ? loaderContext.rootContext : undefined
-  );
+  let request = filename;
+
+  // A `~` makes the url an module
+  if (MODULE_REQUEST_REGEX.test(request)) {
+    request = request.replace(MODULE_REQUEST_REGEX, "");
+  }
 
   return [...new Set([request, filename])];
 }
@@ -348,6 +350,7 @@ async function createEvaluator(loaderContext, code, options) {
     mainFiles: ["index", "..."],
     extensions: [".styl", ".css"],
     restrictions: [/\.(css|styl)$/i],
+    preferRelative: true,
   });
 
   const globResolve = loaderContext.getResolve({
@@ -355,6 +358,7 @@ async function createEvaluator(loaderContext, code, options) {
     mainFields: ["styl", "style", "stylus", "main", "..."],
     mainFiles: ["index", "..."],
     resolveToContext: true,
+    preferRelative: true,
   });
 
   const resolvedImportDependencies = new Map();
