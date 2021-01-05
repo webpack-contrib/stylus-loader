@@ -122,9 +122,7 @@ function resolveRequests(context, possibleRequests, resolve) {
   }
 
   return resolve(context, possibleRequests[0])
-    .then((result) => {
-      return result;
-    })
+    .then((result) => result)
     .catch((error) => {
       const [, ...tailPossibleRequests] = possibleRequests;
 

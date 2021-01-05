@@ -107,9 +107,7 @@ describe("loader", () => {
   it("should work when stylusOptions is function", async () => {
     function plugin() {
       return (style) => {
-        style.define("add", (a, b) => {
-          return a.operate("+", b);
-        });
+        style.define("add", (a, b) => a.operate("+", b));
       };
     }
 
@@ -525,9 +523,7 @@ describe("loader", () => {
   it('should work "use" option', async () => {
     function plugin() {
       return (style) => {
-        style.define("add", (a, b) => {
-          return a.operate("+", b);
-        });
+        style.define("add", (a, b) => a.operate("+", b));
       };
     }
 
