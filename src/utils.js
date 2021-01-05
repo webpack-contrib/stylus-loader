@@ -116,22 +116,26 @@ async function resolveFilename(
   return result;
 }
 
-function resolveRequests(context, possibleRequests, resolve) {
+async function resolveRequests(context, possibleRequests, resolve) {
   if (possibleRequests.length === 0) {
     return Promise.reject();
   }
 
-  return resolve(context, possibleRequests[0])
-    .then((result) => result)
-    .catch((error) => {
-      const [, ...tailPossibleRequests] = possibleRequests;
+  let result;
 
-      if (tailPossibleRequests.length === 0) {
-        throw error;
-      }
+  try {
+    result = await resolve(context, possibleRequests[0]);
+  } catch (error) {
+    const [, ...tailPossibleRequests] = possibleRequests;
 
-      return resolveRequests(context, tailPossibleRequests, resolve);
-    });
+    if (tailPossibleRequests.length === 0) {
+      throw error;
+    }
+
+    result = await resolveRequests(context, tailPossibleRequests, resolve);
+  }
+
+  return result;
 }
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
