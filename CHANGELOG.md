@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.3.2](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.1...v4.3.2) (2021-01-09)
+
+
+### Bug Fixes
+
+* convert relative paths to absolute paths in dependencies ([#301](https://github.com/webpack-contrib/stylus-loader/issues/301)) ([3ded080](https://github.com/webpack-contrib/stylus-loader/commit/3ded080fdc0425c3ebdf41f3204a36bae2eaa02c))
+
 ### [4.3.1](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.0...v4.3.1) (2020-12-02)
 
 
