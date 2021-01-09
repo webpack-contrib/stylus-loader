@@ -78,7 +78,7 @@
     "standard-version": "^9.0.0",
     "style-loader": "^2.0.0",
     "stylus": "^0.54.8",
-    "webpack": "^5.4.0"
+    "webpack": "^5.12.2"
   },
   "keywords": [
     "webpack",

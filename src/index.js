@@ -147,7 +147,11 @@ export default async function stylusLoader(source) {
     if (stylusOptions._imports.length > 0) {
       // eslint-disable-next-line no-underscore-dangle
       for (const importData of stylusOptions._imports) {
-        this.addDependency(path.normalize(importData.path));
+        if (path.isAbsolute(importData.path)) {
+          this.addDependency(path.normalize(importData.path));
+        } else {
+          this.addDependency(path.resolve(process.cwd(), importData.path));
+        }
       }
     }
 
