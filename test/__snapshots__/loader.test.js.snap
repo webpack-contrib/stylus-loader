@@ -917,6 +917,28 @@ exports[`loader should work "use" option: errors 1`] = `Array []`;
 
 exports[`loader should work "use" option: warnings 1`] = `Array []`;
 
+exports[`loader should work and respect the "compress" option with the "false" value: css 1`] = `
+"body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader should work and respect the "compress" option with the "false" value: errors 1`] = `Array []`;
+
+exports[`loader should work and respect the "compress" option with the "false" value: warnings 1`] = `Array []`;
+
+exports[`loader should work and respect the "compress" option with the "true" value: css 1`] = `"body{font:12px Helvetica,Arial,sans-serif}a.button{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px}"`;
+
+exports[`loader should work and respect the "compress" option with the "true" value: errors 1`] = `Array []`;
+
+exports[`loader should work and respect the "compress" option with the "true" value: warnings 1`] = `Array []`;
+
 exports[`loader should work binop import: css 1`] = `
 ".not-real-nib {
   color: #000;
