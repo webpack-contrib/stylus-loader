@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.3.3](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.2...v4.3.3) (2021-01-15)
+
+
+### Bug Fixes
+
+* respect the `compress` option ([#303](https://github.com/webpack-contrib/stylus-loader/issues/303)) ([e964abc](https://github.com/webpack-contrib/stylus-loader/commit/e964abcf18147c1a3894e47cc9e8970379ae33e6))
+
 ### [4.3.2](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.1...v4.3.2) (2021-01-09)
 
 
