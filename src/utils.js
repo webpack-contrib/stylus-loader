@@ -34,7 +34,10 @@ function getStylusOptions(loaderContext, loaderOptions) {
       ? stylusOptions.resolveURL
       : { nocheck: true };
 
-  if (!stylusOptions.compress && isProductionLikeMode(loaderContext)) {
+  if (
+    typeof stylusOptions.compress === "undefined" &&
+    isProductionLikeMode(loaderContext)
+  ) {
     stylusOptions.compress = true;
   }
 

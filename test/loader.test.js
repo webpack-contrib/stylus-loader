@@ -1509,6 +1509,56 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
+  it('should work and respect the "compress" option with the "true" value', async () => {
+    const testId = "./basic.styl";
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          compress: true,
+        },
+      },
+      { mode: "production" }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        compress: true,
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
+  it('should work and respect the "compress" option with the "false" value', async () => {
+    const testId = "./basic.styl";
+    const compiler = getCompiler(
+      testId,
+      {
+        stylusOptions: {
+          compress: false,
+        },
+      },
+      { mode: "production" }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        compress: false,
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
   it("should use .json file", async () => {
     const testId = "./json/index.styl";
     const compiler = getCompiler(testId, {
