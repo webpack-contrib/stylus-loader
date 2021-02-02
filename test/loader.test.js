@@ -1693,4 +1693,40 @@ describe("loader", () => {
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
+
+  it("should throw an error on circular imports", async () => {
+    const testId = "./circular.styl";
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+
+    await expect(getCodeFromStylus(testId)).rejects.toThrow();
+
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
+  it("should work and respect the 'resolve.byDependecy.less' option", async () => {
+    const testId = "./by-dependency.styl";
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          byDependency: {
+            stylus: {
+              mainFiles: ["custom"],
+            },
+          },
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
 });
