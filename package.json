@@ -42,7 +42,7 @@
     "webpack": "^5.0.0"
   },
   "dependencies": {
-    "fast-glob": "^3.2.4",
+    "fast-glob": "^3.2.5",
     "klona": "^2.0.4",
     "normalize-path": "^3.0.0"
   },
@@ -76,7 +76,7 @@
     "standard-version": "^9.1.0",
     "style-loader": "^2.0.0",
     "stylus": "^0.54.8",
-    "webpack": "^5.12.2"
+    "webpack": "^5.19.0"
   },
   "keywords": [
     "webpack",
