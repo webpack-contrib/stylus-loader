@@ -366,11 +366,10 @@ async function createEvaluator(loaderContext, code, options) {
     preferRelative: true,
   });
 
+  // Get cwd for `fastGlob()`
   const globResolve = loaderContext.getResolve({
     dependencyType: "stylus",
     conditionNames: ["styl", "stylus", "style"],
-    mainFields: ["styl", "style", "stylus", "main", "..."],
-    mainFiles: ["index", "..."],
     resolveToContext: true,
     preferRelative: true,
   });
