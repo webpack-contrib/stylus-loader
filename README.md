@@ -550,10 +550,17 @@ Usually, it's recommended to extract the style sheets into a dedicated file in p
 Webpack provides an [advanced mechanism to resolve files](https://webpack.js.org/configuration/resolve/).
 The `stylus-loader` applies the webpack resolver when processing queries.
 Thus you can import your Stylus modules from `node_modules`.
+
+```styl
+@import 'bootstrap-styl/bootstrap/index.styl';
+```
+
+Using `~` is deprecated and can be removed from your code (**we recommend it**), but we still support it for historical reasons.
+Why you can removed it? The loader will first try to resolve `@import` as relative, if it cannot be resolved, the loader will try to resolve `@import` inside [`node_modules`](https://webpack.js.org/configuration/resolve/#resolve-modules).
 Just prepend them with a `~` which tells webpack to look up the [`modules`](https://webpack.js.org/configuration/resolve/#resolve-modules).
 
 ```styl
-@import '~bootstrap-styl/bootstrap/index.styl';
+@import "~bootstrap-styl/bootstrap/index.styl";
 ```
 
 It's important to only prepend it with `~`, because `~/` resolves to the home-directory.
