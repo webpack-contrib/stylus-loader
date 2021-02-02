@@ -367,12 +367,9 @@ async function createEvaluator(loaderContext, code, options) {
   });
 
   // Get cwd for `fastGlob()`
+  // No need extra options, because they do not used when `resolveToContext` is `true`
   const globResolve = loaderContext.getResolve({
-    dependencyType: "stylus",
     conditionNames: ["styl", "stylus", "style"],
-    mainFields: [],
-    mainFiles: [],
-    extensions: [],
     resolveToContext: true,
     preferRelative: true,
   });
