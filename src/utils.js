@@ -370,6 +370,9 @@ async function createEvaluator(loaderContext, code, options) {
   const globResolve = loaderContext.getResolve({
     dependencyType: "stylus",
     conditionNames: ["styl", "stylus", "style"],
+    mainFields: [],
+    mainFiles: [],
+    extensions: [],
     resolveToContext: true,
     preferRelative: true,
   });
