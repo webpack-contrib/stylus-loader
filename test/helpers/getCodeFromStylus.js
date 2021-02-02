@@ -75,6 +75,11 @@ const pathMap = {
     "prefer-relative",
     "style.styl"
   ),
+  "custom-main-files": path.resolve(
+    fixturesDir,
+    "custom-main-files",
+    "custom.styl"
+  ),
 };
 
 function evaluator() {

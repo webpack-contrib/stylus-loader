@@ -761,6 +761,15 @@ exports[`loader should not be resolved when url begin with "#": errors 1`] = `Ar
 
 exports[`loader should not be resolved when url begin with "#": warnings 1`] = `Array []`;
 
+exports[`loader should throw an error on circular imports: errors 1`] = `
+Array [
+  "ModuleError: Module Error (from \`replaced original path\`):
+Stylus resolver error: import loop has been found",
+]
+`;
+
+exports[`loader should throw an error on circular imports: warnings 1`] = `Array []`;
+
 exports[`loader should use .json file: css 1`] = `
 "@media screen and (min-width: 1px) and (max-width: 400px) {
   body {
@@ -955,6 +964,20 @@ exports[`loader should work and respect the "compress" option with the "true" va
 exports[`loader should work and respect the "compress" option with the "true" value: errors 1`] = `Array []`;
 
 exports[`loader should work and respect the "compress" option with the "true" value: warnings 1`] = `Array []`;
+
+exports[`loader should work and respect the 'resolve.byDependecy.less' option: css 1`] = `
+".b {
+  color: #f00;
+}
+.b {
+  color: #f00;
+}
+"
+`;
+
+exports[`loader should work and respect the 'resolve.byDependecy.less' option: errors 1`] = `Array []`;
+
+exports[`loader should work and respect the 'resolve.byDependecy.less' option: warnings 1`] = `Array []`;
 
 exports[`loader should work binop import: css 1`] = `
 ".not-real-nib {

@@ -357,6 +357,7 @@ function mergeBlocks(blocks) {
 
 async function createEvaluator(loaderContext, code, options) {
   const fileResolve = loaderContext.getResolve({
+    dependencyType: "stylus",
     conditionNames: ["styl", "stylus", "style"],
     mainFields: ["styl", "style", "stylus", "main", "..."],
     mainFiles: ["index", "..."],
@@ -366,6 +367,7 @@ async function createEvaluator(loaderContext, code, options) {
   });
 
   const globResolve = loaderContext.getResolve({
+    dependencyType: "stylus",
     conditionNames: ["styl", "stylus", "style"],
     mainFields: ["styl", "style", "stylus", "main", "..."],
     mainFiles: ["index", "..."],
