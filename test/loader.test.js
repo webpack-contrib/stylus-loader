@@ -107,9 +107,7 @@ describe("loader", () => {
   it("should work when stylusOptions is function", async () => {
     function plugin() {
       return (style) => {
-        style.define("add", (a, b) => {
-          return a.operate("+", b);
-        });
+        style.define("add", (a, b) => a.operate("+", b));
       };
     }
 
@@ -324,6 +322,29 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
+  it("resolve prefer-relative with webpack", async () => {
+    const testId = "./import-webpack-prefer-relative.styl";
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          alias: {
+            preferRelativeAlias: "prefer-relative/style",
+          },
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
   it("in a nested import load module from paths", async () => {
     const testId = "./shallow-paths.styl";
     const compiler = getCompiler(testId, {
@@ -525,9 +546,7 @@ describe("loader", () => {
   it('should work "use" option', async () => {
     function plugin() {
       return (style) => {
-        style.define("add", (a, b) => {
-          return a.operate("+", b);
-        });
+        style.define("add", (a, b) => a.operate("+", b));
       };
     }
 

@@ -3,10 +3,19 @@ import path from "path";
 
 import { Parser, Compiler, Evaluator, nodes, utils } from "stylus";
 import DepsResolver from "stylus/lib/visitor/deps-resolver";
-import { urlToRequest } from "loader-utils";
 import { klona } from "klona/full";
 import fastGlob from "fast-glob";
 import normalizePath from "normalize-path";
+
+// Examples:
+// - ~package
+// - ~package/
+// - ~@org
+// - ~@org/
+// - ~@org/package
+// - ~@org/package/
+const IS_MODULE_IMPORT = /^~([^/]+|[^/]+\/|@[^/]+[/][^/]+|@[^/]+\/?|@[^/]+[/][^/]+\/)$/;
+const MODULE_REQUEST_REGEX = /^[^?]*~/;
 
 function isProductionLikeMode(loaderContext) {
   return loaderContext.mode === "production" || !loaderContext.mode;
@@ -45,11 +54,16 @@ function getStylusOptions(loaderContext, loaderOptions) {
 }
 
 function getPossibleRequests(loaderContext, filename) {
-  const request = urlToRequest(
-    filename,
-    // eslint-disable-next-line no-undefined
-    filename.charAt(0) === "/" ? loaderContext.rootContext : undefined
-  );
+  let request = filename;
+
+  // A `~` makes the url an module
+  if (MODULE_REQUEST_REGEX.test(filename)) {
+    request = request.replace(MODULE_REQUEST_REGEX, "");
+  }
+
+  if (IS_MODULE_IMPORT.test(filename)) {
+    request = request[request.length - 1] === "/" ? request : `${request}/`;
+  }
 
   return [...new Set([request, filename])];
 }
@@ -116,24 +130,26 @@ async function resolveFilename(
   return result;
 }
 
-function resolveRequests(context, possibleRequests, resolve) {
+async function resolveRequests(context, possibleRequests, resolve) {
   if (possibleRequests.length === 0) {
     return Promise.reject();
   }
 
-  return resolve(context, possibleRequests[0])
-    .then((result) => {
-      return result;
-    })
-    .catch((error) => {
-      const [, ...tailPossibleRequests] = possibleRequests;
+  let result;
 
-      if (tailPossibleRequests.length === 0) {
-        throw error;
-      }
+  try {
+    result = await resolve(context, possibleRequests[0]);
+  } catch (error) {
+    const [, ...tailPossibleRequests] = possibleRequests;
 
-      return resolveRequests(context, tailPossibleRequests, resolve);
-    });
+    if (tailPossibleRequests.length === 0) {
+      throw error;
+    }
+
+    result = await resolveRequests(context, tailPossibleRequests, resolve);
+  }
+
+  return result;
 }
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
@@ -346,6 +362,7 @@ async function createEvaluator(loaderContext, code, options) {
     mainFiles: ["index", "..."],
     extensions: [".styl", ".css"],
     restrictions: [/\.(css|styl)$/i],
+    preferRelative: true,
   });
 
   const globResolve = loaderContext.getResolve({
@@ -353,6 +370,7 @@ async function createEvaluator(loaderContext, code, options) {
     mainFields: ["styl", "style", "stylus", "main", "..."],
     mainFiles: ["index", "..."],
     resolveToContext: true,
+    preferRelative: true,
   });
 
   const resolvedImportDependencies = new Map();

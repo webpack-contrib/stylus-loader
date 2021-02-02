@@ -2,9 +2,6 @@ import path from "path";
 
 import stylus from "stylus";
 
-import { getOptions } from "loader-utils";
-import { validate } from "schema-utils";
-
 import schema from "./options.json";
 import {
   getStylusOptions,
@@ -15,15 +12,8 @@ import {
 } from "./utils";
 
 export default async function stylusLoader(source) {
-  const options = getOptions(this);
-
-  validate(schema, options, {
-    name: "Stylus Loader",
-    baseDataPath: "options",
-  });
-
+  const options = this.getOptions(schema);
   const callback = this.async();
-
   let data = source;
 
   if (typeof options.additionalData !== "undefined") {

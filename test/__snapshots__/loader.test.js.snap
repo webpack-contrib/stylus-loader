@@ -46,6 +46,9 @@ exports[`loader imports and webpack deps: css 1`] = `
 ".imported-in-web-modules {
   font-size: 2em;
 }
+.imported-in-web-modules {
+  font-size: 2em;
+}
 "
 `;
 
@@ -577,8 +580,22 @@ exports[`loader in a nested import specified in options: errors 1`] = `Array []`
 
 exports[`loader in a nested import specified in options: warnings 1`] = `Array []`;
 
+exports[`loader resolve prefer-relative with webpack: css 1`] = `
+".relative {
+  color: #ff7f50;
+}
+"
+`;
+
+exports[`loader resolve prefer-relative with webpack: errors 1`] = `Array []`;
+
+exports[`loader resolve prefer-relative with webpack: warnings 1`] = `Array []`;
+
 exports[`loader resolve with webpack if stylus can't find it: css 1`] = `
 ".imported-in-web-modules {
+  font-size: 2em;
+}
+.imported-in-web-modules {
   font-size: 2em;
 }
 "
