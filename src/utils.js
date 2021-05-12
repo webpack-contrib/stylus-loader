@@ -14,7 +14,8 @@ import normalizePath from "normalize-path";
 // - ~@org/
 // - ~@org/package
 // - ~@org/package/
-const IS_MODULE_IMPORT = /^~([^/]+|[^/]+\/|@[^/]+[/][^/]+|@[^/]+\/?|@[^/]+[/][^/]+\/)$/;
+const IS_MODULE_IMPORT =
+  /^~([^/]+|[^/]+\/|@[^/]+[/][^/]+|@[^/]+\/?|@[^/]+[/][^/]+\/)$/;
 const MODULE_REQUEST_REGEX = /^[^?]*~/;
 
 function isProductionLikeMode(loaderContext) {
