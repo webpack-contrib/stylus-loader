@@ -38,6 +38,11 @@ describe("validate options", () => {
       success: ["color = coral", () => "bg = coral"],
       failure: [1, true, false, /test/, [], {}],
     },
+    implementation: {
+      // eslint-disable-next-line global-require
+      success: [require("stylus"), "stylus"],
+      failure: [true, false, {}, []],
+    },
     unknown: {
       success: [],
       failure: [1, true, false, "test", /test/, [], {}, { foo: "bar" }],
