@@ -55,23 +55,23 @@ function getStylusOptions(loaderContext, loaderOptions) {
 }
 
 function getStylusImplementation(loaderContext, implementation) {
-  if (typeof implementation === "function") {
-    return implementation;
+  let resolvedImplementation = implementation;
+
+  if (!implementation || typeof implementation === "string") {
+    const stylusImplPkg = implementation || "stylus";
+
+    try {
+      // eslint-disable-next-line import/no-dynamic-require, global-require
+      resolvedImplementation = require(stylusImplPkg);
+    } catch (error) {
+      loaderContext.emitError(error);
+
+      // eslint-disable-next-line consistent-return
+      return;
+    }
   }
 
-  const stylusImplPkg = implementation || "stylus";
-  let resolvedImplementation;
-
-  try {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    resolvedImplementation = require(stylusImplPkg);
-  } catch (error) {
-    loaderContext.emitError(error);
-
-    // eslint-disable-next-line consistent-return
-    return;
-  }
-
+  // eslint-disable-next-line consistent-return
   return resolvedImplementation;
 }
 

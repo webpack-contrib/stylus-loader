@@ -401,7 +401,7 @@ module.exports = {
 
 ### `implementation`
 
-Type: `Function|String`
+Type: `Function | String`
 
 The special `implementation` option determines which implementation of Stylus to use. Overrides the locally installed `peerDependency` version of `stylus`.
 
@@ -447,7 +447,7 @@ module.exports = {
           {
             loader: "stylus-loader",
             options: {
-              implementation: "stylus",
+              implementation: require.resolve("stylus"),
             },
           },
         ],

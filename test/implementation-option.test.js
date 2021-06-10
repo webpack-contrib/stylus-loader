@@ -33,7 +33,7 @@ describe("implementation option", () => {
   it("should work when implementation option is string", async () => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
-      implementation: "stylus",
+      implementation: require.resolve("stylus"),
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
