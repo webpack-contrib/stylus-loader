@@ -2,6 +2,17 @@
   "title": "Stylus Loader options",
   "type": "object",
   "properties": {
+    "implementation": {
+      "description": "The implementation of the `Stylus` to be used (https://github.com/webpack-contrib/stylus-loade#implementation).",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function"
+        }
+      ]
+    },
     "stylusOptions": {
       "description": "Options to pass through to `Stylus` (https://github.com/webpack-contrib/stylus-loader#stylusoptions).",
       "anyOf": [

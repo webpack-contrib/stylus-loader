@@ -1,7 +1,5 @@
 import path from "path";
 
-import stylus from "stylus";
-
 import schema from "./options.json";
 import {
   getStylusOptions,
@@ -9,11 +7,20 @@ import {
   urlResolver,
   readFile,
   normalizeSourceMap,
+  getStylusImplementation,
 } from "./utils";
 
 export default async function stylusLoader(source) {
   const options = this.getOptions(schema);
   const callback = this.async();
+  const implementation = getStylusImplementation(this, options.implementation);
+
+  if (!implementation) {
+    callback();
+
+    return;
+  }
+
   let data = source;
 
   if (typeof options.additionalData !== "undefined") {
@@ -24,7 +31,7 @@ export default async function stylusLoader(source) {
   }
 
   const stylusOptions = getStylusOptions(this, options);
-  const styl = stylus(data, stylusOptions);
+  const styl = implementation(data, stylusOptions);
 
   // include regular CSS on @import
   if (stylusOptions.includeCSS) {

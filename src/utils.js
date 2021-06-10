@@ -54,6 +54,27 @@ function getStylusOptions(loaderContext, loaderOptions) {
   return stylusOptions;
 }
 
+function getStylusImplementation(loaderContext, implementation) {
+  let resolvedImplementation = implementation;
+
+  if (!implementation || typeof implementation === "string") {
+    const stylusImplPkg = implementation || "stylus";
+
+    try {
+      // eslint-disable-next-line import/no-dynamic-require, global-require
+      resolvedImplementation = require(stylusImplPkg);
+    } catch (error) {
+      loaderContext.emitError(error);
+
+      // eslint-disable-next-line consistent-return
+      return;
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  return resolvedImplementation;
+}
+
 function getPossibleRequests(loaderContext, filename) {
   let request = filename;
 
@@ -710,4 +731,5 @@ export {
   resolveFilename,
   readFile,
   normalizeSourceMap,
+  getStylusImplementation,
 };

@@ -60,6 +60,46 @@ exports[`validate options should throw an error on the "additionalData" option w
     * options.additionalData should be an instance of function."
 `;
 
+exports[`validate options should throw an error on the "implementation" option with "[]" value 1`] = `
+"Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
+ - options.implementation should be one of these:
+   string | function
+   -> The implementation of the \`Stylus\` to be used (https://github.com/webpack-contrib/stylus-loade#implementation).
+   Details:
+    * options.implementation should be a string.
+    * options.implementation should be an instance of function."
+`;
+
+exports[`validate options should throw an error on the "implementation" option with "{}" value 1`] = `
+"Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
+ - options.implementation should be one of these:
+   string | function
+   -> The implementation of the \`Stylus\` to be used (https://github.com/webpack-contrib/stylus-loade#implementation).
+   Details:
+    * options.implementation should be a string.
+    * options.implementation should be an instance of function."
+`;
+
+exports[`validate options should throw an error on the "implementation" option with "false" value 1`] = `
+"Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
+ - options.implementation should be one of these:
+   string | function
+   -> The implementation of the \`Stylus\` to be used (https://github.com/webpack-contrib/stylus-loade#implementation).
+   Details:
+    * options.implementation should be a string.
+    * options.implementation should be an instance of function."
+`;
+
+exports[`validate options should throw an error on the "implementation" option with "true" value 1`] = `
+"Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
+ - options.implementation should be one of these:
+   string | function
+   -> The implementation of the \`Stylus\` to be used (https://github.com/webpack-contrib/stylus-loade#implementation).
+   Details:
+    * options.implementation should be a string.
+    * options.implementation should be an instance of function."
+`;
+
 exports[`validate options should throw an error on the "sourceMap" option with "string" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options.sourceMap should be a boolean.
@@ -124,49 +164,49 @@ exports[`validate options should throw an error on the "stylusOptions" option wi
 exports[`validate options should throw an error on the "unknown" option with "/test/" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "[]" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "{"foo":"bar"}" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "{}" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "1" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "false" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "test" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "unknown" option with "true" value 1`] = `
 "Invalid options object. Stylus Loader has been initialized using an options object that does not match the API schema.
  - options has an unknown property 'unknown'. These properties are valid:
-   object { stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
+   object { implementation?, stylusOptions?, sourceMap?, webpackImporter?, additionalData? }"
 `;
 
 exports[`validate options should throw an error on the "webpackImporter" option with "string" value 1`] = `
