@@ -93,7 +93,11 @@ describe("webpackImporter option", () => {
     );
     const stats = await compile(compiler);
 
-    expect(getCodeFromStylus(testId)).rejects.toThrow();
+    await expect(
+      getCodeFromStylus(testId, {
+        stylusOptions: { shouldUseWebpackImporter: false },
+      })
+    ).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
