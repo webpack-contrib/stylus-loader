@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.0.0...v6.1.0) (2021-06-10)
+
+
+### Features
+
+* allow to use `String` value for the `implementation` option ([b118719](https://github.com/webpack-contrib/stylus-loader/commit/b1187196de0755417f12d81aa72ea2629d946371))
+
 ## [6.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v5.0.0...v6.0.0) (2021-05-12)
 
 
