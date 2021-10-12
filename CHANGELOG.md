@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.1.0...v6.2.0) (2021-10-12)
+
+
+### Features
+
+* add `link` field in schema ([#319](https://github.com/webpack-contrib/stylus-loader/issues/319)) ([dbc073f](https://github.com/webpack-contrib/stylus-loader/commit/dbc073f942af280fec2e72365f42ab92eb9ef7b3))
+
 ## [6.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.0.0...v6.1.0) (2021-06-10)
 
 

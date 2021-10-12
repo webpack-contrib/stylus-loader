@@ -1,6 +1,6 @@
 {
   "name": "stylus-loader",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "description": "Stylus loader for webpack",
   "license": "MIT",
   "repository": "webpack-contrib/stylus-loader",
