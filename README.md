@@ -21,8 +21,19 @@ A Stylus loader for webpack. Compiles Styl to CSS.
 To begin, you'll need to install `stylus` and `stylus-loader`:
 
 ```console
-$ npm install stylus stylus-loader --save-dev
+npm install stylus stylus-loader --save-dev
 ```
+
+or
+
+```console
+yarn add -D stylus stylus-loader
+```
+
+or
+
+````console
+pnpm add -D stylus stylus-loader
 
 Then add the loader to your `webpack` config. For example:
 
@@ -39,7 +50,7 @@ module.exports = {
     ],
   },
 };
-```
+````
 
 And run `webpack` via your preferred method.
 
