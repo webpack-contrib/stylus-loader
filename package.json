@@ -41,30 +41,30 @@
     "webpack": "^5.0.0"
   },
   "dependencies": {
-    "fast-glob": "^3.2.7",
+    "fast-glob": "^3.2.11",
     "klona": "^2.0.5",
     "normalize-path": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.7",
-    "@babel/core": "^7.16.7",
-    "@babel/preset-env": "^7.16.7",
+    "@babel/cli": "^7.17.0",
+    "@babel/core": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
     "@commitlint/cli": "^13.2.1",
     "@commitlint/config-conventional": "^13.2.0",
     "@webpack-contrib/eslint-config-webpack": "^3.0.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^27.4.5",
+    "babel-jest": "^27.5.0",
     "benchmark": "^2.1.4",
     "bootstrap-styl": "^5.0.9",
     "cross-env": "^7.0.3",
-    "css-loader": "^6.5.1",
+    "css-loader": "^6.6.0",
     "del": "^6.0.0",
     "del-cli": "^3.0.1",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.4",
     "husky": "^7.0.4",
-    "jest": "^27.4.5",
+    "jest": "^27.5.0",
     "lint-staged": "^11.2.6",
     "memfs": "^3.4.1",
     "nib": "^1.1.2",
@@ -74,7 +74,7 @@
     "standard-version": "^9.3.2",
     "style-loader": "^3.3.1",
     "stylus": "^0.55.0",
-    "webpack": "^5.65.0"
+    "webpack": "^5.68.0"
   },
   "keywords": [
     "webpack",
