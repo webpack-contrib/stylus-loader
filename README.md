@@ -56,24 +56,39 @@ And run `webpack` via your preferred method.
 
 ## Options
 
-|                   Name                    |         Type         |      Default       | Description                                              |
-| :---------------------------------------: | :------------------: | :----------------: | :------------------------------------------------------- |
-|   **[`stylusOptions`](#stylusOptions)**   | `{Object\|Function}` |        `{}`        | Options for Stylus.                                      |
-|       **[`sourceMap`](#sourcemap)**       |     `{Boolean}`      | `compiler.devtool` | Enables/Disables generation of source maps.              |
-| **[`webpackImporter`](#webpackimporter)** |     `{Boolean}`      |       `true`       | Enables/Disables the default Webpack importer.           |
-|  **[`additionalData`](#additionalData)**  | `{String\|Function}` |    `undefined`     | Prepends/Appends `Stylus` code to the actual entry file. |
-|  **[`implementation`](#implementation)**  | `{String\|Function}` |      `stylus`      | Setup Stylus implementation to use.                      |
+- **[`stylusOptions`](#stylusOptions)**
+- **[`sourceMap`](#sourcemap)**
+- **[`webpackImporter`](#webpackimporter)**
+- **[`additionalData`](#additionalData)**
+- **[`implementation`](#implementation)**
 
 ### `stylusOptions`
 
-Type: `Object|Function`
+Type:
+
+```ts
+type stylusOptions =
+  | {
+      use: Array<string | Function>;
+      include: string;
+      import: string;
+      define: Array;
+      includeCSS: false;
+      resolveURL: boolean | Object;
+      lineNumbers: boolean;
+      hoistAtrules: boolean;
+      compress: boolean;
+    }
+  | (loaderContext: LoaderContext) => Array<string>;
+```
+
 Default: `{}`
 
 You can pass any Stylus specific options to the `stylus-loader` through the `stylusOptions` property in the [loader options](https://webpack.js.org/configuration/module/#rule-options-rule-query).
 See the [Stylus documentation](https://stylus-lang.com/docs/js.html).
 Options in dash-case should use camelCase.
 
-#### `Object`
+#### `object`
 
 Use an object to pass options through to Stylus.
 
@@ -197,7 +212,7 @@ module.exports = {
 };
 ```
 
-#### `Function`
+#### `function`
 
 Allows setting the options passed through to Stylus based off of the loader context.
 
@@ -239,7 +254,11 @@ module.exports = {
 
 ### `sourceMap`
 
-Type: `Boolean`
+Type:
+
+```ts
+type sourceMap = boolean;
+```
 
 **webpack.config.js**
 
@@ -272,7 +291,12 @@ module.exports = {
 
 ### `webpackImporter`
 
-Type: `Boolean`
+Type:
+
+```ts
+type webpackImporter = boolean;
+```
+
 Default: `true`
 
 Enables/Disables the default Webpack importer.
@@ -306,7 +330,18 @@ module.exports = {
 
 ### `additionalData`
 
-Type: `String|Function`
+Type:
+
+```ts
+type additionalData =
+  | string
+  | (
+      content: string | Buffer,
+      loaderContext: LoaderContext,
+      meta: any
+    ) => string;
+```
+
 Default: `undefined`
 
 Prepends `Stylus` code before the actual entry file.
@@ -316,7 +351,7 @@ This is especially useful when some of your Stylus variables depend on the envir
 
 > ℹ Since you're injecting code, this will break the source mappings in your entry file. Often there's a simpler solution than this, like multiple Stylus entry files.
 
-#### `String`
+#### `string`
 
 ```js
 module.exports = {
@@ -340,7 +375,7 @@ module.exports = {
 };
 ```
 
-#### `Function`
+#### `function`
 
 ##### Sync
 
@@ -412,11 +447,15 @@ module.exports = {
 
 ### `implementation`
 
-Type: `Function | String`
+Type:
+
+```ts
+type implementation = Function | string;
+```
 
 The special `implementation` option determines which implementation of Stylus to use. Overrides the locally installed `peerDependency` version of `stylus`.
 
-#### Function
+#### `function`
 
 **webpack.config.js**
 
@@ -442,7 +481,7 @@ module.exports = {
 };
 ```
 
-#### String
+#### `string`
 
 **webpack.config.js**
 
