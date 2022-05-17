@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.2.0...v7.0.0) (2022-05-17)
+
+### ⚠ BREAKING CHANGES
+
+* minimum supported `Node.js` version is `14.15.0`
+
 ## [6.2.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.1.0...v6.2.0) (2021-10-12)
 
 
