@@ -50,7 +50,7 @@ module.exports = {
     ],
   },
 };
-````
+```
 
 And run `webpack` via your preferred method.
 
