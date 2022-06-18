@@ -31,8 +31,9 @@ yarn add -D stylus stylus-loader
 
 or
 
-````console
+```console
 pnpm add -D stylus stylus-loader
+```
 
 Then add the loader to your `webpack` config. For example:
 
@@ -49,7 +50,7 @@ module.exports = {
     ],
   },
 };
-````
+```
 
 And run `webpack` via your preferred method.
 
