@@ -1,11 +1,11 @@
-import { parse } from "url";
-import path from "path";
+const { parse } = require("url");
+const path = require("path");
 
-import { Parser, Compiler, Evaluator, nodes, utils } from "stylus";
-import DepsResolver from "stylus/lib/visitor/deps-resolver";
-import { klona } from "klona/full";
-import fastGlob from "fast-glob";
-import normalizePath from "normalize-path";
+const { Parser, Compiler, Evaluator, nodes, utils } = require("stylus");
+const DepsResolver = require("stylus/lib/visitor/deps-resolver");
+const { klona } = require("klona/full");
+const fastGlob = require("fast-glob");
+const normalizePath = require("normalize-path");
 
 // Examples:
 // - ~package
@@ -724,7 +724,7 @@ function normalizeSourceMap(map, rootContext) {
   return newMap;
 }
 
-export {
+module.exports = {
   getStylusOptions,
   urlResolver,
   createEvaluator,

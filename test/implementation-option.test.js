@@ -2,14 +2,14 @@
  * @jest-environment node
  */
 
-import {
+const {
   compile,
   getCodeFromBundle,
   getCodeFromStylus,
   getCompiler,
   getErrors,
   getWarnings,
-} from "./helpers";
+} = require("./helpers");
 
 jest.setTimeout(30000);
 

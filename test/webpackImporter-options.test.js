@@ -1,13 +1,13 @@
-import path from "path";
+const path = require("path");
 
-import {
+const {
   compile,
   getCodeFromBundle,
   getCodeFromStylus,
   getCompiler,
   getErrors,
   getWarnings,
-} from "./helpers";
+} = require("./helpers");
 
 jest.setTimeout(10000);
 

@@ -1,16 +1,16 @@
-import path from "path";
+const path = require("path");
 
-import schema from "./options.json";
-import {
+const schema = require("./options.json");
+const {
   getStylusOptions,
   createEvaluator,
   urlResolver,
   readFile,
   normalizeSourceMap,
   getStylusImplementation,
-} from "./utils";
+} = require("./utils");
 
-export default async function stylusLoader(source) {
+module.exports = async function stylusLoader(source) {
   const options = this.getOptions(schema);
   const callback = this.async();
   const implementation = getStylusImplementation(this, options.implementation);
@@ -172,4 +172,4 @@ export default async function stylusLoader(source) {
 
     callback(null, css, map);
   });
-}
+};

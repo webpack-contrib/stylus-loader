@@ -2,10 +2,10 @@
  * @jest-environment node
  */
 
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
-import {
+const {
   compile,
   getCodeFromBundle,
   getCodeFromStylus,
@@ -13,7 +13,7 @@ import {
   getErrors,
   getWarnings,
   validateDependencies,
-} from "./helpers";
+} = require("./helpers");
 
 jest.setTimeout(30000);
 

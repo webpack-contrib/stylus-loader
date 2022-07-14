@@ -1,8 +1,8 @@
-import path from "path";
-import fs from "fs";
+const path = require("path");
+const fs = require("fs");
 
-import stylus from "stylus";
-import Evaluator from "stylus/lib/visitor/evaluator";
+const stylus = require("stylus");
+const Evaluator = require("stylus/lib/visitor/evaluator");
 
 const fixturesDir = path.resolve(__dirname, "..", "fixtures");
 const pathMap = {
@@ -209,4 +209,4 @@ function stylRender(styl) {
   });
 }
 
-export default getCodeFromStylus;
+module.exports = getCodeFromStylus;
