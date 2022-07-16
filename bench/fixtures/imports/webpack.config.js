@@ -14,7 +14,7 @@ module.exports = {
             loader: require("path").join(__dirname, "./testLoader.js"),
           },
           {
-            loader: require("path").join(__dirname, "../../../dist/cjs.js"),
+            loader: require("path").join(__dirname, "../../../src/index.js"),
             options: {},
           },
         ],
