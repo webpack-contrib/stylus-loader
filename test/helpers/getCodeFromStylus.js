@@ -109,12 +109,32 @@ function evaluator() {
   };
 }
 
-async function getCodeFromStylus(testId, options = {}) {
+async function getCodeFromStylus(testId, options = {}, context = {}) {
   const defaultOptions = {
     shouldUseWebpackImporter: true,
   };
   const stylusOptions = options.stylusOptions || {};
-  let pathToFile = path.resolve(__dirname, "..", "fixtures", testId);
+
+  let pathToFile;
+
+  if (context.packageExportsCustomConditionTestVariant === 1) {
+    pathToFile = path.resolve(
+      __dirname,
+      "..",
+      "fixtures",
+      "node_modules/package-with-exports-and-custom-condition/style-1.styl"
+    );
+  } else if (context.packageExportsCustomConditionTestVariant === 2) {
+    pathToFile = path.resolve(
+      __dirname,
+      "..",
+      "fixtures",
+      "node_modules/package-with-exports-and-custom-condition/style-2.styl"
+    );
+  } else {
+    pathToFile = path.resolve(__dirname, "..", "fixtures", testId);
+  }
+
   let data;
 
   try {
