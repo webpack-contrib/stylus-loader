@@ -1705,7 +1705,7 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  it("should work and respect the 'resolve.byDependecy.less' option", async () => {
+  it("should work and respect the 'resolve.byDependency.less' option", async () => {
     const testId = "./by-dependency.styl";
     const compiler = getCompiler(
       testId,
@@ -1723,6 +1723,60 @@ describe("loader", () => {
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
+  it(`should work with a package with "styl" and "exports" fields and a custom condition (theme1)`, async () => {
+    const testId = "./import-package-with-exports-and-custom-condition.styl";
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          conditionNames: ["theme1", "..."],
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(
+      testId,
+      {},
+      {
+        packageExportsCustomConditionTestVariant: 1,
+      }
+    );
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
+  it(`should work with a package with "styl" and "exports" fields and a custom condition (theme2)`, async () => {
+    const testId = "./import-package-with-exports-and-custom-condition.styl";
+    const compiler = getCompiler(
+      testId,
+      {},
+      {
+        resolve: {
+          conditionNames: ["theme2", "..."],
+        },
+      }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(
+      testId,
+      {},
+      {
+        packageExportsCustomConditionTestVariant: 2,
+      }
+    );
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
