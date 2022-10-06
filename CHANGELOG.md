@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v7.0.0...v7.1.0) (2022-10-06)
+
+
+### Features
+
+* allow to extend `conditionNames` ([#365](https://github.com/webpack-contrib/stylus-loader/issues/365)) ([5d76d64](https://github.com/webpack-contrib/stylus-loader/commit/5d76d646585a80b3b5729540850c1f66fdf9aaf0))
+
 ## [7.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.2.0...v7.0.0) (2022-05-17)
 
 ### ⚠ BREAKING CHANGES
