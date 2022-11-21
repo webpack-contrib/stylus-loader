@@ -615,13 +615,13 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  it("should work with plugin using bootsrtap", async () => {
+  it("should work with plugin using bootstrap", async () => {
     // eslint-disable-next-line global-require
-    const bootsrap = require("bootstrap-styl");
+    const bootstrap = require("bootstrap-styl");
 
     function plugin() {
       return (styl) => {
-        bootsrap()(styl);
+        bootstrap()(styl);
 
         // assume that /lib/StylusLibA contains all the .styl files.
         styl.include(`${__dirname}/lib/`);

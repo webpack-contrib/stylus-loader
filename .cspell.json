@@ -1,0 +1,41 @@
+{
+  "version": "0.2",
+  "language": "en,en-gb",
+  "words": [
+    "styl",
+    "unresolve",
+    "Atrules",
+    "atrules",
+    "Atrules",
+    "rootdir",
+    "fakestylus",
+    "bootsrap",
+    "binop",
+    "fakenib",
+    "nocheck",
+    "memfs",
+    "linenos",
+    "fakestylus",
+    "atata",
+    "rgba",
+    "Cpath",
+    "Csvg",
+    "nestedfile",
+    "directoryfile",
+    "nocheck",
+    "stylu",
+    "klona",
+    "plusplus",
+    "FOUC",
+    "sourcemaps",
+    "commitlint"
+  ],
+
+  "ignorePaths": [
+    "CHANGELOG.md",
+    "package.json",
+    "dist/**",
+    "**/__snapshots__/**",
+    "package-lock.json"
+  ]
+}
