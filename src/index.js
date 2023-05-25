@@ -13,10 +13,23 @@ import {
 export default async function stylusLoader(source) {
   const options = this.getOptions(schema);
   const callback = this.async();
-  const implementation = getStylusImplementation(this, options.implementation);
+
+  let implementation;
+
+  try {
+    implementation = getStylusImplementation(this, options.implementation);
+  } catch (error) {
+    callback(error);
+
+    return;
+  }
 
   if (!implementation) {
-    callback();
+    callback(
+      new Error(
+        `The Stylus implementation "${options.implementation}" not found`
+      )
+    );
 
     return;
   }
