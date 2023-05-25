@@ -2,8 +2,8 @@
 
 exports[`implementation option should throw error when unresolved package: errors 1`] = `
 [
-  "ModuleError: Module Error (from \`replaced original path\`):
-(Emitted value instead of an instance of Error) Error: Cannot find module 'unresolved' from 'src/utils.js'",
+  "ModuleBuildError: Module build failed (from \`replaced original path\`):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) Error: Cannot find module 'unresolved' from 'src/utils.js'",
 ]
 `;
 
