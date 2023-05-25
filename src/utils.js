@@ -60,15 +60,8 @@ function getStylusImplementation(loaderContext, implementation) {
   if (!implementation || typeof implementation === "string") {
     const stylusImplPkg = implementation || "stylus";
 
-    try {
-      // eslint-disable-next-line import/no-dynamic-require, global-require
-      resolvedImplementation = require(stylusImplPkg);
-    } catch (error) {
-      loaderContext.emitError(error);
-
-      // eslint-disable-next-line consistent-return
-      return;
-    }
+    // eslint-disable-next-line import/no-dynamic-require, global-require
+    resolvedImplementation = require(stylusImplPkg);
   }
 
   // eslint-disable-next-line consistent-return
