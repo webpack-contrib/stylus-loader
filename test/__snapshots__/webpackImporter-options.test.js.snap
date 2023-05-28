@@ -3,7 +3,7 @@
 exports[`webpackImporter option should throw an error on webpack import when value is "false": errors 1`] = `
 [
   "ModuleBuildError: Module build failed (from \`replaced original path\`):
-Error: /test/fixtures/import-webpack.styl:1:9",
+/test/fixtures/import-webpack.styl:1:9",
 ]
 `;
 
