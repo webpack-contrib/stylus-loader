@@ -1783,4 +1783,13 @@ describe("loader", () => {
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
+
+  it("should throw an error", async () => {
+    const testId = "./broken.styl";
+    const compiler = getCompiler(testId);
+    const stats = await compile(compiler);
+
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
 });
