@@ -150,7 +150,7 @@ export default async function stylusLoader(source) {
 
       const obj = new Error(error.message, { cause: error });
 
-      obj.stack = false;
+      obj.stack = null;
 
       callback(obj);
 
