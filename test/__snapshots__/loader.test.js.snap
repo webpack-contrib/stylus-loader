@@ -679,7 +679,7 @@ exports[`loader should emit error when imports files listed as glob in empty dir
 exports[`loader should emit error when parse error: errors 1`] = `
 [
   "ModuleBuildError: Module build failed (from \`replaced original path\`):
-ParseError: /test/fixtures/parse-error.styl:3:1",
+/test/fixtures/parse-error.styl:3:1",
   "ModuleError: Module Error (from \`replaced original path\`):
 expected "indent", got "eos"",
 ]
@@ -769,6 +769,17 @@ Stylus resolver error: import loop has been found",
 `;
 
 exports[`loader should throw an error on circular imports: warnings 1`] = `[]`;
+
+exports[`loader should throw an error: errors 1`] = `
+[
+  "ModuleBuildError: Module build failed (from \`replaced original path\`):
+/test/fixtures/broken.styl:1:8",
+  "ModuleError: Module Error (from \`replaced original path\`):
+expected "indent", got ";"",
+]
+`;
+
+exports[`loader should throw an error: warnings 1`] = `[]`;
 
 exports[`loader should use .json file: css 1`] = `
 "@media screen and (min-width: 1px) and (max-width: 400px) {

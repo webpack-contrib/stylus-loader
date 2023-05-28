@@ -148,7 +148,11 @@ export default async function stylusLoader(source) {
         this.addDependency(path.normalize(error.filename));
       }
 
-      callback(error);
+      const obj = new Error(error.message, { cause: error });
+
+      obj.stack = null;
+
+      callback(obj);
 
       return;
     }
