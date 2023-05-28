@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.1.2](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.1...v7.1.2) (2023-05-28)
+
+
+### Bug Fixes
+
+* avoid stack in error messages ([#391](https://github.com/webpack-contrib/stylus-loader/issues/391)) ([b6f5578](https://github.com/webpack-contrib/stylus-loader/commit/b6f55783df2b4233383d96fad574906f6ccb26b8))
+
 ### [7.1.1](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.0...v7.1.1) (2023-05-25)
 
 
