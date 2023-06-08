@@ -66,7 +66,7 @@ export default async function stylusLoader(source) {
   const useSourceMap =
     typeof options.sourceMap === "boolean" ? options.sourceMap : this.sourceMap;
 
-  if (stylusOptions.sourcemap || useSourceMap) {
+  if (useSourceMap || stylusOptions.sourcemap) {
     styl.set(
       "sourcemap",
       useSourceMap

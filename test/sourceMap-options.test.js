@@ -249,4 +249,23 @@ describe('"sourceMap" options', () => {
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
+
+  it("should work and allow to override source maps options", async () => {
+    const testId = "./basic.styl";
+    const stylusOptions = {
+      sourcemap: {
+        comment: true,
+        inline: true,
+      },
+    };
+    const compiler = getCompiler(testId, { stylusOptions });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, { stylusOptions });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
 });

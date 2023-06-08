@@ -3,7 +3,6 @@ import path from "path";
 
 import { Parser, Compiler, Evaluator, nodes, utils } from "stylus";
 import DepsResolver from "stylus/lib/visitor/deps-resolver";
-import { klona } from "klona/full";
 import fastGlob from "fast-glob";
 import normalizePath from "normalize-path";
 
@@ -23,25 +22,26 @@ function isProductionLikeMode(loaderContext) {
 }
 
 function getStylusOptions(loaderContext, loaderOptions) {
-  const stylusOptions = klona(
+  const options =
     typeof loaderOptions.stylusOptions === "function"
       ? loaderOptions.stylusOptions(loaderContext) || {}
-      : loaderOptions.stylusOptions || {}
-  );
-
-  stylusOptions.filename = loaderContext.resourcePath;
-  stylusOptions.dest = path.dirname(loaderContext.resourcePath);
-
-  // Keep track of imported files (used by Stylus CLI watch mode)
-  // eslint-disable-next-line no-underscore-dangle
-  stylusOptions._imports = [];
+      : loaderOptions.stylusOptions || {};
+  const stylusOptions = {
+    filename: loaderContext.resourcePath,
+    dest: path.dirname(loaderContext.resourcePath),
+    ...options,
+    // Keep track of imported files (used by Stylus CLI watch mode)
+    // eslint-disable-next-line no-underscore-dangle
+    // Don't allow to override, because it is internally
+    _imports: [],
+  };
 
   // https://github.com/stylus/stylus/issues/2119
   stylusOptions.resolveURL =
     typeof stylusOptions.resolveURL === "boolean" && !stylusOptions.resolveURL
       ? false
       : typeof stylusOptions.resolveURL === "object"
-      ? stylusOptions.resolveURL
+      ? { ...stylusOptions.resolveURL }
       : { nocheck: true };
 
   if (
@@ -182,7 +182,7 @@ async function getDependencies(
   seen.add(filename);
 
   // See https://github.com/stylus/stylus/issues/2108
-  const newOptions = klona({ ...options, filename, cache: false });
+  const newOptions = { ...options, filename, cache: false };
   const parser = new Parser(code, newOptions);
 
   let ast;
