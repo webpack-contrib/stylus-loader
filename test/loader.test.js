@@ -249,7 +249,7 @@ describe("loader", () => {
     const testId = "./shallow-deep-literal.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        dest: "deep/deep-literal.css",
+        dest: path.resolve(__dirname, "fixtures/"),
       },
     });
     const stats = await compile(compiler);
@@ -257,7 +257,7 @@ describe("loader", () => {
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
         resolveURL: { nocheck: true },
-        dest: "deep/deep-literal.css",
+        dest: path.resolve(__dirname, "fixtures/"),
       },
     });
 
@@ -1789,6 +1789,43 @@ describe("loader", () => {
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
+  it("should work and don't override loader options", async () => {
+    const testId = "./basic.styl";
+    const stylusOptions = {
+      compress: false,
+      resolveURL: {
+        nocheck: false,
+      },
+      sourcemap: {
+        comment: true,
+        inline: true,
+      },
+    };
+    const compiler = getCompiler(
+      testId,
+      { stylusOptions },
+      { mode: "production" }
+    );
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, { stylusOptions });
+
+    expect(stylusOptions).toEqual({
+      compress: false,
+      resolveURL: {
+        nocheck: false,
+      },
+      sourcemap: {
+        comment: true,
+        inline: true,
+      },
+    });
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });

@@ -954,6 +954,22 @@ exports[`loader should work "use" option: errors 1`] = `[]`;
 
 exports[`loader should work "use" option: warnings 1`] = `[]`;
 
+exports[`loader should work and don't override loader options: css 1`] = `
+"body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImJhc2ljLnN0eWwiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBS0E7RUFDRSxNQUFtQixrQ0FBbkI7O0FBRUY7RUFQRSx1QkFBc0IsSUFBdEI7RUFDQSxvQkFBbUIsSUFBbkI7RUFDQSxlQUFjLElBQWQiLCJmaWxlIjoiYmFzaWMuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiYm9yZGVyLXJhZGl1cygpXG4gIC13ZWJraXQtYm9yZGVyLXJhZGl1cyBhcmd1bWVudHNcbiAgLW1vei1ib3JkZXItcmFkaXVzIGFyZ3VtZW50c1xuICBib3JkZXItcmFkaXVzIGFyZ3VtZW50c1xuXG5ib2R5XG4gIGZvbnQgMTJweCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmXG5cbmEuYnV0dG9uXG4gIGJvcmRlci1yYWRpdXMgNXB4Il19 */"
+`;
+
+exports[`loader should work and don't override loader options: errors 1`] = `[]`;
+
+exports[`loader should work and don't override loader options: warnings 1`] = `[]`;
+
 exports[`loader should work and respect the "compress" option with the "false" value: css 1`] = `
 "body {
   font: 12px Helvetica, Arial, sans-serif;

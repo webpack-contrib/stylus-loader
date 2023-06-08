@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "fast-glob": "^3.2.12",
-    "klona": "^2.0.6",
     "normalize-path": "^3.0.0"
   },
   "devDependencies": {
