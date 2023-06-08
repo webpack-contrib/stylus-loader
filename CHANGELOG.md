@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.1.3](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.2...v7.1.3) (2023-06-08)
+
+
+### Bug Fixes
+
+* **perf:** avoid using `klona` for `stylus` options ([#394](https://github.com/webpack-contrib/stylus-loader/issues/394)) ([261f70e](https://github.com/webpack-contrib/stylus-loader/commit/261f70edaaa2435f3fe2637abadba2e6a84dc1a9))
+
 ### [7.1.2](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.1...v7.1.2) (2023-05-28)
 
 
