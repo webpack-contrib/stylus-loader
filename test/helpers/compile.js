@@ -6,5 +6,5 @@ export default (compiler) =>
       }
 
       return resolve(stats);
-    })
+    }),
   );
