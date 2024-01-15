@@ -21,7 +21,7 @@ describe("webpackImporter option", () => {
         resolve: {
           modules: [path.join(__dirname, "fixtures", "web_modules")],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -44,7 +44,7 @@ describe("webpackImporter option", () => {
         resolve: {
           modules: [path.join(__dirname, "fixtures", "web_modules")],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -89,14 +89,14 @@ describe("webpackImporter option", () => {
         resolve: {
           modules: [path.join(__dirname, "fixtures", "web_modules")],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
 
     await expect(
       getCodeFromStylus(testId, {
         stylusOptions: { shouldUseWebpackImporter: false },
-      })
+      }),
     ).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");

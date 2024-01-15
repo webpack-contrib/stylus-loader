@@ -310,7 +310,7 @@ describe("loader", () => {
         resolve: {
           modules: [path.join(__dirname, "fixtures", "web_modules")],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -333,7 +333,7 @@ describe("loader", () => {
             preferRelativeAlias: "prefer-relative/style",
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -444,7 +444,7 @@ describe("loader", () => {
         resolve: {
           modules: [path.join(__dirname, "fixtures", "web_modules")],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -469,7 +469,7 @@ describe("loader", () => {
         resolve: {
           modules: [path.join(__dirname, "fixtures", "web_modules")],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -501,7 +501,7 @@ describe("loader", () => {
             globAlias2: path.resolve(__dirname, "fixtures", "glob"),
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -785,7 +785,7 @@ describe("loader", () => {
         resolve: {
           modules: ["node_modules"],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -814,7 +814,7 @@ describe("loader", () => {
         resolve: {
           modules: ["node_modules"],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -996,7 +996,7 @@ describe("loader", () => {
             globAlias2: path.resolve(__dirname, "fixtures", "glob"),
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1082,7 +1082,7 @@ describe("loader", () => {
             globAlias2: path.resolve(__dirname, "fixtures", "glob"),
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1127,7 +1127,7 @@ describe("loader", () => {
             aliasNested: path.resolve(__dirname, "fixtures", "glob-nested"),
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1187,11 +1187,11 @@ describe("loader", () => {
       fs.mkdirSync(pathDir);
       fs.copyFileSync(
         path.resolve(exampleDir, "package.json"),
-        path.resolve(pathDir, "package.json")
+        path.resolve(pathDir, "package.json"),
       );
       fs.copyFileSync(
         path.resolve(exampleDir, "index.styl"),
-        path.resolve(pathDir, "index.styl")
+        path.resolve(pathDir, "index.styl"),
       );
     }
 
@@ -1219,11 +1219,11 @@ describe("loader", () => {
       fs.mkdirSync(pathDir);
       fs.copyFileSync(
         path.resolve(exampleDir, "package.json"),
-        path.resolve(pathDir, "package.json")
+        path.resolve(pathDir, "package.json"),
       );
       fs.copyFileSync(
         path.resolve(exampleDir, "index.styl"),
-        path.resolve(pathDir, "index.styl")
+        path.resolve(pathDir, "index.styl"),
       );
     }
 
@@ -1231,7 +1231,7 @@ describe("loader", () => {
 
     if (process.platform === "win32") {
       let fileContent = fs.readFileSync(
-        path.resolve(__dirname, "fixtures", testId)
+        path.resolve(__dirname, "fixtures", testId),
       );
 
       fileContent = fileContent.toString().replace(/\*/i, "");
@@ -1240,9 +1240,9 @@ describe("loader", () => {
         path.resolve(
           __dirname,
           "fixtures",
-          "import-webpack-dir-like-a-glob-win32.styl"
+          "import-webpack-dir-like-a-glob-win32.styl",
         ),
-        fileContent
+        fileContent,
       );
 
       testId = "./import-webpack-dir-like-a-glob-win32.styl";
@@ -1291,7 +1291,7 @@ describe("loader", () => {
             globSimpleAlias: path.resolve(__dirname, "fixtures", "glob"),
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1333,7 +1333,7 @@ describe("loader", () => {
         resolve: {
           modules: [path.join(__dirname, "fixtures", "web_modules")],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1356,7 +1356,7 @@ describe("loader", () => {
             alias: path.resolve(__dirname, "fixtures", "alias"),
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1383,7 +1383,7 @@ describe("loader", () => {
             alias: path.resolve(__dirname, "fixtures", "alias"),
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1537,7 +1537,7 @@ describe("loader", () => {
           compress: true,
         },
       },
-      { mode: "production" }
+      { mode: "production" },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1562,7 +1562,7 @@ describe("loader", () => {
           compress: false,
         },
       },
-      { mode: "production" }
+      { mode: "production" },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1645,10 +1645,10 @@ describe("loader", () => {
         process.platform === "win32"
           ? item.replace(
               "failed to locate @import file self.styl",
-              "import loop has been found"
+              "import loop has been found",
             )
-          : item
-      )
+          : item,
+      ),
     ).toMatchSnapshot("errors");
   });
 
@@ -1718,7 +1718,7 @@ describe("loader", () => {
             },
           },
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1739,7 +1739,7 @@ describe("loader", () => {
         resolve: {
           conditionNames: ["theme1", "..."],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1748,7 +1748,7 @@ describe("loader", () => {
       {},
       {
         packageExportsCustomConditionTestVariant: 1,
-      }
+      },
     );
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
@@ -1766,7 +1766,7 @@ describe("loader", () => {
         resolve: {
           conditionNames: ["theme2", "..."],
         },
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -1775,7 +1775,7 @@ describe("loader", () => {
       {},
       {
         packageExportsCustomConditionTestVariant: 2,
-      }
+      },
     );
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
@@ -1808,7 +1808,7 @@ describe("loader", () => {
     const compiler = getCompiler(
       testId,
       { stylusOptions },
-      { mode: "production" }
+      { mode: "production" },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);

@@ -59,7 +59,7 @@ Promise.resolve()
         .run({ async: true });
 
       return suite;
-    })
+    }),
   )
   .then(
     resolveOnComplete(() => {
@@ -84,5 +84,5 @@ Promise.resolve()
         .run({ async: true });
 
       return suite;
-    })
+    }),
   );

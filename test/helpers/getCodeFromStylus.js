@@ -21,64 +21,64 @@ const pathMap = {
     fixturesDir,
     "node_modules",
     "fakenib",
-    "index.styl"
+    "index.styl",
   ),
   fakestylus: path.resolve(
     fixturesDir,
     "node_modules",
     "fakestylus",
-    "main.styl"
+    "main.styl",
   ),
   "~fakestylus": path.resolve(
     fixturesDir,
     "node_modules",
     "fakestylus",
-    "main.styl"
+    "main.styl",
   ),
   "~glob_package/*": path.resolve(
     fixturesDir,
     "node_modules",
-    "glob_package/*"
+    "glob_package/*",
   ),
   "in-web-modules": path.resolve(
     fixturesDir,
     "web_modules",
     "in-web-modules",
-    "index.styl"
+    "index.styl",
   ),
   "~in-web-modules": path.resolve(
     fixturesDir,
     "web_modules",
     "in-web-modules",
-    "index.styl"
+    "index.styl",
   ),
   "~in-web-modules/index": path.resolve(
     fixturesDir,
     "web_modules",
     "in-web-modules",
-    "index.styl"
+    "index.styl",
   ),
   "~webpack-like-a-glob-package-name*": path.resolve(
     fixturesDir,
     "node_modules",
     "webpack-like-a-glob-package-name*",
-    "index.styl"
+    "index.styl",
   ),
   "~webpack-like-a-glob-package-name": path.resolve(
     fixturesDir,
     "node_modules",
     "webpack-like-a-glob-package-name",
-    "index.styl"
+    "index.styl",
   ),
   preferRelativeAlias: path.resolve(
     fixturesDir,
     "prefer-relative",
-    "style.styl"
+    "style.styl",
   ),
   "custom-main-files": path.resolve(
     fixturesDir,
     "custom-main-files",
-    "custom.styl"
+    "custom.styl",
   ),
 };
 
@@ -122,14 +122,14 @@ async function getCodeFromStylus(testId, options = {}, context = {}) {
       __dirname,
       "..",
       "fixtures",
-      "node_modules/package-with-exports-and-custom-condition/style-1.styl"
+      "node_modules/package-with-exports-and-custom-condition/style-1.styl",
     );
   } else if (context.packageExportsCustomConditionTestVariant === 2) {
     pathToFile = path.resolve(
       __dirname,
       "..",
       "fixtures",
-      "node_modules/package-with-exports-and-custom-condition/style-2.styl"
+      "node_modules/package-with-exports-and-custom-condition/style-2.styl",
     );
   } else {
     pathToFile = path.resolve(__dirname, "..", "fixtures", testId);

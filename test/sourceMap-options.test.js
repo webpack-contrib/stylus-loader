@@ -60,7 +60,7 @@ describe('"sourceMap" options', () => {
       },
       {
         devtool: "source-map",
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -102,7 +102,7 @@ describe('"sourceMap" options', () => {
       },
       {
         devtool: false,
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -166,7 +166,7 @@ describe('"sourceMap" options', () => {
       },
       {
         devtool: false,
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
@@ -196,7 +196,7 @@ describe('"sourceMap" options', () => {
       },
       {
         devtool: "source-map",
-      }
+      },
     );
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);

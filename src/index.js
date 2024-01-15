@@ -27,8 +27,8 @@ export default async function stylusLoader(source) {
   if (!implementation) {
     callback(
       new Error(
-        `The Stylus implementation "${options.implementation}" not found`
-      )
+        `The Stylus implementation "${options.implementation}" not found`,
+      ),
     );
 
     return;
@@ -75,7 +75,7 @@ export default async function stylusLoader(source) {
             sourceRoot: stylusOptions.dest,
             basePath: this.rootContext,
           }
-        : stylusOptions.sourcemap
+        : stylusOptions.sourcemap,
     );
   }
 
@@ -96,7 +96,7 @@ export default async function stylusLoader(source) {
           item = require(resolved)(stylusOptions);
         } catch (error) {
           callback(
-            `Failed to load "${item}" Stylus plugin. Are you sure it's installed?\n${error}`
+            `Failed to load "${item}" Stylus plugin. Are you sure it's installed?\n${error}`,
           );
 
           return;
@@ -177,8 +177,8 @@ export default async function stylusLoader(source) {
       try {
         map.sourcesContent = await Promise.all(
           map.sources.map(async (file) =>
-            (await readFile(this.fs, file)).toString()
-          )
+            (await readFile(this.fs, file)).toString(),
+          ),
         );
       } catch (fsError) {
         callback(fsError);

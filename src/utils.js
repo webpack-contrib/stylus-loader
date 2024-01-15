@@ -41,8 +41,8 @@ function getStylusOptions(loaderContext, loaderOptions) {
     typeof stylusOptions.resolveURL === "boolean" && !stylusOptions.resolveURL
       ? false
       : typeof stylusOptions.resolveURL === "object"
-      ? { ...stylusOptions.resolveURL }
-      : { nocheck: true };
+        ? { ...stylusOptions.resolveURL }
+        : { nocheck: true };
 
   if (
     typeof stylusOptions.compress === "undefined" &&
@@ -89,7 +89,7 @@ async function resolveFilename(
   globResolver,
   isGlob,
   context,
-  filename
+  filename,
 ) {
   const possibleRequests = getPossibleRequests(loaderContext, filename);
 
@@ -103,13 +103,13 @@ async function resolveFilename(
 
       if (globTask.base === ".") {
         throw new Error(
-          'Glob resolving without a glob base ("~**/*") is not supported, please specify a glob base ("~package/**/*")'
+          'Glob resolving without a glob base ("~**/*") is not supported, please specify a glob base ("~package/**/*")',
         );
       }
 
       const possibleGlobRequests = getPossibleRequests(
         loaderContext,
-        globTask.base
+        globTask.base,
       );
 
       let globResult;
@@ -118,7 +118,7 @@ async function resolveFilename(
         globResult = await resolveRequests(
           context,
           possibleGlobRequests,
-          globResolver
+          globResolver,
         );
       } catch (globError) {
         throw globError;
@@ -128,7 +128,7 @@ async function resolveFilename(
 
       const patterns = filename.replace(
         new RegExp(`^${globTask.base}`),
-        normalizePath(globResult)
+        normalizePath(globResult),
       );
 
       const paths = await fastGlob(patterns, {
@@ -177,7 +177,7 @@ async function getDependencies(
   seen,
   code,
   filename,
-  options
+  options,
 ) {
   seen.add(filename);
 
@@ -254,7 +254,7 @@ async function getDependencies(
           originalColumn: firstNode.column,
           originalNodePath,
           resolved: found.map((item) =>
-            path.isAbsolute(item) ? item : path.join(process.cwd(), item)
+            path.isAbsolute(item) ? item : path.join(process.cwd(), item),
           ),
         });
 
@@ -271,7 +271,7 @@ async function getDependencies(
           globResolver,
           isGlob,
           path.dirname(this.filename),
-          originalNodePath
+          originalNodePath,
         ),
       });
     }
@@ -338,14 +338,14 @@ async function getDependencies(
               seen,
               dependencyCode,
               dependency,
-              options
+              options,
             );
-          })()
+          })(),
         );
       }
 
       await Promise.all(dependenciesOfDependencies);
-    })
+    }),
   );
 
   if (dependencies.length > 0) {
@@ -401,7 +401,7 @@ async function createEvaluator(loaderContext, code, options) {
     seen,
     code,
     loaderContext.resourcePath,
-    options
+    options,
   );
 
   const optionsImports = [];
@@ -417,7 +417,7 @@ async function createEvaluator(loaderContext, code, options) {
         globResolve,
         isGlob,
         path.dirname(loaderContext.resourcePath),
-        importPath
+        importPath,
       ),
     });
   }
@@ -466,14 +466,14 @@ async function createEvaluator(loaderContext, code, options) {
               seen,
               dependencyCode,
               dependency,
-              options
+              options,
             );
-          })()
+          })(),
         );
       }
 
       await Promise.all(dependenciesOfImportDependencies);
-    })
+    }),
   );
 
   return class CustomEvaluator extends Evaluator {
@@ -498,7 +498,7 @@ async function createEvaluator(loaderContext, code, options) {
 
         if (!dependency) {
           const dependencies = resolvedDependencies.get(
-            path.normalize(node.filename)
+            path.normalize(node.filename),
           );
 
           if (dependencies) {
@@ -570,13 +570,13 @@ async function createEvaluator(loaderContext, code, options) {
                   }${
                     webpackResolveError.missing
                       ? `\n\nWebpack resolver error missing:\n${webpackResolveError.missing.join(
-                          "\n"
+                          "\n",
                         )}`
                       : ""
                   }`
                 : ""
-            }`
-          )
+            }`,
+          ),
         );
 
         return imported;
@@ -642,7 +642,9 @@ function urlResolver(options = {}) {
     res =
       path.relative(
         dest || path.dirname(this.filename),
-        options.nocheck ? path.join(path.dirname(filename), pathname) : pathname
+        options.nocheck
+          ? path.join(path.dirname(filename), pathname)
+          : pathname,
       ) + tail;
 
     if (path.sep === "\\") {
