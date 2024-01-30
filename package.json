@@ -41,8 +41,17 @@
     "dist"
   ],
   "peerDependencies": {
+    "@rspack/core": "0.x || 1.x",
     "stylus": ">=0.52.4",
     "webpack": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@rspack/core": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
   },
   "dependencies": {
     "fast-glob": "^3.3.2",
