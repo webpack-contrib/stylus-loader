@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v8.0.0...v8.1.0) (2024-01-30)
+
+
+### Features
+
+* add @rspack/core as an optional peer dependency ([#407](https://github.com/webpack-contrib/stylus-loader/issues/407)) ([4315ff6](https://github.com/webpack-contrib/stylus-loader/commit/4315ff62556ba33b3c95f5807f253ca4585f9808))
+
 ## [8.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.3...v8.0.0) (2024-01-15)
 
 
