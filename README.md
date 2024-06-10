@@ -349,7 +349,7 @@ In this case, the `stylus-loader` will not override the source but just **prepen
 
 This is especially useful when some of your Stylus variables depend on the environment:
 
-> **Note**
+> [!NOTE]
 >
 > Since you're injecting code, this will break the source mappings in your entry file. Often there's a simpler solution than this, like multiple Stylus entry files.
 
