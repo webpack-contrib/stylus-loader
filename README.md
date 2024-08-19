@@ -70,8 +70,8 @@ Type:
 type stylusOptions =
   | {
       use: Array<string | Function>;
-      include: string;
-      import: string;
+      include: Array<string>;
+      import: Array<string>;
       define: Array;
       includeCSS: false;
       resolveURL: boolean | Object;
