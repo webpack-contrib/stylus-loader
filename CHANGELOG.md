@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.1.1](https://github.com/webpack-contrib/stylus-loader/compare/v8.1.0...v8.1.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* avoid losing `use` during incremental build ([#425](https://github.com/webpack-contrib/stylus-loader/issues/425)) ([4f28957](https://github.com/webpack-contrib/stylus-loader/commit/4f28957af51522d4ab2fc8f591d11f53191d66b8))
+
 ## [8.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v8.0.0...v8.1.0) (2024-01-30)
 
 
