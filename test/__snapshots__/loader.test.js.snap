@@ -708,7 +708,7 @@ exports[`loader should emit error when unresolved import: warnings 1`] = `[]`;
 exports[`loader should emit warning when use unresolved plugin: errors 1`] = `
 [
   "ModuleBuildError: Module build failed (from \`replaced original path\`):
-NonErrorEmittedError: (Emitted value instead of an instance of Error) Failed to load "unresolved" Stylus plugin. Are you sure it's installed?",
+Error: Failed to load "unresolved" Stylus plugin. Are you sure it's installed?",
 ]
 `;
 
@@ -927,6 +927,17 @@ exports[`loader should work "prefix" option: errors 1`] = `[]`;
 
 exports[`loader should work "prefix" option: warnings 1`] = `[]`;
 
+exports[`loader should work "use" option #1: css 1`] = `
+"body {
+  width: 100%;
+}
+"
+`;
+
+exports[`loader should work "use" option #1: errors 1`] = `[]`;
+
+exports[`loader should work "use" option #1: warnings 1`] = `[]`;
+
 exports[`loader should work "use" option as Array<string>: css 1`] = `
 "body {
   font: 12px Helvetica, Arial, sans-serif;
@@ -942,6 +953,22 @@ a.button {
 exports[`loader should work "use" option as Array<string>: errors 1`] = `[]`;
 
 exports[`loader should work "use" option as Array<string>: warnings 1`] = `[]`;
+
+exports[`loader should work "use" option as string: css 1`] = `
+"body {
+  font: 12px Helvetica, Arial, sans-serif;
+}
+a.button {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+"
+`;
+
+exports[`loader should work "use" option as string: errors 1`] = `[]`;
+
+exports[`loader should work "use" option as string: warnings 1`] = `[]`;
 
 exports[`loader should work "use" option: css 1`] = `
 "body {

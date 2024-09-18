@@ -36,6 +36,29 @@ function getStylusOptions(loaderContext, loaderOptions) {
     _imports: [],
   };
 
+  if (typeof stylusOptions.use !== "undefined") {
+    stylusOptions.use = (
+      Array.isArray(stylusOptions.use) ? stylusOptions.use : [stylusOptions.use]
+    ).map((item) => {
+      if (typeof item === "string") {
+        try {
+          const resolved = require.resolve(item);
+
+          loaderContext.addBuildDependency(resolved);
+
+          // eslint-disable-next-line import/no-dynamic-require, global-require
+          return require(resolved)(stylusOptions);
+        } catch (error) {
+          throw new Error(
+            `Failed to load "${item}" Stylus plugin. Are you sure it's installed?\n${error}`,
+          );
+        }
+      }
+
+      return item;
+    });
+  }
+
   // https://github.com/stylus/stylus/issues/2119
   stylusOptions.resolveURL =
     typeof stylusOptions.resolveURL === "boolean" && !stylusOptions.resolveURL
