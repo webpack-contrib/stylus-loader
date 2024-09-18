@@ -570,6 +570,55 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
+  it('should work "use" option #1', async () => {
+    function plugin() {
+      return (style) => {
+        style.define("add", (a, b) => a.operate("+", b));
+      };
+    }
+
+    const testId = "./webpack.config-plugin.styl";
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        use: plugin(),
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        use: plugin(),
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
+  it('should work "use" option as string', async () => {
+    const testId = "./basic.styl";
+    const compiler = getCompiler(testId, {
+      stylusOptions: {
+        use: "nib",
+      },
+    });
+    const stats = await compile(compiler);
+    const codeFromBundle = getCodeFromBundle(stats, compiler);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        // eslint-disable-next-line global-require
+        use: require("nib")(),
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toMatchSnapshot("css");
+    expect(getWarnings(stats)).toMatchSnapshot("warnings");
+    expect(getErrors(stats)).toMatchSnapshot("errors");
+  });
+
   it('should work "use" option as Array<string>', async () => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {

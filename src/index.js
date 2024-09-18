@@ -43,7 +43,15 @@ export default async function stylusLoader(source) {
         : `${options.additionalData}\n${data}`;
   }
 
-  const stylusOptions = getStylusOptions(this, options);
+  let stylusOptions;
+
+  try {
+    stylusOptions = getStylusOptions(this, options);
+  } catch (err) {
+    callback(err);
+    return;
+  }
+
   const styl = implementation(data, stylusOptions);
 
   // include regular CSS on @import
@@ -77,34 +85,6 @@ export default async function stylusLoader(source) {
           }
         : stylusOptions.sourcemap,
     );
-  }
-
-  if (
-    typeof stylusOptions.use !== "undefined" &&
-    stylusOptions.use.length > 0
-  ) {
-    let { length } = stylusOptions.use;
-
-    // eslint-disable-next-line no-plusplus
-    while (length--) {
-      let [item] = stylusOptions.use.splice(length, 1);
-      if (typeof item === "string") {
-        try {
-          const resolved = require.resolve(item);
-
-          // eslint-disable-next-line import/no-dynamic-require, global-require
-          item = require(resolved)(stylusOptions);
-        } catch (error) {
-          callback(
-            `Failed to load "${item}" Stylus plugin. Are you sure it's installed?\n${error}`,
-          );
-
-          return;
-        }
-      }
-
-      styl.use(item);
-    }
   }
 
   if (typeof stylusOptions.import !== "undefined") {
