@@ -84,7 +84,7 @@ type stylusOptions =
 
 Default: `{}`
 
-You can pass any Stylus specific options to the `stylus-loader` through the `stylusOptions` property in the [loader options](https://webpack.js.org/configuration/module/#rule-options-rule-query).
+You can pass any Stylus specific options to the `stylus-loader` through the `stylusOptions` property in the [loader options](https://webpack.js.org/configuration/module/#ruleoptions--rulequery)
 See the [Stylus documentation](https://stylus-lang.com/docs/js.html).
 Options in dash-case should use camelCase.
 
@@ -667,8 +667,8 @@ Thus you can import your Stylus modules from `node_modules`.
 ```
 
 Using `~` is deprecated and can be removed from your code (**we recommend it**), but we still support it for historical reasons.
-Why you can removed it? The loader will first try to resolve `@import`/`@require` as relative, if it cannot be resolved, the loader will try to resolve `@import`/`@require` inside [`node_modules`](https://webpack.js.org/configuration/resolve/#resolve-modules).
-Just prepend them with a `~` which tells webpack to look up the [`modules`](https://webpack.js.org/configuration/resolve/#resolve-modules).
+Why you can removed it? The loader will first try to resolve `@import`/`@require` as relative, if it cannot be resolved, the loader will try to resolve `@import`/`@require` inside [`node_modules`](https://webpack.js.org/configuration/resolve/#resolvemodules).
+Just prepend them with a `~` which tells webpack to look up the [`modules`](https://webpack.js.org/configuration/resolve/#resolvemodules).
 
 ```styl
 @import "~bootstrap-styl/bootstrap/index.styl";
