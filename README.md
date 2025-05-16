@@ -35,6 +35,12 @@ or
 pnpm add -D stylus stylus-loader
 ```
 
+or
+
+```console
+bun add -D stylus stylus-loader
+```
+
 Then add the loader to your `webpack` config. For example:
 
 **webpack.config.js**
