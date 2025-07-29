@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`loader correctly compiles mixin calls inside imported files: css 1`] = `
 "body {
@@ -55,20 +55,6 @@ exports[`loader imports and webpack deps: css 1`] = `
 exports[`loader imports and webpack deps: errors 1`] = `[]`;
 
 exports[`loader imports and webpack deps: warnings 1`] = `[]`;
-
-exports[`loader imports files in dir like a glob through webpack: css 1`] = `
-".like-a-glob {
-  color: #ff7f50;
-}
-.entry {
-  box-sizing: border-box;
-}
-"
-`;
-
-exports[`loader imports files in dir like a glob through webpack: errors 1`] = `[]`;
-
-exports[`loader imports files in dir like a glob through webpack: warnings 1`] = `[]`;
 
 exports[`loader imports files in dir like a glob: css 1`] = `
 ".like-a-glob {
