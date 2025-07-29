@@ -1,13 +1,13 @@
-import path from "path";
+import path from "node:path";
 
 import schema from "./options.json";
 import {
-  getStylusOptions,
   createEvaluator,
-  urlResolver,
-  readFile,
-  normalizeSourceMap,
   getStylusImplementation,
+  getStylusOptions,
+  normalizeSourceMap,
+  readFile,
+  urlResolver,
 } from "./utils";
 
 export default async function stylusLoader(source) {
@@ -137,9 +137,7 @@ export default async function stylusLoader(source) {
       return;
     }
 
-    // eslint-disable-next-line no-underscore-dangle
     if (stylusOptions._imports.length > 0) {
-      // eslint-disable-next-line no-underscore-dangle
       for (const importData of stylusOptions._imports) {
         if (path.isAbsolute(importData.path)) {
           this.addDependency(path.normalize(importData.path));
@@ -160,8 +158,8 @@ export default async function stylusLoader(source) {
             (await readFile(this.fs, file)).toString(),
           ),
         );
-      } catch (fsError) {
-        callback(fsError);
+      } catch (err) {
+        callback(err);
 
         return;
       }

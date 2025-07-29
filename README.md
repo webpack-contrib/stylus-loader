@@ -402,10 +402,10 @@ module.exports = {
                 const relativePath = path.relative(rootContext, resourcePath);
 
                 if (relativePath === "styles/foo.styl") {
-                  return "value = 100px" + content;
+                  return `value = 100px${content}`;
                 }
 
-                return "value = 200px" + content;
+                return `value = 200px${content}`;
               },
             },
           },
@@ -436,10 +436,10 @@ module.exports = {
                 const relativePath = path.relative(rootContext, resourcePath);
 
                 if (relativePath === "styles/foo.styl") {
-                  return "value = 100px" + content;
+                  return `value = 100px${content}`;
                 }
 
-                return "value = 200px" + content;
+                return `value = 200px${content}`;
               },
             },
           },

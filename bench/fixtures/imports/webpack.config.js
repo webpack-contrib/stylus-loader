@@ -11,10 +11,13 @@ module.exports = {
         test: /\.styl$/,
         use: [
           {
-            loader: require("path").join(__dirname, "./testLoader.js"),
+            loader: require("node:path").join(__dirname, "./testLoader.js"),
           },
           {
-            loader: require("path").join(__dirname, "../../../dist/cjs.js"),
+            loader: require("node:path").join(
+              __dirname,
+              "../../../dist/cjs.js",
+            ),
             options: {},
           },
         ],

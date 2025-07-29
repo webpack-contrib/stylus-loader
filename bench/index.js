@@ -1,9 +1,8 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 const Benchmark = require("benchmark");
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 const MemoryFileSystem = require("memory-fs");
 const stylus = require("stylus");
 const webpack = require("webpack");

@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import {
   compile,
@@ -189,7 +189,6 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
-        // eslint-disable-next-line no-undefined
         resolveURL: undefined,
       },
     });
@@ -385,9 +384,9 @@ describe("loader", () => {
       path.resolve(fixturesDir, "shallow-indent.styl"),
     ];
 
-    fixtures.forEach((fixture) => {
+    for (const fixture of fixtures) {
       expect(fileDependencies.has(fixture)).toBe(true);
-    });
+    }
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
@@ -412,9 +411,9 @@ describe("loader", () => {
       path.resolve(fixturesDir, "import-binop.styl"),
     ];
 
-    fixtures.forEach((fixture) => {
+    for (const fixture of fixtures) {
       expect(fileDependencies.has(fixture)).toBe(true);
-    });
+    }
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
@@ -608,7 +607,6 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
-        // eslint-disable-next-line global-require
         use: require("nib")(),
       },
     });
@@ -630,7 +628,6 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
-        // eslint-disable-next-line global-require
         use: require("nib")(),
       },
     });
@@ -652,7 +649,6 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
-        // eslint-disable-next-line global-require
         use: require("bootstrap-styl")(),
         resolveURL: { nocheck: true },
       },
@@ -665,7 +661,6 @@ describe("loader", () => {
   });
 
   it("should work with plugin using bootstrap", async () => {
-    // eslint-disable-next-line global-require
     const bootstrap = require("bootstrap-styl");
 
     function plugin() {
@@ -959,7 +954,6 @@ describe("loader", () => {
     const testId = "./basic-nib.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        // eslint-disable-next-line global-require
         use: [require("nib")()],
         import: ["nib"],
       },
@@ -968,7 +962,6 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
-        // eslint-disable-next-line global-require
         use: [require("nib")()],
         import: ["nib"],
       },
@@ -994,24 +987,24 @@ describe("loader", () => {
 
     const fixturesDir = path.resolve(__dirname, "fixtures");
 
-    [
+    for (const fixture of [
       path.resolve(fixturesDir, "import-glob.styl"),
       path.resolve(fixturesDir, "glob", "a.styl"),
       path.resolve(fixturesDir, "glob", "b.styl"),
       path.resolve(fixturesDir, "glob-files", "index.styl"),
       path.resolve(fixturesDir, "glob-files", "dir", "a.styl"),
       path.resolve(fixturesDir, "glob-files", "dir", "b.styl"),
-    ].forEach((fixture) => {
+    ]) {
       expect(fileDependencies.has(fixture)).toBe(true);
-    });
+    }
 
-    [
+    for (const fixture of [
       fixturesDir,
       path.resolve(fixturesDir, "glob"),
       path.resolve(fixturesDir, "glob-files"),
-    ].forEach((fixture) => {
+    ]) {
       expect(contextDependencies.has(fixture)).toBe(true);
-    });
+    }
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
@@ -1057,7 +1050,7 @@ describe("loader", () => {
 
     const fixturesDir = path.resolve(__dirname, "fixtures");
 
-    [
+    for (const fixture of [
       path.resolve(fixturesDir, "glob-webpack-2", "a.styl"),
       path.resolve(fixturesDir, "glob-webpack-2", "b.styl"),
       path.resolve(fixturesDir, "glob-webpack-2", "index.styl"),
@@ -1069,18 +1062,18 @@ describe("loader", () => {
       path.resolve(fixturesDir, "node_modules", "glob_package", "a.styl"),
       path.resolve(fixturesDir, "node_modules", "glob_package", "b.styl"),
       path.resolve(fixturesDir, "node_modules", "glob_package", "index.styl"),
-    ].forEach((fixture) => {
+    ]) {
       expect(fileDependencies.has(fixture)).toBe(true);
-    });
+    }
 
-    [
+    for (const fixture of [
       path.resolve(fixturesDir, "glob"),
       path.resolve(fixturesDir, "glob-webpack"),
       path.resolve(fixturesDir, "glob-webpack-2"),
       path.resolve(fixturesDir, "node_modules", "glob_package"),
-    ].forEach((fixture) => {
+    ]) {
       expect(contextDependencies.has(fixture)).toBe(true);
-    });
+    }
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
@@ -1109,9 +1102,9 @@ describe("loader", () => {
       path.resolve(rootDir, "b-glob", "file.styl"),
     ];
 
-    fixtures.forEach((fixture) => {
+    for (const fixture of fixtures) {
       expect(fileDependencies.has(fixture)).toBe(true);
-    });
+    }
 
     expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
@@ -1607,9 +1600,9 @@ describe("loader", () => {
     const fixturesDir = path.resolve(__dirname, "fixtures");
     const fixtures = [path.resolve(fixturesDir, "import-unresolve.styl")];
 
-    fixtures.forEach((fixture) => {
+    for (const fixture of fixtures) {
       expect(fileDependencies.has(fixture)).toBe(true);
-    });
+    }
 
     await expect(getCodeFromStylus(testId)).rejects.toThrow();
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
@@ -1727,7 +1720,7 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  it(`should work with a package with "styl" and "exports" fields and a custom condition (theme1)`, async () => {
+  it('should work with a package with "styl" and "exports" fields and a custom condition (theme1)', async () => {
     const testId = "./import-package-with-exports-and-custom-condition.styl";
     const compiler = getCompiler(
       testId,
@@ -1754,7 +1747,7 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  it(`should work with a package with "styl" and "exports" fields and a custom condition (theme2)`, async () => {
+  it('should work with a package with "styl" and "exports" fields and a custom condition (theme2)', async () => {
     const testId = "./import-package-with-exports-and-custom-condition.styl";
     const compiler = getCompiler(
       testId,

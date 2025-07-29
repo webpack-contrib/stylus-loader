@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 
 import stylus from "stylus";
 import Evaluator from "stylus/lib/visitor/evaluator";
@@ -87,7 +87,7 @@ function evaluator() {
     visitImport(imported) {
       try {
         return super.visitImport(imported);
-      } catch (ignoreError) {
+      } catch {
         // Then use the webpack resolver
       }
 
@@ -140,13 +140,13 @@ async function getCodeFromStylus(testId, options = {}, context = {}) {
   try {
     data = await fs.promises.readFile(pathToFile);
     // May be directory
-  } catch (ignoreError) {
+  } catch (err) {
     pathToFile = path.resolve(pathToFile, "index.styl");
 
     data = await fs.promises.readFile(pathToFile);
 
     if (typeof data === "undefined") {
-      throw ignoreError;
+      throw err;
     }
   }
 

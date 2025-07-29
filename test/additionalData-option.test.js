@@ -23,8 +23,11 @@ describe('"additionalData" option', () => {
     const testId = "./additional-data.styl";
     const additionalData = (content, loaderContext) => {
       const { resourcePath, rootContext } = loaderContext;
-      // eslint-disable-next-line global-require
-      const relativePath = require("path").relative(rootContext, resourcePath);
+
+      const relativePath = require("node:path").relative(
+        rootContext,
+        resourcePath,
+      );
 
       return `
 /* RelativePath: ${relativePath}; */
@@ -51,8 +54,11 @@ ${content}
     const testId = "./additional-data.styl";
     const additionalData = async (content, loaderContext) => {
       const { resourcePath, rootContext } = loaderContext;
-      // eslint-disable-next-line global-require
-      const relativePath = require("path").relative(rootContext, resourcePath);
+
+      const relativePath = require("node:path").relative(
+        rootContext,
+        resourcePath,
+      );
 
       return `
 /* RelativePath: ${relativePath}; */

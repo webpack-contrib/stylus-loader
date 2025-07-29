@@ -1,4 +1,4 @@
-import { getCompiler, compile } from "./helpers/index";
+import { compile, getCompiler } from "./helpers/index";
 
 describe("validate options", () => {
   const tests = {
@@ -20,9 +20,7 @@ describe("validate options", () => {
           },
         },
         () => {},
-        () => {
-          return { resolveCss: true };
-        },
+        () => ({ resolveCss: true }),
       ],
       failure: [1, true, false, "test", []],
     },
@@ -39,7 +37,6 @@ describe("validate options", () => {
       failure: [1, true, false, /test/, [], {}],
     },
     implementation: {
-      // eslint-disable-next-line global-require
       success: [require("stylus"), "stylus"],
       failure: [true, false, {}, []],
     },

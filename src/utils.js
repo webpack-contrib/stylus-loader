@@ -1,10 +1,10 @@
-import { parse } from "url";
-import path from "path";
+import path from "node:path";
+import { parse } from "node:url";
 
-import { Parser, Compiler, Evaluator, nodes, utils } from "stylus";
-import DepsResolver from "stylus/lib/visitor/deps-resolver";
 import fastGlob from "fast-glob";
 import normalizePath from "normalize-path";
+import { Compiler, Evaluator, Parser, nodes, utils } from "stylus";
+import DepsResolver from "stylus/lib/visitor/deps-resolver";
 
 // Examples:
 // - ~package
@@ -31,7 +31,7 @@ function getStylusOptions(loaderContext, loaderOptions) {
     dest: path.dirname(loaderContext.resourcePath),
     ...options,
     // Keep track of imported files (used by Stylus CLI watch mode)
-    // eslint-disable-next-line no-underscore-dangle
+
     // Don't allow to override, because it is internally
     _imports: [],
   };
@@ -46,7 +46,6 @@ function getStylusOptions(loaderContext, loaderOptions) {
 
           loaderContext.addBuildDependency(resolved);
 
-          // eslint-disable-next-line import/no-dynamic-require, global-require
           return require(resolved)(stylusOptions);
         } catch (error) {
           throw new Error(
@@ -83,11 +82,9 @@ function getStylusImplementation(loaderContext, implementation) {
   if (!implementation || typeof implementation === "string") {
     const stylusImplPkg = implementation || "stylus";
 
-    // eslint-disable-next-line import/no-dynamic-require, global-require
     resolvedImplementation = require(stylusImplPkg);
   }
 
-  // eslint-disable-next-line consistent-return
   return resolvedImplementation;
 }
 
@@ -143,8 +140,8 @@ async function resolveFilename(
           possibleGlobRequests,
           globResolver,
         );
-      } catch (globError) {
-        throw globError;
+      } catch (err) {
+        throw err;
       }
 
       loaderContext.addContextDependency(globResult);
@@ -170,7 +167,7 @@ async function resolveFilename(
 
 async function resolveRequests(context, possibleRequests, resolve) {
   if (possibleRequests.length === 0) {
-    return Promise.reject();
+    throw undefined;
   }
 
   let result;
@@ -221,7 +218,6 @@ async function getDependencies(
   const dependencies = [];
 
   class ImportVisitor extends DepsResolver {
-    // eslint-disable-next-line class-methods-use-this
     visitImport(node) {
       let firstNode = node.path.first;
 
@@ -303,17 +299,15 @@ async function getDependencies(
   new ImportVisitor(ast, newOptions).visit(ast);
 
   await Promise.all(
-    Array.from(dependencies).map(async (result) => {
+    [...dependencies].map(async (result) => {
       let { resolved } = result;
 
       try {
         resolved = await resolved;
-      } catch (ignoreError) {
-        // eslint-disable-next-line no-param-reassign
+      } catch (err) {
         delete result.resolved;
 
-        // eslint-disable-next-line no-param-reassign
-        result.error = ignoreError;
+        result.error = err;
 
         return;
       }
@@ -321,7 +315,7 @@ async function getDependencies(
       const isArray = Array.isArray(resolved);
 
       // `stylus` returns forward slashes on windows
-      // eslint-disable-next-line no-param-reassign
+
       result.resolved = isArray
         ? resolved.map((item) => path.normalize(item))
         : path.normalize(resolved);
@@ -452,14 +446,14 @@ async function createEvaluator(loaderContext, code, options) {
 
       try {
         resolved = await resolved;
-      } catch (ignoreError) {
+      } catch {
         return;
       }
 
       const isArray = Array.isArray(resolved);
 
       // `stylus` returns forward slashes on windows
-      // eslint-disable-next-line no-param-reassign
+
       result.resolved = isArray
         ? resolved.map((item) => path.normalize(item))
         : path.normalize(resolved);
@@ -563,7 +557,7 @@ async function createEvaluator(loaderContext, code, options) {
 
               try {
                 result = super.visitImport(clonedImported);
-              } catch (error) {
+              } catch {
                 hasError = true;
               }
 
@@ -636,7 +630,6 @@ function urlResolver(options = {}) {
 
     // Check that file exists
     if (!options.nocheck) {
-      // eslint-disable-next-line no-underscore-dangle
       const _paths = options.paths || [];
 
       pathname = utils.lookup(pathname, _paths.concat(this.paths));
@@ -671,7 +664,7 @@ function urlResolver(options = {}) {
       ) + tail;
 
     if (path.sep === "\\") {
-      res = res.replace(/\\/g, "/");
+      res = res.replaceAll("\\", "/");
     }
 
     splitted.push(res);
@@ -721,13 +714,11 @@ function normalizeSourceMap(map, rootContext) {
 
   // result.map.file is an optional property that provides the output filename.
   // Since we don't know the final filename in the webpack build chain yet, it makes no sense to have it.
-  // eslint-disable-next-line no-param-reassign
+
   delete newMap.file;
 
-  // eslint-disable-next-line no-param-reassign
   newMap.sourceRoot = "";
 
-  // eslint-disable-next-line no-param-reassign
   newMap.sources = newMap.sources.map((source) => {
     const sourceType = getURLType(source);
 
@@ -743,11 +734,11 @@ function normalizeSourceMap(map, rootContext) {
 }
 
 export {
-  getStylusOptions,
-  urlResolver,
   createEvaluator,
-  resolveFilename,
-  readFile,
-  normalizeSourceMap,
   getStylusImplementation,
+  getStylusOptions,
+  normalizeSourceMap,
+  readFile,
+  resolveFilename,
+  urlResolver,
 };

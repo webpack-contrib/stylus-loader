@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 
 import {
   compile,
@@ -33,7 +33,7 @@ describe('"sourceMap" options', () => {
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
-        .replace(/\\/g, "/");
+        .replaceAll("\\", "/");
     });
 
     const codeFromStylus = await getCodeFromStylus(testId, {
@@ -74,7 +74,7 @@ describe('"sourceMap" options', () => {
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
-        .replace(/\\/g, "/");
+        .replaceAll("\\", "/");
     });
 
     const codeFromStylus = await getCodeFromStylus(testId, {
@@ -116,7 +116,7 @@ describe('"sourceMap" options', () => {
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
-        .replace(/\\/g, "/");
+        .replaceAll("\\", "/");
     });
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
@@ -234,7 +234,7 @@ describe('"sourceMap" options', () => {
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
-        .replace(/\\/g, "/");
+        .replaceAll("\\", "/");
     });
 
     const codeFromStylus = await getCodeFromStylus(testId, {

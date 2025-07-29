@@ -17,7 +17,6 @@ describe("implementation option", () => {
   it("should work", async () => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
-      // eslint-disable-next-line global-require
       implementation: require("stylus"),
     });
     const stats = await compile(compiler);
