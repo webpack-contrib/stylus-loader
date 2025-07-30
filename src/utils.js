@@ -662,7 +662,7 @@ function urlResolver(options = {}) {
     }
 
     if (path.sep === "\\") {
-      filename = filename.replaceAll("\\", "/");
+      filename = filename.replaceAll("/", "\\");
     }
 
     // eslint-disable-next-line
