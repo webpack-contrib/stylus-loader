@@ -618,14 +618,9 @@ function urlResolver(options = {}) {
     compiler.isURL = true;
 
     const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join("");
-    // eslint-disable-next-line
-    console.log("visitedUrl", visitedUrl);
     const splitted = visitedUrl.split("!");
 
     const parsedUrl = parse(splitted.pop());
-
-    // eslint-disable-next-line
-    console.log("parsedUrl", parsedUrl);
 
     // Parse literal
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
@@ -667,6 +662,11 @@ function urlResolver(options = {}) {
     }
 
     // eslint-disable-next-line
+    console.log(filename);
+    // eslint-disable-next-line
+    console.log("pathname", pathname);
+
+    // eslint-disable-next-line
     console.log("dest", dest || path.dirname(this.filename));
     // eslint-disable-next-line
     console.log(
@@ -677,8 +677,6 @@ function urlResolver(options = {}) {
       filename,
       pathname,
     );
-    // eslint-disable-next-line
-    console.log("tail", tail);
 
     res =
       path.relative(
@@ -687,19 +685,6 @@ function urlResolver(options = {}) {
           ? path.join(path.dirname(filename), pathname)
           : pathname,
       ) + tail;
-
-    // eslint-disable-next-line
-    console.log("before res", res);
-    // eslint-disable-next-line
-    console.log(
-      "fixed before res",
-      path.posix.relative(
-        dest || path.posix.dirname(this.filename),
-        options.nocheck
-          ? path.posix.join(path.posix.dirname(filename), pathname)
-          : pathname,
-      ) + tail,
-    );
 
     if (path.sep === "\\") {
       res = res.replaceAll("\\", "/");
