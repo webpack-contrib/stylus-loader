@@ -618,9 +618,14 @@ function urlResolver(options = {}) {
     compiler.isURL = true;
 
     const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join("");
+    // eslint-disable-next-line
+    console.log("visitedUrl", visitedUrl);
     const splitted = visitedUrl.split("!");
 
     const parsedUrl = parse(splitted.pop());
+
+    // eslint-disable-next-line
+    console.log("parsedUrl", parsedUrl);
 
     // Parse literal
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
@@ -669,11 +674,20 @@ function urlResolver(options = {}) {
           : pathname,
       ) + tail;
 
+    // eslint-disable-next-line
+    console.log("before res", res);
+
     if (path.sep === "\\") {
       res = res.replaceAll("\\", "/");
     }
 
+    // eslint-disable-next-line
+    console.log("res", res);
+
     splitted.push(res);
+
+    // eslint-disable-next-line
+    console.log("result", splitted);
 
     return new nodes.Literal(`url("${splitted.join("!")}")`);
   }
