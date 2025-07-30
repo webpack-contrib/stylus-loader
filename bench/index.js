@@ -1,18 +1,15 @@
 const fs = require("node:fs");
 const path = require("node:path");
-
 const Benchmark = require("benchmark");
-
-const MemoryFileSystem = require("memory-fs");
+const { Volume, createFsFromVolume } = require("memfs");
 const stylus = require("stylus");
 const webpack = require("webpack");
 
 const importWebpackConfig = require("./fixtures/imports/webpack.config");
 
 function resolveOnComplete(fn) {
-  return () => {
+  return (...args) => {
     const _this = this;
-    const args = arguments;
 
     return new Promise((resolve) => {
       const result = fn.apply(_this, args);
@@ -29,7 +26,8 @@ const source = fs.readFileSync(sourceFile).toString();
 const styl = stylus(source);
 
 const compiler = webpack(importWebpackConfig);
-compiler.outputFileSystem = new MemoryFileSystem();
+
+compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 Promise.resolve()
   .then(
@@ -60,6 +58,7 @@ Promise.resolve()
       return suite;
     }),
   )
+  // eslint-disable-next-line unicorn/prefer-top-level-await
   .then(
     resolveOnComplete(() => {
       const suite = new Benchmark.Suite();
@@ -67,7 +66,7 @@ Promise.resolve()
         .add("Stylus loader", {
           defer: true,
           fn(deferred) {
-            compiler.run((error, stats) => {
+            compiler.run((error, _stats) => {
               if (error) {
                 throw error;
               }
