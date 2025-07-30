@@ -613,7 +613,7 @@ async function createEvaluator(loaderContext, code, options) {
 function urlResolver(options = {}) {
   function resolver(url) {
     const compiler = new Compiler(url);
-    const { filename } = url;
+    let { filename } = url;
 
     compiler.isURL = true;
 
@@ -661,6 +661,10 @@ function urlResolver(options = {}) {
       dest = path.dirname(dest);
     }
 
+    if (path.sep === "\\") {
+      filename = path.normalize(filename);
+    }
+
     // eslint-disable-next-line
     console.log("filename", filename);
     // eslint-disable-next-line
@@ -669,6 +673,8 @@ function urlResolver(options = {}) {
     console.log(
       "dest",
       dest || path.dirname(this.filename),
+      "dest real",
+      dest,
       "dirname",
       path.dirname(this.filename),
     );
