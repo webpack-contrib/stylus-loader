@@ -662,14 +662,13 @@ function urlResolver(options = {}) {
     }
 
     if (path.sep === "\\") {
-      filename = filename.replaceAll("/", "\\");
+      filename = path.normalize(filename.replaceAll("/", "\\"));
     }
 
     // eslint-disable-next-line
     console.log("filename", filename);
     // eslint-disable-next-line
     console.log("pathname", pathname);
-
     // eslint-disable-next-line
     console.log("dest", dest || path.dirname(this.filename));
     // eslint-disable-next-line
