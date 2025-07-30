@@ -682,12 +682,26 @@ function urlResolver(options = {}) {
       pathname,
     );
 
-    res =
-      path.relative(
-        dest || path.dirname(this.filename),
+    // eslint-disable-next-line
+    console.log("first", normalizePath(dest || path.dirname(this.filename)));
+    // eslint-disable-next-line
+    console.log(
+      "second",
+      normalizePath(
         options.nocheck
           ? path.join(path.dirname(filename), pathname)
           : pathname,
+      ),
+    );
+
+    res =
+      path.relative(
+        normalizePath(dest || path.dirname(this.filename)),
+        normalizePath(
+          options.nocheck
+            ? path.join(path.dirname(filename), pathname)
+            : pathname,
+        ),
       ) + tail;
 
     if (path.sep === "\\") {
