@@ -613,7 +613,7 @@ async function createEvaluator(loaderContext, code, options) {
 function urlResolver(options = {}) {
   function resolver(url) {
     const compiler = new Compiler(url);
-    let { filename } = url;
+    const { filename } = url;
 
     compiler.isURL = true;
 
@@ -659,11 +659,6 @@ function urlResolver(options = {}) {
 
     if (dest && path.extname(dest) === ".css") {
       dest = path.dirname(dest);
-    }
-
-    if (path.sep === "\\") {
-      filename = path.normalize(filename.replaceAll("/", "\\"));
-      dest = path.normalize(dest);
     }
 
     // eslint-disable-next-line
