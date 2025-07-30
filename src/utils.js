@@ -666,6 +666,8 @@ function urlResolver(options = {}) {
     }
 
     // eslint-disable-next-line
+    console.log("url", url);
+    // eslint-disable-next-line
     console.log("filename", filename);
     // eslint-disable-next-line
     console.log("pathname", pathname);
