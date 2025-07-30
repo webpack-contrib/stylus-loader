@@ -671,16 +671,20 @@ function urlResolver(options = {}) {
     // eslint-disable-next-line
     console.log("pathname", pathname);
     // eslint-disable-next-line
-    console.log("dest", dest || path.dirname(this.filename));
+    console.log(
+      "dest",
+      dest || path.dirname(this.filename),
+      "dirname",
+      path.dirname(this.filename),
+    );
     // eslint-disable-next-line
     console.log(
-      "part",
-      options.nocheck ? path.join(path.dirname(filename), pathname) : pathname,
-      options.nocheck,
+      "relative",
       path.join(path.dirname(filename), pathname),
-      filename,
+      "first",
+      path.dirname(filename),
+      "second",
       pathname,
-      path.dirname(this.filename),
     );
 
     res =
@@ -694,9 +698,6 @@ function urlResolver(options = {}) {
     if (path.sep === "\\") {
       res = res.replaceAll("\\", "/");
     }
-
-    // eslint-disable-next-line
-    console.log("res", res);
 
     splitted.push(res);
 
