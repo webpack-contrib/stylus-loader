@@ -615,6 +615,10 @@ function urlResolver(options = {}) {
     const compiler = new Compiler(url);
     let { filename } = url;
 
+    if (path.sep === "\\") {
+      filename = path.normalize(filename).replace(/^\\\\\?\\/, "");
+    }
+
     compiler.isURL = true;
 
     const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join("");
@@ -661,55 +665,12 @@ function urlResolver(options = {}) {
       dest = path.dirname(dest);
     }
 
-    if (path.sep === "\\") {
-      filename = path.normalize(filename).replace(/^\\\\\?\\/, "");
-    }
-
-    // eslint-disable-next-line
-    console.log("url", url);
-    // eslint-disable-next-line
-    console.log("filename", filename);
-    // eslint-disable-next-line
-    console.log("pathname", pathname);
-    // eslint-disable-next-line
-    console.log(
-      "dest",
-      dest || path.dirname(this.filename),
-      "dest real",
-      dest,
-      "dirname",
-      path.dirname(this.filename),
-    );
-    // eslint-disable-next-line
-    console.log(
-      "relative",
-      path.join(path.dirname(filename), pathname),
-      "first",
-      path.dirname(filename),
-      "second",
-      pathname,
-    );
-
-    // eslint-disable-next-line
-    console.log("first", normalizePath(dest || path.dirname(this.filename)));
-    // eslint-disable-next-line
-    console.log(
-      "second",
-      normalizePath(
+    res =
+      path.relative(
+        dest || path.dirname(this.filename),
         options.nocheck
           ? path.join(path.dirname(filename), pathname)
           : pathname,
-      ),
-    );
-
-    res =
-      path.relative(
-        normalizePath(dest || path.dirname(this.filename)),
-        normalizePath(
-          options.nocheck
-            ? path.join(path.dirname(filename), pathname)
-            : pathname,
-        ),
       ) + tail;
 
     if (path.sep === "\\") {
