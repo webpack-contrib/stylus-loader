@@ -672,6 +672,10 @@ function urlResolver(options = {}) {
     console.log(
       "part",
       options.nocheck ? path.join(path.dirname(filename), pathname) : pathname,
+      options.nocheck,
+      path.join(path.dirname(filename), pathname),
+      filename,
+      pathname,
     );
     // eslint-disable-next-line
     console.log("tail", tail);
