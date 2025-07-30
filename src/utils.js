@@ -663,6 +663,7 @@ function urlResolver(options = {}) {
 
     if (path.sep === "\\") {
       filename = path.normalize(filename.replaceAll("/", "\\"));
+      dest = path.normalize(dest);
     }
 
     // eslint-disable-next-line
@@ -679,6 +680,7 @@ function urlResolver(options = {}) {
       path.join(path.dirname(filename), pathname),
       filename,
       pathname,
+      path.dirname(this.filename),
     );
 
     res =
