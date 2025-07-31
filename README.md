@@ -69,17 +69,17 @@ Type:
 ```ts
 type stylusOptions =
   | {
-      use: Array<string | Function>;
-      include: Array<string>;
-      import: Array<string>;
-      define: Array;
+      use: (string | ((stylusOptions: StylusOptions) => void))[];
+      include: string[];
+      import: string[];
+      define: any[];
       includeCSS: false;
-      resolveURL: boolean | Object;
+      resolveURL: boolean | object;
       lineNumbers: boolean;
       hoistAtrules: boolean;
       compress: boolean;
     }
-  | (loaderContext: LoaderContext) => Array<string>;
+  | ((loaderContext: LoaderContext) => string[]);
 ```
 
 Default: `{}`
@@ -337,11 +337,11 @@ Type:
 ```ts
 type additionalData =
   | string
-  | (
+  | ((
       content: string | Buffer,
       loaderContext: LoaderContext,
-      meta: any
-    ) => string;
+      meta: any,
+    ) => string);
 ```
 
 Default: `undefined`
@@ -455,7 +455,7 @@ module.exports = {
 Type:
 
 ```ts
-type implementation = Function | string;
+type implementation = (() => typeof import("stylus")) | string;
 ```
 
 The `implementation` option allows you to specify which `Stylus implementation` to use.

@@ -97,7 +97,7 @@ describe("webpackImporter option", () => {
       getCodeFromStylus(testId, {
         stylusOptions: { shouldUseWebpackImporter: false },
       }),
-    ).rejects.toThrow();
+    ).rejects.toThrow("failed to locate @import file ~in-web-modules.styl");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
