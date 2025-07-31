@@ -668,7 +668,7 @@ describe("loader", () => {
         bootstrap()(styl);
 
         // assume that /lib/StylusLibA contains all the .styl files.
-        styl.include(`${__dirname}/lib/`);
+        styl.include(path.join(__dirname, "lib"));
       };
     }
     const testId = "./lib-bootstrap.styl";
@@ -798,7 +798,7 @@ describe("loader", () => {
     const compiler = getCompiler(testId, {
       stylusOptions: {
         import: ["in-paths.styl"],
-        paths: [`${__dirname}/fixtures/paths`],
+        paths: [path.join(__dirname, "fixtures", "paths")],
       },
     });
     const stats = await compile(compiler);
@@ -806,7 +806,7 @@ describe("loader", () => {
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
         import: ["in-paths.styl"],
-        paths: [`${__dirname}/fixtures/paths`],
+        paths: [path.join(__dirname, "fixtures", "paths")],
       },
     });
 
@@ -933,14 +933,14 @@ describe("loader", () => {
     const testId = "./include-option.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        include: [`${__dirname}/fixtures/paths`],
+        include: [path.join(__dirname, "fixtures", "paths")],
       },
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
-        include: [`${__dirname}/fixtures/paths`],
+        include: [path.join(__dirname, "fixtures", "paths")],
       },
     });
 
@@ -1297,14 +1297,14 @@ describe("loader", () => {
     const testId = "./import-paths.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
-        paths: [`${__dirname}/fixtures/paths`],
+        paths: [path.join(__dirname, "fixtures", "paths")],
       },
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, {
       stylusOptions: {
-        paths: [`${__dirname}/fixtures/paths`],
+        paths: [path.join(__dirname, "fixtures", "paths")],
       },
     });
 

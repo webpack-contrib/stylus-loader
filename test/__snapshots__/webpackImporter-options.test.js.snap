@@ -1,13 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`webpackImporter option should throw an error on webpack import when value is "false": errors 1`] = `
-[
-  "ModuleBuildError: Module build failed (from \`replaced original path\`):
-/test/fixtures/import-webpack.styl:1:9",
-]
-`;
-
-exports[`webpackImporter option should throw an error on webpack import when value is "false": warnings 1`] = `[]`;
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`webpackImporter option should work when value is "false": css 1`] = `
 ".other {

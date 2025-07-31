@@ -97,7 +97,7 @@ describe("webpackImporter option", () => {
       getCodeFromStylus(testId, {
         stylusOptions: { shouldUseWebpackImporter: false },
       }),
-    ).rejects.toThrow();
+    ).rejects.toThrow("Failed to resolve import");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });

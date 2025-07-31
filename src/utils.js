@@ -1,5 +1,4 @@
 import path from "node:path";
-import { parse } from "node:url";
 
 import fastGlob from "fast-glob";
 import normalizePath from "normalize-path";
@@ -103,6 +102,28 @@ function getPossibleRequests(loaderContext, filename) {
   return [...new Set([request, filename])];
 }
 
+async function resolveRequests(context, possibleRequests, resolve) {
+  if (possibleRequests.length === 0) {
+    throw new Error("No possible requests provided");
+  }
+
+  let result;
+
+  try {
+    result = await resolve(context, possibleRequests[0]);
+  } catch (error) {
+    const [, ...tailPossibleRequests] = possibleRequests;
+
+    if (tailPossibleRequests.length === 0) {
+      throw error;
+    }
+
+    result = await resolveRequests(context, tailPossibleRequests, resolve);
+  }
+
+  return result;
+}
+
 async function resolveFilename(
   loaderContext,
   fileResolver,
@@ -132,17 +153,11 @@ async function resolveFilename(
         globTask.base,
       );
 
-      let globResult;
-
-      try {
-        globResult = await resolveRequests(
-          context,
-          possibleGlobRequests,
-          globResolver,
-        );
-      } catch (err) {
-        throw err;
-      }
+      const globResult = await resolveRequests(
+        context,
+        possibleGlobRequests,
+        globResolver,
+      );
 
       loaderContext.addContextDependency(globResult);
 
@@ -165,26 +180,16 @@ async function resolveFilename(
   return result;
 }
 
-async function resolveRequests(context, possibleRequests, resolve) {
-  if (possibleRequests.length === 0) {
-    throw undefined;
-  }
+function readFile(inputFileSystem, filepath) {
+  return new Promise((resolve, reject) => {
+    inputFileSystem.readFile(filepath, (error, stats) => {
+      if (error) {
+        reject(error);
+      }
 
-  let result;
-
-  try {
-    result = await resolve(context, possibleRequests[0]);
-  } catch (error) {
-    const [, ...tailPossibleRequests] = possibleRequests;
-
-    if (tailPossibleRequests.length === 0) {
-      throw error;
-    }
-
-    result = await resolveRequests(context, tailPossibleRequests, resolve);
-  }
-
-  return result;
+      resolve(stats);
+    });
+  });
 }
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
@@ -228,7 +233,7 @@ async function getDependencies(
       if (!firstNode.val) {
         const evaluator = new Evaluator(ast);
 
-        firstNode = evaluator.visit.call(evaluator, firstNode).first;
+        firstNode = evaluator.visit(firstNode).first;
       }
 
       const originalNodePath =
@@ -378,7 +383,9 @@ function mergeBlocks(blocks) {
 
   for (const block of blocks) {
     if (finalBlock) {
-      block.nodes.forEach(adding);
+      for (const item of block.nodes) {
+        adding(item);
+      }
     } else {
       finalBlock = block;
     }
@@ -614,7 +621,7 @@ function urlResolver(options = {}) {
     const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join("");
     const splitted = visitedUrl.split("!");
 
-    const parsedUrl = parse(splitted.pop());
+    const parsedUrl = new URL(splitted.pop());
 
     // Parse literal
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
@@ -632,7 +639,7 @@ function urlResolver(options = {}) {
     if (!options.nocheck) {
       const _paths = options.paths || [];
 
-      pathname = utils.lookup(pathname, _paths.concat(this.paths));
+      pathname = utils.lookup(pathname, [..._paths, ...this.paths]);
 
       if (!pathname) {
         return literal;
@@ -676,18 +683,6 @@ function urlResolver(options = {}) {
   resolver.raw = true;
 
   return resolver;
-}
-
-function readFile(inputFileSystem, filepath) {
-  return new Promise((resolve, reject) => {
-    inputFileSystem.readFile(filepath, (error, stats) => {
-      if (error) {
-        reject(error);
-      }
-
-      resolve(stats);
-    });
-  });
 }
 
 const IS_NATIVE_WIN32_PATH = /^[a-z]:[/\\]|^\\\\/i;

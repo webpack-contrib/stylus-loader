@@ -2,7 +2,7 @@ module.exports = {
   context: __dirname,
   entry: "./index.js",
   output: {
-    path: `${__dirname}/tmp`,
+    path: require("node:path").join(__dirname, "tmp"),
     filename: "bundle.js",
   },
   module: {
