@@ -616,7 +616,7 @@ function urlResolver(options = {}) {
     let { filename } = url;
 
     if (path.sep === "\\") {
-      filename = path.normalize(filename).replace(/^\\\\\?\\/, "");
+      filename = filename.replace(/^\\\\\?\\/, "");
     }
 
     compiler.isURL = true;
@@ -678,9 +678,6 @@ function urlResolver(options = {}) {
     }
 
     splitted.push(res);
-
-    // eslint-disable-next-line
-    console.log("result", splitted);
 
     return new nodes.Literal(`url("${splitted.join("!")}")`);
   }
