@@ -66,6 +66,8 @@ Finally, run `webpack` using the method you normally use (e.g., via CLI or an np
 
 Type:
 
+<!-- eslint-skip -->
+
 ```ts
 type stylusOptions =
   | {
@@ -334,6 +336,8 @@ module.exports = {
 
 Type:
 
+<!-- eslint-skip -->
+
 ```ts
 type additionalData =
   | string
@@ -453,6 +457,8 @@ module.exports = {
 ### `implementation`
 
 Type:
+
+<!-- eslint-skip -->
 
 ```ts
 type implementation = Function | string;

@@ -109,6 +109,20 @@ function evaluator() {
   };
 }
 
+function stylRender(styl) {
+  return new Promise((resolve, reject) => {
+    styl.render(async (error, css) => {
+      if (error) {
+        reject(error);
+      }
+
+      const map = styl.sourcemap;
+
+      resolve({ css, map });
+    });
+  });
+}
+
 async function getCodeFromStylus(testId, options = {}, context = {}) {
   const defaultOptions = {
     shouldUseWebpackImporter: true,
@@ -213,20 +227,6 @@ async function getCodeFromStylus(testId, options = {}, context = {}) {
   }
 
   return stylRender(styl);
-}
-
-function stylRender(styl) {
-  return new Promise((resolve, reject) => {
-    styl.render(async (error, css) => {
-      if (error) {
-        reject(error);
-      }
-
-      const map = styl.sourcemap;
-
-      resolve({ css, map });
-    });
-  });
 }
 
 export default getCodeFromStylus;

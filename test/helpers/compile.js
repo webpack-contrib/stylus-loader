@@ -1,10 +1,11 @@
 export default (compiler) =>
-  new Promise((resolve, reject) =>
+  new Promise((resolve, reject) => {
     compiler.run((error, stats) => {
       if (error) {
-        return reject(error);
+        reject(error);
+        return;
       }
 
-      return resolve(stats);
-    }),
-  );
+      resolve(stats);
+    });
+  });
