@@ -667,7 +667,9 @@ function urlResolver(options = {}) {
       pathname = utils.lookup(pathname, [
         ..._paths,
         ...(path.sep === "\\"
-          ? this.paths.map((item) => item.replace(/^\/\/\?\//, ""))
+          ? this.paths.map((item) =>
+              path.normalize(item.replace(/^\/\/\?\//, "")),
+            )
           : this.paths),
       ]);
 
