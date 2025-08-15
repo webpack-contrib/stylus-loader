@@ -740,6 +740,11 @@ function normalizeSourceMap(map, rootContext) {
   newMap.sources = newMap.sources.map((source) => {
     const sourceType = getURLType(source);
 
+    // eslint-disable-next-line
+    console.log("source", source);
+    // eslint-disable-next-line
+    console.log("sourceType", sourceType);
+
     // Do no touch `scheme-relative`, `path-absolute` and `absolute` types
     if (sourceType === "path-relative") {
       return path.resolve(rootContext, path.normalize(source));
