@@ -699,6 +699,9 @@ function urlResolver(options = {}) {
           : pathname,
       ) + tail;
 
+    // eslint-disable-next-line
+    console.log("res", res);
+
     if (path.sep === "\\") {
       res = normalizePath(res);
     }
