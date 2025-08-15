@@ -686,6 +686,9 @@ function urlResolver(options = {}) {
       res = normalizePath(res);
     }
 
+    // eslint-disable-next-line
+    console.log("splitted", splitted);
+
     splitted.push(res);
 
     return new nodes.Literal(`url("${splitted.join("!")}")`);
