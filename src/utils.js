@@ -630,6 +630,11 @@ function urlResolver(options = {}) {
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
     let { pathname } = parsedUrl;
     let { dest } = this.options;
+
+    if (path.sep === "\\") {
+      dest = dest.replace(/^\\\\\?\\/, "");
+    }
+
     let tail = "";
     let res;
 
@@ -643,6 +648,10 @@ function urlResolver(options = {}) {
       const _paths = options.paths || [];
 
       pathname = utils.lookup(pathname, [..._paths, ...this.paths]);
+
+      if (path.sep === "\\") {
+        pathname = pathname.replace(/^\\\\\?\\/, "");
+      }
 
       if (!pathname) {
         return literal;
@@ -674,7 +683,7 @@ function urlResolver(options = {}) {
       ) + tail;
 
     if (path.sep === "\\") {
-      res = res.replaceAll("\\", "/");
+      res = normalizePath(res);
     }
 
     splitted.push(res);
