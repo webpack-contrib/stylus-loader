@@ -528,7 +528,13 @@ async function createEvaluator(loaderContext, code, options) {
       if (node.name !== "url" && nodePath && !URL_RE.test(nodePath)) {
         let dependency;
 
-        const isEntrypoint = loaderContext.resourcePath === node.filename;
+        let { filename } = node;
+
+        if (path.sep === "\\") {
+          filename = filename.replace(/^\/\/\?\//, "");
+        }
+
+        const isEntrypoint = loaderContext.resourcePath === filename;
 
         if (isEntrypoint) {
           dependency = resolvedImportDependencies.get(nodePath);
@@ -536,15 +542,17 @@ async function createEvaluator(loaderContext, code, options) {
 
         if (!dependency) {
           const dependencies = resolvedDependencies.get(
-            path.normalize(node.filename),
+            path.normalize(filename),
           );
 
           // eslint-disable-next-line
           console.log("nodePath", nodePath);
           // eslint-disable-next-line
-          console.log("filename", node.filename);
+          console.log("loaderContext.resourcePath", loaderContext.resourcePath);
           // eslint-disable-next-line
-          console.log("dependencies", dependencies);
+          console.log("filename", filename);
+          // eslint-disable-next-line
+          console.log("resolvedDependencies", resolvedDependencies);
 
           if (dependencies) {
             dependency = dependencies.find((item) => {
