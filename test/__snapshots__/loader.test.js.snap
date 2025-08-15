@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`loader with option, should resolve urls relatively: css 1`] = `
+exports[`loader with option resolveURL nocheck is "false", should not resolve missing urls relatively: css 1`] = `
 ".img {
   content: url("img.png");
-  content: url("not-exist.png");
+  content: url("../not-exist.png");
   background: url("deep/deep-img.png");
   background: url("http://example.com/img.png");
 }
 "
 `;
 
-exports[`loader with option, should resolve urls relatively: errors 1`] = `[]`;
+exports[`loader with option resolveURL nocheck is "false", should not resolve missing urls relatively: errors 1`] = `[]`;
 
-exports[`loader with option, should resolve urls relatively: warnings 1`] = `[]`;
+exports[`loader with option resolveURL nocheck is "false", should not resolve missing urls relatively: warnings 1`] = `[]`;

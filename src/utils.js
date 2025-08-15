@@ -641,19 +641,21 @@ function urlResolver(options = {}) {
 
     const _paths = options.paths || [];
 
-    const tryPathname = utils.lookup(pathname, [..._paths, ...this.paths]);
-    // eslint-disable-next-line no-console
-    console.log("pathname", tryPathname);
-
     // Check that file exists
     if (!options.nocheck) {
       const _paths = options.paths || [];
 
       pathname = utils.lookup(pathname, [..._paths, ...this.paths]);
 
+      // eslint-disable-next-line
+      console.log("pathname", pathname);
+
       if (path.sep === "\\") {
         pathname = pathname.replace(/^\\\\\?\\/, "");
       }
+
+      // eslint-disable-next-line
+      console.log("after pathname", pathname);
 
       if (!pathname) {
         return literal;

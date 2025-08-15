@@ -138,8 +138,7 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  // eslint-disable-next-line
-  it.only("with option, should resolve urls relatively", async () => {
+  it("with option, should resolve urls relatively", async () => {
     const testId = "./shallow-deep.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -201,7 +200,8 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  it('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async () => {
+  // eslint-disable-next-line
+  it.only('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async () => {
     const testId = "./shallow-deep.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
