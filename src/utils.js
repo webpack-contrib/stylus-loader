@@ -285,6 +285,10 @@ async function getDependencies(
         // eslint-disable-next-line
         console.log("filename", filename);
         found = utils.lookupIndex(oldNodePath, paths, filename);
+
+        if (path.sep === "\\") {
+          found = found.map((item) => item.replace(/^\\\\\?\\/, ""));
+        }
       }
 
       if (found) {
@@ -309,7 +313,7 @@ async function getDependencies(
           fileResolver,
           globResolver,
           isGlob,
-          path.dirname(this.filename),
+          path.dirname(filename),
           originalNodePath,
         ),
       });
