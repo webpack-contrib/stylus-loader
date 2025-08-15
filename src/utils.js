@@ -278,15 +278,9 @@ async function getDependencies(
       }
 
       if (!found && oldNodePath) {
-        // eslint-disable-next-line
-        console.log("oldNodePath", oldNodePath);
-        // eslint-disable-next-line
-        console.log("paths", paths);
-        // eslint-disable-next-line
-        console.log("filename", filename);
         found = utils.lookupIndex(oldNodePath, paths, filename);
 
-        if (path.sep === "\\") {
+        if (found && path.sep === "\\") {
           found = found.map((item) => item.replace(/^\\\\\?\\/, ""));
         }
       }
