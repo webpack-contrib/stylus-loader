@@ -246,9 +246,6 @@ async function getDependencies(
         return;
       }
 
-      // eslint-disable-next-line
-      console.log("nodePath", nodePath);
-
       let found;
       let oldNodePath;
 
@@ -261,21 +258,21 @@ async function getDependencies(
 
       const isGlob = fastGlob.isDynamicPattern(nodePath);
 
-      found = utils.find(nodePath, this.paths, this.filename);
+      let { filename, paths } = this;
 
-      // eslint-disable-next-line
-      console.log("found", nodePath);
-      // eslint-disable-next-line
-      console.log("this.paths", this.paths);
-      // eslint-disable-next-line
-      console.log("this.filename", this.filename);
+      if (path.sep === "\\") {
+        filename = filename.replace(/^\\\\\?\\/, "");
+        paths = paths.map((item) => item.replace(/^\\\\\?\\/, ""));
+      }
+
+      found = utils.find(nodePath, paths, filename);
 
       if (found && isGlob) {
         const [globTask] = fastGlob.generateTasks(nodePath);
         const context =
           globTask.base === "."
-            ? path.dirname(this.filename)
-            : path.join(path.dirname(this.filename), globTask.base);
+            ? path.dirname(filename)
+            : path.join(path.dirname(filename), globTask.base);
 
         loaderContext.addContextDependency(context);
       }
@@ -284,10 +281,10 @@ async function getDependencies(
         // eslint-disable-next-line
         console.log("oldNodePath", oldNodePath);
         // eslint-disable-next-line
-        console.log("this.paths", this.paths);
+        console.log("paths", paths);
         // eslint-disable-next-line
-        console.log("this.filename", this.filename);
-        found = utils.lookupIndex(oldNodePath, this.paths, this.filename);
+        console.log("filename", filename);
+        found = utils.lookupIndex(oldNodePath, paths, filename);
       }
 
       if (found) {
