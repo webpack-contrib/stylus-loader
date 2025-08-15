@@ -521,6 +521,11 @@ async function createEvaluator(loaderContext, code, options) {
       const node = this.visit(imported.path).first;
       const nodePath = (!node.val.isNull && node.val) || node.name;
 
+      // eslint-disable-next-line
+      console.log("nodePath", nodePath);
+      // eslint-disable-next-line
+      console.log("node", node);
+
       this.return -= 1;
 
       let webpackResolveError;
@@ -557,6 +562,9 @@ async function createEvaluator(loaderContext, code, options) {
             });
           }
         }
+
+        // eslint-disable-next-line
+        console.log("dependency", dependency);
 
         if (dependency) {
           const { resolved } = dependency;
@@ -619,6 +627,9 @@ async function createEvaluator(loaderContext, code, options) {
 
         return imported;
       }
+
+      // eslint-disable-next-line
+      console.log("result", result);
 
       return result;
     }
