@@ -639,23 +639,15 @@ function urlResolver(options = {}) {
       return literal;
     }
 
-    const _paths = options.paths || [];
-
     // Check that file exists
     if (!options.nocheck) {
       const _paths = options.paths || [];
 
       pathname = utils.lookup(pathname, [..._paths, ...this.paths]);
 
-      // eslint-disable-next-line
-      console.log("pathname", pathname);
-
       if (path.sep === "\\") {
         pathname = pathname.replace(/^\\\\\?\\/, "");
       }
-
-      // eslint-disable-next-line
-      console.log("after pathname", pathname);
 
       if (!pathname) {
         return literal;
