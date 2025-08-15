@@ -662,9 +662,21 @@ function urlResolver(options = {}) {
 
     // Check that file exists
     if (!options.nocheck) {
+      // eslint-disable-next-line
+      console.log("filename", filename);
+      // eslint-disable-next-line
+      console.log("pathname", pathname);
       const _paths = options.paths || [];
 
+      // eslint-disable-next-line
+      console.log("_paths", _paths);
+      // eslint-disable-next-line
+      console.log("this.paths", this.paths);
+
       pathname = utils.lookup(pathname, [..._paths, ...this.paths]);
+
+      // eslint-disable-next-line
+      console.log("found pathname", pathname);
 
       if (path.sep === "\\") {
         pathname = pathname.replace(/^\\\\\?\\/, "");
@@ -698,9 +710,6 @@ function urlResolver(options = {}) {
           ? path.join(path.dirname(filename), pathname)
           : pathname,
       ) + tail;
-
-    // eslint-disable-next-line
-    console.log("res", res);
 
     if (path.sep === "\\") {
       res = normalizePath(res);
