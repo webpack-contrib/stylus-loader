@@ -591,6 +591,9 @@ async function createEvaluator(loaderContext, code, options) {
                 hasError = true;
               }
 
+              // eslint-disable-next-line
+              console.log("hasError", hasError);
+
               return result;
             });
 
