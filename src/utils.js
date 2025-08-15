@@ -631,13 +631,6 @@ function urlResolver(options = {}) {
     let { pathname } = parsedUrl;
     let { dest } = this.options;
 
-    // eslint-disable-next-line
-    console.log("dest", dest);
-
-    if (path.sep === "\\") {
-      dest = dest.replace(/^\\\\\?\\/, "");
-    }
-
     let tail = "";
     let res;
 
@@ -647,10 +640,14 @@ function urlResolver(options = {}) {
     }
 
     // Check that file exists
-    if (!options.nocheck) {
+    // eslint-disable-next-line no-constant-condition
+    if (true) {
       const _paths = options.paths || [];
 
       pathname = utils.lookup(pathname, [..._paths, ...this.paths]);
+
+      // eslint-disable-next-line
+      console.log("pathname", pathname);
 
       if (path.sep === "\\") {
         pathname = pathname.replace(/^\\\\\?\\/, "");
