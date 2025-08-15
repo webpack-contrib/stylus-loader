@@ -94,6 +94,11 @@ function evaluator() {
       this.return += 1;
 
       const node = imported.path.first;
+
+      if (!node) {
+        throw new Error("Not found");
+      }
+
       const nodePath = node.string;
 
       this.return -= 1;
@@ -107,6 +112,20 @@ function evaluator() {
       return super.visitImport(imported);
     }
   };
+}
+
+function stylRender(styl) {
+  return new Promise((resolve, reject) => {
+    styl.render(async (error, css) => {
+      if (error) {
+        reject(error);
+      }
+
+      const map = styl.sourcemap;
+
+      resolve({ css, map });
+    });
+  });
 }
 
 async function getCodeFromStylus(testId, options = {}, context = {}) {
@@ -213,20 +232,6 @@ async function getCodeFromStylus(testId, options = {}, context = {}) {
   }
 
   return stylRender(styl);
-}
-
-function stylRender(styl) {
-  return new Promise((resolve, reject) => {
-    styl.render(async (error, css) => {
-      if (error) {
-        reject(error);
-      }
-
-      const map = styl.sourcemap;
-
-      resolve({ css, map });
-    });
-  });
 }
 
 export default getCodeFromStylus;
