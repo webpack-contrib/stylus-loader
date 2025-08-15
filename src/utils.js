@@ -264,7 +264,11 @@ async function getDependencies(
       found = utils.find(nodePath, this.paths, this.filename);
 
       // eslint-disable-next-line
-      console.log("found", found);
+      console.log("found", nodePath);
+      // eslint-disable-next-line
+      console.log("this.paths", this.paths);
+      // eslint-disable-next-line
+      console.log("this.filename", this.filename);
 
       if (found && isGlob) {
         const [globTask] = fastGlob.generateTasks(nodePath);
