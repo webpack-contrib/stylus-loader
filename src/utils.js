@@ -246,6 +246,9 @@ async function getDependencies(
         return;
       }
 
+      // eslint-disable-next-line
+      console.log("nodePath", nodePath);
+
       let found;
       let oldNodePath;
 
@@ -260,6 +263,9 @@ async function getDependencies(
 
       found = utils.find(nodePath, this.paths, this.filename);
 
+      // eslint-disable-next-line
+      console.log("found", found);
+
       if (found && isGlob) {
         const [globTask] = fastGlob.generateTasks(nodePath);
         const context =
@@ -271,6 +277,12 @@ async function getDependencies(
       }
 
       if (!found && oldNodePath) {
+        // eslint-disable-next-line
+        console.log("oldNodePath", oldNodePath);
+        // eslint-disable-next-line
+        console.log("this.paths", this.paths);
+        // eslint-disable-next-line
+        console.log("this.filename", this.filename);
         found = utils.lookupIndex(oldNodePath, this.paths, this.filename);
       }
 
