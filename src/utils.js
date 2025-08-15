@@ -268,7 +268,7 @@ async function getDependencies(
       found = utils.find(nodePath, paths, filename);
 
       if (found && path.sep === "\\") {
-        found = found.map((item) => item.replace(/^\\\\\?\\/, ""));
+        found = found.map((item) => item.replace(/^\/\/\?\//, ""));
       }
 
       // eslint-disable-next-line
@@ -288,7 +288,7 @@ async function getDependencies(
         found = utils.lookupIndex(oldNodePath, paths, filename);
 
         if (found && path.sep === "\\") {
-          found = found.map((item) => item.replace(/^\\\\\?\\/, ""));
+          found = found.map((item) => item.replace(/^\/\/\?\//, ""));
         }
       }
 
