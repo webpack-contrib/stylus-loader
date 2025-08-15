@@ -141,7 +141,11 @@ export default async function stylusLoader(source) {
       for (const importData of stylusOptions._imports) {
         if (path.isAbsolute(importData.path)) {
           this.addDependency(
-            path.normalize(importData.path.replace(/^\/\/\?\//, "")),
+            path.normalize(
+              path.sep === "\\"
+                ? importData.path.replace(/^\/\/\?\//, "")
+                : importData.path,
+            ),
           );
         } else {
           this.addDependency(path.resolve(process.cwd(), importData.path));

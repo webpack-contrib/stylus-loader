@@ -368,8 +368,7 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  // eslint-disable-next-line
-  it.only("should work indented import", async () => {
+  it("should work indented import", async () => {
     const testId = "./shallow-indent.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -387,8 +386,6 @@ describe("loader", () => {
       path.resolve(fixturesDir, "node_modules", "fakenib", "index.styl"),
       path.resolve(fixturesDir, "shallow-indent.styl"),
     ];
-
-    console.log(fileDependencies);
 
     for (const fixture of fixtures) {
       expect(fileDependencies.has(fixture)).toBe(true);
