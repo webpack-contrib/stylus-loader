@@ -545,15 +545,6 @@ async function createEvaluator(loaderContext, code, options) {
             path.normalize(filename),
           );
 
-          // eslint-disable-next-line
-          console.log("nodePath", nodePath);
-          // eslint-disable-next-line
-          console.log("loaderContext.resourcePath", loaderContext.resourcePath);
-          // eslint-disable-next-line
-          console.log("filename", filename);
-          // eslint-disable-next-line
-          console.log("resolvedDependencies", resolvedDependencies);
-
           if (dependencies) {
             dependency = dependencies.find((item) => {
               if (
@@ -634,9 +625,6 @@ async function createEvaluator(loaderContext, code, options) {
 
         return imported;
       }
-
-      // eslint-disable-next-line
-      console.log("result", result);
 
       return result;
     }

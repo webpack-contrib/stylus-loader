@@ -487,8 +487,7 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  // eslint-disable-next-line
-  it.only("imports files listed in options with nested glob import", async () => {
+  it("imports files listed in options with nested glob import", async () => {
     const testId = "./basic.styl";
     const compiler = getCompiler(
       testId,
