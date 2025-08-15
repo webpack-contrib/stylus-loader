@@ -619,6 +619,9 @@ function urlResolver(options = {}) {
       filename = filename.replace(/^\\\\\?\\/, "");
     }
 
+    // eslint-disable-next-line
+    console.log("filename", filename);
+
     compiler.isURL = true;
 
     const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join("");
@@ -685,9 +688,6 @@ function urlResolver(options = {}) {
     if (path.sep === "\\") {
       res = normalizePath(res);
     }
-
-    // eslint-disable-next-line
-    console.log("splitted", splitted);
 
     splitted.push(res);
 
