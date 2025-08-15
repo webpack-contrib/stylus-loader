@@ -388,6 +388,8 @@ describe("loader", () => {
       path.resolve(fixturesDir, "shallow-indent.styl"),
     ];
 
+    console.log(fileDependencies);
+
     for (const fixture of fixtures) {
       expect(fileDependencies.has(fixture)).toBe(true);
     }
