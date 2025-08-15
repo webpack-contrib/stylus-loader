@@ -616,11 +616,8 @@ function urlResolver(options = {}) {
     let { filename } = url;
 
     if (path.sep === "\\") {
-      filename = filename.replace(/^\\\\\?\\/, "");
+      filename = filename.replace(/^\/\/\?\//, "");
     }
-
-    // eslint-disable-next-line
-    console.log("filename", filename);
 
     compiler.isURL = true;
 
@@ -633,6 +630,9 @@ function urlResolver(options = {}) {
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
     let { pathname } = parsedUrl;
     let { dest } = this.options;
+
+    // eslint-disable-next-line
+    console.log("dest", dest);
 
     if (path.sep === "\\") {
       dest = dest.replace(/^\\\\\?\\/, "");
