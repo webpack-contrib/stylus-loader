@@ -271,9 +271,6 @@ async function getDependencies(
         found = found.map((item) => item.replace(/^\/\/\?\//, ""));
       }
 
-      // eslint-disable-next-line
-      console.log("found 1", found);
-
       if (found && isGlob) {
         const [globTask] = fastGlob.generateTasks(nodePath);
         const context =
@@ -291,9 +288,6 @@ async function getDependencies(
           found = found.map((item) => item.replace(/^\/\/\?\//, ""));
         }
       }
-
-      // eslint-disable-next-line
-      console.log("found 2", found);
 
       if (found) {
         dependencies.push({

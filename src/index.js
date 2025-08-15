@@ -139,6 +139,8 @@ export default async function stylusLoader(source) {
 
     if (stylusOptions._imports.length > 0) {
       for (const importData of stylusOptions._imports) {
+        // eslint-disable-next-line
+        console.log(importData, path.isAbsolute(importData.path));
         if (path.isAbsolute(importData.path)) {
           this.addDependency(path.normalize(importData.path));
         } else {
