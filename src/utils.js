@@ -639,15 +639,17 @@ function urlResolver(options = {}) {
       return literal;
     }
 
+    const _paths = options.paths || [];
+
+    const tryPathname = utils.lookup(pathname, [..._paths, ...this.paths]);
+    // eslint-disable-next-line no-console
+    console.log("pathname", tryPathname);
+
     // Check that file exists
-    // eslint-disable-next-line no-constant-condition
-    if (true) {
+    if (!options.nocheck) {
       const _paths = options.paths || [];
 
       pathname = utils.lookup(pathname, [..._paths, ...this.paths]);
-
-      // eslint-disable-next-line
-      console.log("pathname", pathname);
 
       if (path.sep === "\\") {
         pathname = pathname.replace(/^\\\\\?\\/, "");
