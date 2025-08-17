@@ -582,17 +582,11 @@ async function createEvaluator(loaderContext, code, options) {
 
               let result;
 
-              // eslint-disable-next-line
-              console.log(clonedImported);
-
               try {
                 result = super.visitImport(clonedImported);
               } catch {
                 hasError = true;
               }
-
-              // eslint-disable-next-line
-              console.log("hasError", hasError);
 
               return result;
             });
@@ -605,6 +599,9 @@ async function createEvaluator(loaderContext, code, options) {
       }
 
       let result;
+
+      // eslint-disable-next-line
+      console.log(imported);
 
       try {
         result = super.visitImport(imported);
