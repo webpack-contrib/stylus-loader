@@ -574,18 +574,17 @@ async function createEvaluator(loaderContext, code, options) {
             let hasError = false;
 
             const blocks = resolved.map((item) => {
+              this.return += 1;
+
               const clonedImported = imported.clone();
               const clonedNode = this.visit(clonedImported.path).first;
+
+              this.return -= 1;
 
               // Avoid re globbing when resolved import contains glob characters
               clonedNode.string = fastGlob.escapePath(item);
 
               let result;
-
-              // eslint-disable-next-line
-              console.log(this.importStack);
-              // eslint-disable-next-line
-              console.log(this.stack[0].block);
 
               try {
                 result = super.visitImport(clonedImported);
