@@ -583,7 +583,9 @@ async function createEvaluator(loaderContext, code, options) {
               let result;
 
               // eslint-disable-next-line
-              console.log(this.currentBlock);
+              console.log(this.importStack);
+              // eslint-disable-next-line
+              console.log(this.stack[0].block);
 
               try {
                 result = super.visitImport(clonedImported);
