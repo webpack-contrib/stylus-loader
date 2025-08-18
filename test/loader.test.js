@@ -213,13 +213,13 @@ describe("loader", () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // const codeFromStylus = await getCodeFromStylus(testId, {
-    //   stylusOptions: {
-    //     resolveURL: { nocheck: false },
-    //   },
-    // });
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        resolveURL: { nocheck: false },
+      },
+    });
 
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
@@ -957,7 +957,9 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  it('should work "nib"', async () => {
+  // TODO - stylus has a bug on windows
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip('should work "nib"', async () => {
     const testId = "./basic-nib.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -967,15 +969,14 @@ describe("loader", () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // TODO - stylus has a bug with URLs on windows
-    // const codeFromStylus = await getCodeFromStylus(testId, {
-    //   stylusOptions: {
-    //     use: [require("nib")()],
-    //     import: ["nib"],
-    //   },
-    // });
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        use: [require("nib")()],
+        import: ["nib"],
+      },
+    });
 
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
@@ -1469,8 +1470,9 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
-  // eslint-disable-next-line
-  it.only('should work "lineNumbers" option', async () => {
+  // TODO - stylus has a bug on windows
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip('should work "lineNumbers" option', async () => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1479,14 +1481,13 @@ describe("loader", () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // TODO bug on windows
-    // const codeFromStylus = await getCodeFromStylus(testId, {
-    //   stylusOptions: {
-    //     lineNumbers: true,
-    //   },
-    // });
-    //
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
+    const codeFromStylus = await getCodeFromStylus(testId, {
+      stylusOptions: {
+        lineNumbers: true,
+      },
+    });
+
+    expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(
       codeFromBundle.css
         .replaceAll(process.cwd(), "")
