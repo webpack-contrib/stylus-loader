@@ -405,9 +405,6 @@ function mergeBlocks(blocks) {
     }
   }
 
-  // eslint-disable-next-line
-  console.log("finalBlock", finalBlock);
-
   return finalBlock;
 }
 
@@ -521,16 +518,8 @@ async function createEvaluator(loaderContext, code, options) {
     visitImport(imported) {
       this.return += 1;
 
-      // eslint-disable-next-line
-      console.log("imported", imported);
-
       const node = this.visit(imported.path).first;
       const nodePath = (!node.val.isNull && node.val) || node.name;
-
-      // eslint-disable-next-line
-      console.log("node", node);
-      // eslint-disable-next-line
-      console.log("nodePath", nodePath);
 
       this.return -= 1;
 
@@ -555,9 +544,6 @@ async function createEvaluator(loaderContext, code, options) {
           const dependencies = resolvedDependencies.get(
             path.normalize(filename),
           );
-
-          // eslint-disable-next-line
-          console.log("dependencies", dependencies);
 
           if (dependencies) {
             dependency = dependencies.find((item) => {
@@ -590,6 +576,11 @@ async function createEvaluator(loaderContext, code, options) {
             const blocks = resolved.map((item) => {
               const clonedImported = imported.clone();
               const clonedNode = this.visit(clonedImported.path).first;
+
+              // eslint-disable-next-line
+              console.log("clonedImported", clonedImported);
+              // eslint-disable-next-line
+              console.log("clonedNode", clonedNode);
 
               // Avoid re globbing when resolved import contains glob characters
               clonedNode.string = fastGlob.escapePath(item);
@@ -639,9 +630,6 @@ async function createEvaluator(loaderContext, code, options) {
 
         return imported;
       }
-
-      // eslint-disable-next-line
-      console.log("result", result);
 
       return result;
     }
