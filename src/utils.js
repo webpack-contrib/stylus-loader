@@ -577,25 +577,13 @@ async function createEvaluator(loaderContext, code, options) {
               const clonedImported = imported.clone();
               const clonedNode = this.visit(clonedImported.path).first;
 
-              if (path.sep === "\\") {
-                this.paths = this.paths.map((item) =>
-                  path.normalize(item.replace(/^\/\/\?\//, "")),
-                );
-                this.options.paths = this.options.paths.map((item) =>
-                  path.normalize(item.replace(/^\/\/\?\//, "")),
-                );
-                this.renderer.nodes.filename = path.normalize(
-                  this.renderer.nodes.filename.replace(/^\/\/\?\//, ""),
-                );
-              }
-
-              // eslint-disable-next-line
-              console.log(this);
-
               // Avoid re globbing when resolved import contains glob characters
               clonedNode.string = fastGlob.escapePath(item);
 
               let result;
+
+              // eslint-disable-next-line
+              console.log(this.currentBlock);
 
               try {
                 result = super.visitImport(clonedImported);
