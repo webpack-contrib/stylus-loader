@@ -536,13 +536,6 @@ async function createEvaluator(loaderContext, code, options) {
 
         const isEntrypoint = loaderContext.resourcePath === filename;
 
-        // eslint-disable-next-line
-        console.log(loaderContext.resourcePath);
-        // eslint-disable-next-line
-        console.log(filename);
-        // eslint-disable-next-line
-        console.log(isEntrypoint);
-
         if (isEntrypoint) {
           dependency = resolvedImportDependencies.get(nodePath);
         }
@@ -595,6 +588,9 @@ async function createEvaluator(loaderContext, code, options) {
                 hasError = true;
               }
 
+              // eslint-disable-next-line
+              console.log("dependency", result);
+
               return result;
             });
 
@@ -632,6 +628,9 @@ async function createEvaluator(loaderContext, code, options) {
 
         return imported;
       }
+
+      // eslint-disable-next-line
+      console.log("result", result);
 
       return result;
     }
