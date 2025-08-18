@@ -556,6 +556,9 @@ async function createEvaluator(loaderContext, code, options) {
             path.normalize(filename),
           );
 
+          // eslint-disable-next-line
+          console.log("dependencies", dependencies);
+
           if (dependencies) {
             dependency = dependencies.find((item) => {
               if (
