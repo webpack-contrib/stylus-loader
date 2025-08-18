@@ -1,4 +1,5 @@
 import path from "node:path";
+// eslint-disable-next-line n/no-deprecated-api
 import { parse } from "node:url";
 
 import fastGlob from "fast-glob";
@@ -103,6 +104,28 @@ function getPossibleRequests(loaderContext, filename) {
   return [...new Set([request, filename])];
 }
 
+async function resolveRequests(context, possibleRequests, resolve) {
+  if (possibleRequests.length === 0) {
+    throw new Error("Not found");
+  }
+
+  let result;
+
+  try {
+    result = await resolve(context, possibleRequests[0]);
+  } catch (error) {
+    const [, ...tailPossibleRequests] = possibleRequests;
+
+    if (tailPossibleRequests.length === 0) {
+      throw error;
+    }
+
+    result = await resolveRequests(context, tailPossibleRequests, resolve);
+  }
+
+  return result;
+}
+
 async function resolveFilename(
   loaderContext,
   fileResolver,
@@ -132,17 +155,11 @@ async function resolveFilename(
         globTask.base,
       );
 
-      let globResult;
-
-      try {
-        globResult = await resolveRequests(
-          context,
-          possibleGlobRequests,
-          globResolver,
-        );
-      } catch (err) {
-        throw err;
-      }
+      const globResult = await resolveRequests(
+        context,
+        possibleGlobRequests,
+        globResolver,
+      );
 
       loaderContext.addContextDependency(globResult);
 
@@ -165,26 +182,16 @@ async function resolveFilename(
   return result;
 }
 
-async function resolveRequests(context, possibleRequests, resolve) {
-  if (possibleRequests.length === 0) {
-    throw undefined;
-  }
+function readFile(inputFileSystem, filepath) {
+  return new Promise((resolve, reject) => {
+    inputFileSystem.readFile(filepath, (error, stats) => {
+      if (error) {
+        reject(error);
+      }
 
-  let result;
-
-  try {
-    result = await resolve(context, possibleRequests[0]);
-  } catch (error) {
-    const [, ...tailPossibleRequests] = possibleRequests;
-
-    if (tailPossibleRequests.length === 0) {
-      throw error;
-    }
-
-    result = await resolveRequests(context, tailPossibleRequests, resolve);
-  }
-
-  return result;
+      resolve(stats);
+    });
+  });
 }
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
@@ -228,7 +235,7 @@ async function getDependencies(
       if (!firstNode.val) {
         const evaluator = new Evaluator(ast);
 
-        firstNode = evaluator.visit.call(evaluator, firstNode).first;
+        firstNode = evaluator.visit(firstNode).first;
       }
 
       const originalNodePath =
@@ -251,20 +258,35 @@ async function getDependencies(
 
       const isGlob = fastGlob.isDynamicPattern(nodePath);
 
-      found = utils.find(nodePath, this.paths, this.filename);
+      let { filename, paths } = this;
+
+      if (path.sep === "\\") {
+        filename = filename.replace(/^\\\\\?\\/, "");
+        paths = paths.map((item) => item.replace(/^\\\\\?\\/, ""));
+      }
+
+      found = utils.find(nodePath, paths, filename);
+
+      if (found && path.sep === "\\") {
+        found = found.map((item) => item.replace(/^\/\/\?\//, ""));
+      }
 
       if (found && isGlob) {
         const [globTask] = fastGlob.generateTasks(nodePath);
         const context =
           globTask.base === "."
-            ? path.dirname(this.filename)
-            : path.join(path.dirname(this.filename), globTask.base);
+            ? path.dirname(filename)
+            : path.join(path.dirname(filename), globTask.base);
 
         loaderContext.addContextDependency(context);
       }
 
       if (!found && oldNodePath) {
-        found = utils.lookupIndex(oldNodePath, this.paths, this.filename);
+        found = utils.lookupIndex(oldNodePath, paths, filename);
+
+        if (found && path.sep === "\\") {
+          found = found.map((item) => item.replace(/^\/\/\?\//, ""));
+        }
       }
 
       if (found) {
@@ -289,7 +311,7 @@ async function getDependencies(
           fileResolver,
           globResolver,
           isGlob,
-          path.dirname(this.filename),
+          path.dirname(filename),
           originalNodePath,
         ),
       });
@@ -372,13 +394,12 @@ async function getDependencies(
 
 function mergeBlocks(blocks) {
   let finalBlock;
-  const adding = (item) => {
-    finalBlock.push(item);
-  };
 
   for (const block of blocks) {
     if (finalBlock) {
-      block.nodes.forEach(adding);
+      for (const node of block.nodes) {
+        finalBlock.push(node);
+      }
     } else {
       finalBlock = block;
     }
@@ -507,7 +528,13 @@ async function createEvaluator(loaderContext, code, options) {
       if (node.name !== "url" && nodePath && !URL_RE.test(nodePath)) {
         let dependency;
 
-        const isEntrypoint = loaderContext.resourcePath === node.filename;
+        let { filename } = node;
+
+        if (path.sep === "\\") {
+          filename = filename.replace(/^\/\/\?\//, "");
+        }
+
+        const isEntrypoint = loaderContext.resourcePath === filename;
 
         if (isEntrypoint) {
           dependency = resolvedImportDependencies.get(nodePath);
@@ -515,7 +542,7 @@ async function createEvaluator(loaderContext, code, options) {
 
         if (!dependency) {
           const dependencies = resolvedDependencies.get(
-            path.normalize(node.filename),
+            path.normalize(filename),
           );
 
           if (dependencies) {
@@ -607,7 +634,11 @@ async function createEvaluator(loaderContext, code, options) {
 function urlResolver(options = {}) {
   function resolver(url) {
     const compiler = new Compiler(url);
-    const { filename } = url;
+    let { filename } = url;
+
+    if (path.sep === "\\") {
+      filename = filename.replace(/^\/\/\?\//, "");
+    }
 
     compiler.isURL = true;
 
@@ -620,6 +651,7 @@ function urlResolver(options = {}) {
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
     let { pathname } = parsedUrl;
     let { dest } = this.options;
+
     let tail = "";
     let res;
 
@@ -632,7 +664,18 @@ function urlResolver(options = {}) {
     if (!options.nocheck) {
       const _paths = options.paths || [];
 
-      pathname = utils.lookup(pathname, _paths.concat(this.paths));
+      pathname = utils.lookup(pathname, [
+        ..._paths,
+        ...(path.sep === "\\"
+          ? this.paths.map((item) =>
+              path.normalize(item.replace(/^\/\/\?\//, "")),
+            )
+          : this.paths),
+      ]);
+
+      if (path.sep === "\\") {
+        pathname = pathname.replace(/^\\\\\?\\/, "");
+      }
 
       if (!pathname) {
         return literal;
@@ -664,7 +707,7 @@ function urlResolver(options = {}) {
       ) + tail;
 
     if (path.sep === "\\") {
-      res = res.replaceAll("\\", "/");
+      res = normalizePath(res);
     }
 
     splitted.push(res);
@@ -676,18 +719,6 @@ function urlResolver(options = {}) {
   resolver.raw = true;
 
   return resolver;
-}
-
-function readFile(inputFileSystem, filepath) {
-  return new Promise((resolve, reject) => {
-    inputFileSystem.readFile(filepath, (error, stats) => {
-      if (error) {
-        reject(error);
-      }
-
-      resolve(stats);
-    });
-  });
 }
 
 const IS_NATIVE_WIN32_PATH = /^[a-z]:[/\\]|^\\\\/i;
@@ -720,6 +751,10 @@ function normalizeSourceMap(map, rootContext) {
   newMap.sourceRoot = "";
 
   newMap.sources = newMap.sources.map((source) => {
+    if (path.sep === "\\") {
+      source = path.normalize(source.replace(/^\/\/\?\//, ""));
+    }
+
     const sourceType = getURLType(source);
 
     // Do no touch `scheme-relative`, `path-absolute` and `absolute` types
