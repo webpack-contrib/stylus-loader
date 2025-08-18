@@ -1490,7 +1490,7 @@ describe("loader", () => {
     expect(
       codeFromBundle.css
         .replaceAll(process.cwd(), "")
-        .replaceAll("\\\\?", "")
+        .replaceAll("\\\\?\\", "")
         .replaceAll("\\", "/"),
     ).toMatchSnapshot("css");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
