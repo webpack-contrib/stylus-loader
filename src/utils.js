@@ -588,9 +588,6 @@ async function createEvaluator(loaderContext, code, options) {
                 hasError = true;
               }
 
-              // eslint-disable-next-line
-              console.log("dependency", result);
-
               return result;
             });
 
