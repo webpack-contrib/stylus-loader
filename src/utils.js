@@ -578,9 +578,7 @@ async function createEvaluator(loaderContext, code, options) {
               const clonedNode = this.visit(clonedImported.path).first;
 
               // eslint-disable-next-line
-              console.log("clonedImported", clonedImported);
-              // eslint-disable-next-line
-              console.log("clonedNode", clonedNode);
+              console.log(this);
 
               // Avoid re globbing when resolved import contains glob characters
               clonedNode.string = fastGlob.escapePath(item);
