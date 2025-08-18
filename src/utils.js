@@ -405,6 +405,9 @@ function mergeBlocks(blocks) {
     }
   }
 
+  // eslint-disable-next-line
+  console.log("finalBlock", finalBlock);
+
   return finalBlock;
 }
 
