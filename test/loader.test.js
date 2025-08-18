@@ -201,9 +201,8 @@ describe("loader", () => {
   });
 
   // TODO - stylus has a bug on windows
-  // jest/no-disabled-tests
-  // eslint-disable-next-line
-  it.only('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async () => {
     const testId = "./shallow-deep.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
