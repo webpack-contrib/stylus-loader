@@ -1479,6 +1479,7 @@ describe("loader", () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
+    // TODO bug on windows
     // const codeFromStylus = await getCodeFromStylus(testId, {
     //   stylusOptions: {
     //     lineNumbers: true,
@@ -1486,9 +1487,12 @@ describe("loader", () => {
     // });
     //
     // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css.replaceAll(process.cwd(), "")).toMatchSnapshot(
-      "css",
-    );
+    expect(
+      codeFromBundle.css
+        .replaceAll(process.cwd(), "")
+        .replaceAll("\\\\?", "")
+        .replaceAll(/\\/, "/"),
+    ).toMatchSnapshot("css");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
