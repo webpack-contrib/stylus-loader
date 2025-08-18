@@ -577,6 +577,18 @@ async function createEvaluator(loaderContext, code, options) {
               const clonedImported = imported.clone();
               const clonedNode = this.visit(clonedImported.path).first;
 
+              if (path.sep === "\\") {
+                this.paths = this.paths.map((item) =>
+                  path.normalize(item.replace(/^\/\/\?\//, "")),
+                );
+                this.options.paths = this.options.paths.map((item) =>
+                  path.normalize(item.replace(/^\/\/\?\//, "")),
+                );
+                this.renderer.nodes.filename = path.normalize(
+                  this.renderer.nodes.filename.replace(/^\/\/\?\//, ""),
+                );
+              }
+
               // eslint-disable-next-line
               console.log(this);
 
