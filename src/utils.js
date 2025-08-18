@@ -518,8 +518,16 @@ async function createEvaluator(loaderContext, code, options) {
     visitImport(imported) {
       this.return += 1;
 
+      // eslint-disable-next-line
+      console.log("imported", imported);
+
       const node = this.visit(imported.path).first;
       const nodePath = (!node.val.isNull && node.val) || node.name;
+
+      // eslint-disable-next-line
+      console.log("node", node);
+      // eslint-disable-next-line
+      console.log("nodePath", nodePath);
 
       this.return -= 1;
 

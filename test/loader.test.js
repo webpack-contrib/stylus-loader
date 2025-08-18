@@ -200,6 +200,7 @@ describe("loader", () => {
     expect(getErrors(stats)).toMatchSnapshot("errors");
   });
 
+  // TODO - stylus has a bug with URLs on windows
   // eslint-disable-next-line
   it.only('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async () => {
     const testId = "./shallow-deep.styl";
@@ -212,13 +213,12 @@ describe("loader", () => {
     });
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
-    // TODO - stylus has a bug with URLs on windows
     // const codeFromStylus = await getCodeFromStylus(testId, {
     //   stylusOptions: {
     //     resolveURL: { nocheck: false },
     //   },
     // });
-
+    //
     // expect(codeFromBundle.css).toBe(codeFromStylus.css);
     expect(codeFromBundle.css).toMatchSnapshot("css");
     expect(getWarnings(stats)).toMatchSnapshot("warnings");
