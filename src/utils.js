@@ -536,6 +536,13 @@ async function createEvaluator(loaderContext, code, options) {
 
         const isEntrypoint = loaderContext.resourcePath === filename;
 
+        // eslint-disable-next-line
+        console.log(loaderContext.resourcePath);
+        // eslint-disable-next-line
+        console.log(filename);
+        // eslint-disable-next-line
+        console.log(isEntrypoint);
+
         if (isEntrypoint) {
           dependency = resolvedImportDependencies.get(nodePath);
         }
@@ -581,9 +588,6 @@ async function createEvaluator(loaderContext, code, options) {
               clonedNode.string = fastGlob.escapePath(item);
 
               let result;
-
-              // eslint-disable-next-line
-              console.log(clonedImported);
 
               try {
                 result = super.visitImport(clonedImported);
